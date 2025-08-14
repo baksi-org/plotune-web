@@ -1,103 +1,904 @@
-<!doctype html>
-<html lang="tr">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Debug Query Catcher</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    body{font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Arial; margin:24px}
-    h1{margin:0 0 12px}
-    .card{border:1px solid #ddd; border-radius:12px; padding:16px; margin-bottom:16px}
-    table{border-collapse:collapse; width:100%}
-    th,td{border:1px solid #eee; padding:8px; text-align:left; font-size:14px}
-    code{background:#f6f8fa; padding:2px 6px; border-radius:6px}
-    button{padding:10px 14px; border-radius:10px; border:1px solid #ccc; cursor:pointer}
-    .ok{color:green} .err{color:#b00020}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plotune - Real-time Data Visualization Platform</title>
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #26A69A;
+            --primary-dark: #00796B;
+            --secondary: #3f51b5;
+            --dark-bg: #121212;
+            --dark-surface: #1e1e1e;
+            --dark-card: #252525;
+            --dark-text: #e0e0e0;
+            --light-text: #f5f5f5;
+            --gray-text: #9e9e9e;
+            --transition: all 0.3s ease;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--dark-surface);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            padding: 15px 0;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--light-text);
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: var(--dark-text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary);
+            transition: var(--transition);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--dark-text);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 100px 0 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(38, 166, 154, 0.1), transparent 70%);
+            z-index: -1;
+        }
+
+        .hero-content {
+            max-width: 650px;
+            z-index: 2;
+        }
+
+        .hero h2 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            color: var(--light-text);
+        }
+
+        .hero h2 span {
+            color: var(--primary);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: var(--gray-text);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-block;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(38, 166, 154, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .hero-image {
+            position: absolute;
+            right: -50px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50%;
+            max-width: 600px;
+            height: auto;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            opacity: 0.9;
+        }
+
+        /* Features Section */
+        .section {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--light-text);
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            color: var(--gray-text);
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow);
+            border-color: rgba(38, 166, 154, 0.3);
+        }
+
+        .feature-icon {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon i {
+            font-size: 24px;
+            color: white;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--light-text);
+        }
+
+        /* USP Section */
+        .usp-container {
+            background-color: var(--dark-surface);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+        }
+
+        .usp-item {
+            display: flex;
+            gap: 20px;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .usp-item:last-child {
+            border-bottom: none;
+        }
+
+        .usp-icon {
+            color: var(--primary);
+            font-size: 24px;
+            min-width: 40px;
+        }
+
+        /* Target Users */
+        .users-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .user-card {
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .user-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .user-icon {
+            font-size: 40px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        /* Pricing Section */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .pricing-card {
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--primary);
+            transform: scale(1.05);
+            box-shadow: var(--shadow);
+        }
+
+        .pricing-card.featured::before {
+            content: 'Popular';
+            position: absolute;
+            top: 15px;
+            right: -30px;
+            background-color: var(--primary);
+            color: white;
+            padding: 5px 30px;
+            transform: rotate(45deg);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .pricing-header {
+            margin-bottom: 25px;
+        }
+
+        .pricing-name {
+            font-size: 1.5rem;
+            color: var(--light-text);
+            margin-bottom: 10px;
+        }
+
+        .pricing-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .pricing-period {
+            color: var(--gray-text);
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin: 30px 0;
+        }
+
+        .pricing-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-surface);
+            padding: 60px 0 30px;
+            margin-top: 60px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h3 {
+            color: var(--light-text);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: var(--gray-text);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--gray-text);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .hero {
+                text-align: center;
+            }
+            
+            .hero-content {
+                margin: 0 auto;
+            }
+            
+            .hero-image {
+                display: none;
+            }
+            
+            .cta-buttons {
+                justify-content: center;
+            }
+            
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+            
+            .section {
+                padding: 70px 0;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>Debug: Query Param Yakalama</h1>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <img src="assets/logo.png" alt="Plotune Logo">
+                <h1>Plotune</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="extensions.html">Extensions</a></li>
+                    <li><a href="docs.html">Docs</a></li>
+                    <li><a href="download.html">Download</a></li>
+                </ul>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
 
-  <div class="card">
-    <p>URL’den gelen parametreleri listeliyorum. Senin örneğe göre beklenenler: 
-      <code>os_name, os_version, machine, key, fastapi_host, fastapi_port</code>.
-    </p>
-    <table id="paramsTable">
-      <thead><tr><th>Anahtar</th><th>Değer</th></tr></thead>
-      <tbody></tbody>
-    </table>
-    <p id="missing" class="err"></p>
-  </div>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2>Visualize, Inspect, and Analyze <span>Complex Datasets</span> in Real Time</h2>
+                <p>Empower engineers, analysts, and researchers with an intuitive and interactive platform for real-time data visualization and analysis. Drag, drop, and discover insights faster than ever before.</p>
+                <div class="cta-buttons">
+                    <a href="download.html" class="btn btn-primary">Download Now</a>
+                    <a href="#features" class="btn btn-secondary">Explore Features</a>
+                </div>
+            </div>
+        </div>
+        <div class="hero-image">
+            <!-- Placeholder for dashboard visualization -->
+            <div style="width: 100%; height: 100%; background: linear-gradient(45deg, #1a2a6c, #26A69A, #b21f1f); border-radius: 8px;"></div>
+        </div>
+    </section>
 
-  <div class="card">
-    <h3>FastAPI'ye Test POST</h3>
-    <p>
-      Aşağıdaki buton, <code>http://{fastapi_host}:{fastapi_port}/api/action</code> adresine
-      <code>{ key, action }</code> JSON’u yollar.
-    </p>
-    <label>Action: <input id="actionInput" value="debug_ping" /></label>
-    <button id="sendBtn">Gönder</button>
-    <p id="result"></p>
-  </div>
+    <!-- Features Section -->
+    <section id="features" class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Core Features</h2>
+                <p>Plotune delivers a powerful set of features designed for professionals working with complex data systems.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-puzzle-piece"></i>
+                    </div>
+                    <h3>Modular Components</h3>
+                    <p>Drag-and-drop interface with modular components for building custom data visualization workflows.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Real-time Dashboards</h3>
+                    <p>Create and monitor dynamic dashboards that update in real-time as new data streams in.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-plug"></i>
+                    </div>
+                    <h3>Extension System</h3>
+                    <p>Extend functionality with plugins and extensions from our marketplace.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <h3>Multi-source Integration</h3>
+                    <p>Connect to UART, CAN, Bluetooth, databases, and more with unified interface.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <h3>Low-latency Performance</h3>
+                    <p>Optimized for high-performance data processing with minimal delay.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h3>Auto-save & Replay</h3>
+                    <p>Never lose work with auto-save and replay capabilities for data sessions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <script>
-    (function () {
-      const params = Object.fromEntries(new URLSearchParams(window.location.search).entries());
-      const tbody = document.querySelector("#paramsTable tbody");
+    <!-- Unique Selling Points -->
+    <section class="section" style="background-color: var(--dark-surface);">
+        <div class="container">
+            <div class="section-title">
+                <h2>Unique Advantages</h2>
+                <p>Why professionals choose Plotune for their critical data visualization needs.</p>
+            </div>
+            <div class="usp-container">
+                <div class="usp-item">
+                    <div class="usp-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <div>
+                        <h3>Enterprise-Grade GUI</h3>
+                        <p>Component-based interface with resizable, draggable layers for complex workflows.</p>
+                    </div>
+                </div>
+                <div class="usp-item">
+                    <div class="usp-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <div>
+                        <h3>Extension Marketplace</h3>
+                        <p>Enhance functionality with specialized plugins and extensions from our marketplace.</p>
+                    </div>
+                </div>
+                <div class="usp-item">
+                    <div class="usp-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div>
+                        <h3>Seamless Real-time Plotting</h3>
+                        <p>Intuitive tools for real-time data visualization and calculation capabilities.</p>
+                    </div>
+                </div>
+                <div class="usp-item">
+                    <div class="usp-icon">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <div>
+                        <h3>Flexible Licensing</h3>
+                        <p>User-friendly licensing and authentication system for commercial deployment.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-      // tabloyu doldur
-      Object.keys(params).forEach(k => {
-        const tr = document.createElement("tr");
-        const tdK = document.createElement("td");
-        const tdV = document.createElement("td");
-        tdK.textContent = k;
-        tdV.textContent = params[k];
-        tr.appendChild(tdK);
-        tr.appendChild(tdV);
-        tbody.appendChild(tr);
-      });
+    <!-- Target Users -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Designed For Professionals</h2>
+                <p>Plotune serves a wide range of users across multiple technical disciplines.</p>
+            </div>
+            <div class="users-grid">
+                <div class="user-card">
+                    <div class="user-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3>Students</h3>
+                    <p>Learn data visualization and analysis with an intuitive, professional-grade tool.</p>
+                </div>
+                <div class="user-card">
+                    <div class="user-icon">
+                        <i class="fas fa-flask"></i>
+                    </div>
+                    <h3>Researchers</h3>
+                    <p>Analyze experimental data in real-time with customizable visualization tools.</p>
+                </div>
+                <div class="user-card">
+                    <div class="user-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>Engineers</h3>
+                    <p>Monitor systems, debug protocols, and visualize complex engineering data streams.</p>
+                </div>
+                <div class="user-card">
+                    <div class="user-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h3>Data Analysts</h3>
+                    <p>Transform raw data into actionable insights with powerful visualization capabilities.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-      // beklenenler
-      const expected = ["os_name","os_version","machine","key","fastapi_host","fastapi_port"];
-      const missing = expected.filter(k => !(k in params));
-      if (missing.length) {
-        document.getElementById("missing").textContent =
-          "Eksik parametre(ler): " + missing.join(", ");
-      }
+    <!-- Technology Stack -->
+    <section class="section" style="background: linear-gradient(135deg, var(--dark-surface), #1a1a2e);">
+        <div class="container">
+            <div class="section-title">
+                <h2>Technology Stack</h2>
+                <p>Built on a robust and modern technology foundation.</p>
+            </div>
+            <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+                <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 30px; margin-top: 40px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; color: var(--primary); margin-bottom: 10px;">
+                            <i class="fab fa-python"></i>
+                        </div>
+                        <h3>Python Backend</h3>
+                        <p>High-performance data processing</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; color: var(--primary); margin-bottom: 10px;">
+                            <i class="fas fa-window-maximize"></i>
+                        </div>
+                        <h3>PyQt5 Frontend</h3>
+                        <p>Native, cross-platform interface</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; color: var(--primary); margin-bottom: 10px;">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <h3>Redis</h3>
+                        <p>Fast data processing and storage</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; color: var(--primary); margin-bottom: 10px;">
+                            <i class="fas fa-plug"></i>
+                        </div>
+                        <h3>Plugin API</h3>
+                        <p>Flexible data source integration</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-      // POST butonu
-      const btn = document.getElementById("sendBtn");
-      const actionInput = document.getElementById("actionInput");
-      const result = document.getElementById("result");
+    <!-- Pricing Section -->
+    <section id="pricing" class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Simple, Transparent Pricing</h2>
+                <p>Choose the plan that fits your needs and budget.</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3 class="pricing-name">Lite</h3>
+                        <div class="pricing-price">Free</div>
+                        <div class="pricing-period">Forever</div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>Basic visualization tools</li>
+                        <li>Basic data import</li>
+                        <li>Real-time plotting (1 source)</li>
+                        <li>Community support</li>
+                        <li>5 extension slots</li>
+                    </ul>
+                    <a href="download.html" class="btn btn-secondary">Get Started</a>
+                </div>
+                <div class="pricing-card featured">
+                    <div class="pricing-header">
+                        <h3 class="pricing-name">Pro</h3>
+                        <div class="pricing-price">$5</div>
+                        <div class="pricing-period">per month</div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>All Lite features</li>
+                        <li>Advanced visualization tools</li>
+                        <li>Multiple data sources (UART, CAN, Bluetooth)</li>
+                        <li>Priority support</li>
+                        <li>Unlimited extensions</li>
+                        <li>Auto-save & replay</li>
+                        <li>Custom dashboard layouts</li>
+                    </ul>
+                    <a href="download.html" class="btn btn-primary">Get Pro</a>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3 class="pricing-name">Enterprise</h3>
+                        <div class="pricing-price">Custom</div>
+                        <div class="pricing-period">Tailored solution</div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>All Pro features</li>
+                        <li>Custom data source integration</li>
+                        <li>White-label solution</li>
+                        <li>Dedicated support</li>
+                        <li>Team management</li>
+                        <li>On-premises deployment</li>
+                        <li>Custom extension development</li>
+                    </ul>
+                    <a href="download.html" class="btn btn-secondary">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
 
-      btn.addEventListener("click", async () => {
-        const host = params.fastapi_host || "127.0.0.1";
-        const port = params.fastapi_port || "8000";
-        const url = `http://${host}:${port}/api/action`;
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="logo">
+                        <img src="logo.png" alt="Plotune Logo" style="height: 36px;">
+                        <h1 style="font-size: 1.5rem;">Plotune</h1>
+                    </div>
+                    <p style="margin-top: 20px; color: var(--gray-text); max-width: 300px;">
+                        Empowering engineers, analysts, and researchers with real-time data visualization tools.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h3>Product</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Features</a></li>
+                        <li><a href="extensions.html">Extensions</a></li>
+                        <li><a href="download.html">Download</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="docs.html">Documentation</a></li>
+                        <li><a href="tutorials.html">Tutorials</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="community.html">Community</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="careers.html">Careers</a></li>
+                        <li><a href="legal.html">Legal</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2023 Plotune. All rights reserved.
+            </div>
+        </div>
+    </footer>
 
-        const payload = {
-          key: params.key || "no-key",
-          action: actionInput.value || "debug_ping"
-        };
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            const nav = document.querySelector('nav ul');
+            nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+        });
 
-        result.textContent = "Gönderiliyor...";
-        try {
-          const res = await fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-          });
-          const data = await res.json().catch(() => ({}));
-          if (res.ok) {
-            result.innerHTML = `<span class="ok">OK</span> → ${JSON.stringify(data)}`;
-          } else {
-            result.innerHTML = `<span class="err">HTTP ${res.status}</span> → ${JSON.stringify(data)}`;
-          }
-        } catch (e) {
-          result.innerHTML = `<span class="err">Hata:</span> ${e}`;
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    if (window.innerWidth < 768) {
+                        document.querySelector('nav ul').style.display = 'none';
+                    }
+                }
+            });
+        });
+
+        // Header shadow on scroll
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.25)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
+        });
+
+        // Animation on scroll
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.feature-card, .user-card, .pricing-card');
+            
+            elements.forEach(element => {
+                const position = element.getBoundingClientRect();
+                if (position.top < window.innerHeight - 100) {
+                    element.style.opacity = 1;
+                    element.style.transform = 'translateY(0)';
+                }
+            });
         }
-      });
-    })();
-  </script>
+
+        // Set initial state
+        document.querySelectorAll('.feature-card, .user-card, .pricing-card').forEach(el => {
+            el.style.opacity = 0;
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        });
+
+        // Run on load and scroll
+        window.addEventListener('load', animateOnScroll);
+        window.addEventListener('scroll', animateOnScroll);
+    </script>
 </body>
 </html>
