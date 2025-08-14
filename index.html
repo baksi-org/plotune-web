@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <title>Debug Query Catcher</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body{font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Arial; margin:24px}
+    h1{margin:0 0 12px}
+    .card{border:1px solid #ddd; border-radius:12px; padding:16px; margin-bottom:16px}
+    table{border-collapse:collapse; width:100%}
+    th,td{border:1px solid #eee; padding:8px; text-align:left; font-size:14px}
+    code{background:#f6f8fa; padding:2px 6px; border-radius:6px}
+    button{padding:10px 14px; border-radius:10px; border:1px solid #ccc; cursor:pointer}
+    .ok{color:green} .err{color:#b00020}
+  </style>
+</head>
+<body>
+  <h1>Debug: Query Param Yakalama</h1>
+
+  <div class="card">
+    <p>URL’den gelen parametreleri listeliyorum. Senin örneğe göre beklenenler: 
+      <code>os_name, os_version, machine, key, fastapi_host, fastapi_port</code>.
+    </p>
+    <table id="paramsTable">
+      <thead><tr><th>Anahtar</th><th>Değer</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <p id="missing" class="err"></p>
+  </div>
+
+  <div class="card">
+    <h3>FastAPI'ye Test POST</h3>
+    <p>
+      Aşağıdaki buton, <code>http://{fastapi_host}:{fastapi_port}/api/action</code> adresine
+      <code>{ key, action }</code> JSON’u yollar.
+    </p>
+    <label>Action: <input id="actionInput" value="debug_ping" /></label>
+    <button id="sendBtn">Gönder</button>
+    <p id="result"></p>
+  </div>
+
+  <script>
+    (function () {
+      const params = Object.fromEntries(new URLSearchParams(window.location.search).entries());
+      const tbody = document.querySelector("#paramsTable tbody");
+
+      // tabloyu doldur
+      Object.keys(params).forEach(k => {
+        const tr = document.createElement("tr");
+        const tdK = document.createElement("td");
+        const tdV = document.createElement("td");
+        tdK.textContent = k;
+        tdV.textContent = params[k];
+        tr.appendChild(tdK);
+        tr.appendChild(tdV);
+        tbody.appendChild(tr);
+      });
+
+      // beklenenler
+      const expected = ["os_name","os_version","machine","key","fastapi_host","fastapi_port"];
+      const missing = expected.filter(k => !(k in params));
+      if (missing.length) {
+        document.getElementById("missing").textContent =
+          "Eksik parametre(ler): " + missing.join(", ");
+      }
+
+      // POST butonu
+      const btn = document.getElementById("sendBtn");
+      const actionInput = document.getElementById("actionInput");
+      const result = document.getElementById("result");
+
+      btn.addEventListener("click", async () => {
+        const host = params.fastapi_host || "127.0.0.1";
+        const port = params.fastapi_port || "8000";
+        const url = `http://${host}:${port}/api/action`;
+
+        const payload = {
+          key: params.key || "no-key",
+          action: actionInput.value || "debug_ping"
+        };
+
+        result.textContent = "Gönderiliyor...";
+        try {
+          const res = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const data = await res.json().catch(() => ({}));
+          if (res.ok) {
+            result.innerHTML = `<span class="ok">OK</span> → ${JSON.stringify(data)}`;
+          } else {
+            result.innerHTML = `<span class="err">HTTP ${res.status}</span> → ${JSON.stringify(data)}`;
+          }
+        } catch (e) {
+          result.innerHTML = `<span class="err">Hata:</span> ${e}`;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
