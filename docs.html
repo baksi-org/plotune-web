@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation | Plotune</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #26A69A;
+            --primary-dark: #00796B;
+            --secondary: #3f51b5;
+            --dark-bg: #121212;
+            --dark-surface: #1e1e1e;
+            --dark-card: #252525;
+            --dark-text: #e0e0e0;
+            --light-text: #f5f5f5;
+            --gray-text: #9e9e9e;
+            --transition: all 0.3s ease;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            --border-radius: 8px;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --error: #f44336;
+            --info: #2196f3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--dark-surface);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            padding: 15px 0;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--light-text);
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: var(--dark-text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary);
+            transition: var(--transition);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--dark-text);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .docs-hero {
+            min-height: 50vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 150px 0 60px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(38, 166, 154, 0.1), rgba(63, 81, 181, 0.1));
+            text-align: center;
+        }
+
+        .docs-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: var(--light-text);
+        }
+
+        .docs-hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: var(--gray-text);
+        }
+
+        /* Documentation Layout */
+        .docs-container {
+            display: flex;
+            gap: 40px;
+            padding: 50px 0;
+        }
+
+        .docs-sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .docs-content {
+            flex: 1;
+        }
+
+        .docs-card {
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+        }
+
+        .docs-card:hover {
+            border-color: rgba(38, 166, 154, 0.3);
+            box-shadow: var(--shadow);
+        }
+
+        .docs-card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--light-text);
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .docs-card h3 {
+            font-size: 1.4rem;
+            margin: 30px 0 15px;
+            color: var(--light-text);
+        }
+
+        .docs-card h4 {
+            font-size: 1.1rem;
+            margin: 20px 0 10px;
+            color: var(--light-text);
+        }
+
+        .endpoint-card {
+            background-color: var(--dark-surface);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .endpoint-method {
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-weight: 600;
+            margin-right: 10px;
+            text-transform: uppercase;
+        }
+
+        .method-get { background-color: rgba(76, 175, 80, 0.2); color: var(--success); }
+        .method-post { background-color: rgba(33, 150, 243, 0.2); color: var(--info); }
+        .method-put { background-color: rgba(255, 152, 0, 0.2); color: var(--warning); }
+        .method-delete { background-color: rgba(244, 67, 54, 0.2); color: var(--error); }
+        .method-websocket { background-color: rgba(156, 39, 176, 0.2); color: #9c27b0; }
+
+        .endpoint-path {
+            font-family: 'Roboto Mono', monospace;
+            color: var(--light-text);
+        }
+
+        .endpoint-description {
+            color: var(--gray-text);
+            margin-bottom: 15px;
+        }
+
+        .endpoint-section {
+            margin-bottom: 20px;
+        }
+
+        .endpoint-section-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            color: var(--gray-text);
+        }
+
+        .params-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        .params-table th {
+            text-align: left;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--gray-text);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .params-table td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.95rem;
+        }
+
+        .param-name {
+            font-family: 'Roboto Mono', monospace;
+            color: var(--primary);
+        }
+
+        .param-type {
+            color: var(--info);
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .param-required {
+            color: var(--error);
+            font-size: 0.8rem;
+        }
+
+        .param-optional {
+            color: var(--success);
+            font-size: 0.8rem;
+        }
+
+        .schema-example {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .schema-example pre {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--light-text);
+        }
+
+        .schema-property {
+            display: flex;
+            margin-bottom: 8px;
+            padding-left: 20px;
+        }
+
+        .schema-property-name {
+            min-width: 120px;
+            font-family: 'Roboto Mono', monospace;
+            color: var(--primary);
+        }
+
+        .schema-property-type {
+            color: var(--info);
+            font-family: 'Roboto Mono', monospace;
+            margin-right: 10px;
+        }
+
+        .schema-property-desc {
+            color: var(--gray-text);
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .sidebar-nav li {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-nav li:last-child {
+            border-bottom: none;
+        }
+
+        .sidebar-nav a {
+            display: block;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: var(--gray-text);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .sidebar-nav a:hover {
+            color: var(--primary);
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-nav a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background-color: var(--primary);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .sidebar-nav a:hover::before,
+        .sidebar-nav a.active::before {
+            opacity: 1;
+        }
+
+        .sidebar-nav a.active {
+            color: var(--primary);
+            background-color: rgba(38, 166, 154, 0.1);
+        }
+
+        .sidebar-nav i {
+            width: 20px;
+            margin-right: 10px;
+            text-align: center;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-surface);
+            padding: 60px 0 30px;
+            margin-top: 60px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h3 {
+            color: var(--light-text);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: var(--gray-text);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--gray-text);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .docs-container {
+                flex-direction: column;
+            }
+            
+            .docs-sidebar {
+                width: 100%;
+                position: relative;
+                top: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .docs-hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .docs-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .endpoint-header {
+                flex-wrap: wrap;
+            }
+            
+            .endpoint-method {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <img src="logo.png" alt="Plotune Logo">
+                <h1>Plotune</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="extensions.html">Extensions</a></li>
+                    <li><a href="docs.html" class="active">Docs</a></li>
+                    <li><a href="download.html">Download</a></li>
+                </ul>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Documentation Hero -->
+    <section class="docs-hero">
+        <div class="container">
+            <h1>Developer Documentation</h1>
+            <p>Learn how to create powerful extensions for Plotune. Build custom data sources, visualizations, and processing modules.</p>
+        </div>
+    </section>
+
+    <!-- Documentation Layout -->
+    <div class="container docs-container">
+        <!-- Sidebar Navigation -->
+        <div class="docs-sidebar">
+            <ul class="sidebar-nav">
+                <li><a href="#getting-started" class="active"><i class="fas fa-rocket"></i> Getting Started</a></li>
+                <li><a href="#rest-api"><i class="fas fa-server"></i> REST API</a></li>
+                <li><a href="#websockets"><i class="fas fa-bolt"></i> WebSockets</a></li>
+                <li><a href="#authentication"><i class="fas fa-key"></i> Authentication</a></li>
+                <li><a href="#best-practices"><i class="fas fa-star"></i> Best Practices</a></li>
+                <li><a href="#examples"><i class="fas fa-code"></i> Code Examples</a></li>
+                <li><a href="#troubleshooting"><i class="fas fa-bug"></i> Troubleshooting</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="docs-content">
+            <!-- Getting Started Section -->
+            <div class="docs-card" id="getting-started">
+                <h2>Getting Started with Extension Development</h2>
+                <p>Plotune extensions allow you to extend the functionality of the core platform. Extensions can provide new data sources, visualizations, data processing capabilities, and more.</p>
+                
+                <h3>Prerequisites</h3>
+                <ul style="margin-left: 20px; margin-bottom: 20px;">
+                    <li>Python 3.8+ installed</li>
+                    <li>Basic understanding of REST APIs</li>
+                    <li>Familiarity with WebSocket connections</li>
+                    <li>Plotune Pro or Enterprise license</li>
+                </ul>
+                
+                <h3>Extension Structure</h3>
+                <p>Every Plotune extension must have the following structure:</p>
+                
+                <div class="schema-example">
+                    <pre>your-extension/
+├── __init__.py
+├── main.py
+├── manifest.json
+├── requirements.txt
+└── README.md</pre>
+                </div>
+                
+                <h4>manifest.json</h4>
+                <p>This file defines your extension's metadata:</p>
+                
+                <div class="schema-example">
+                    <pre>{
+    "name": "Your Extension",
+    "id": "your_extension_id",
+    "version": "1.0.0",
+    "description": "Brief description of your extension",
+    "mode": "lite|pro|enterprise",
+    "author": "Your Name",
+    "os": ["Windows", "Linux", "macOS"],
+    "category": "DataSource|Visualization|Processing",
+    "entry_point": "main:app"
+}</pre>
+                </div>
+            </div>
+            
+            <!-- REST API Section -->
+            <div class="docs-card" id="rest-api">
+                <h2>REST API Reference <span class="version-badge">v1.0.0</span></h2>
+                <p>Plotune extensions communicate with the core platform through a REST API. Below are the essential endpoints every extension should implement.</p>
+                
+                <!-- Config Endpoint -->
+                <div class="endpoint-card">
+                    <div class="endpoint-header">
+                        <div class="endpoint-method method-get">GET</div>
+                        <div class="endpoint-path">/config</div>
+                    </div>
+                    <div class="endpoint-description">
+                        Fetches the current configuration of the plugin and its status.
+                    </div>
+                    
+                    <div class="endpoint-section">
+                        <div class="endpoint-section-title">Parameters</div>
+                        <p>No parameters required.</p>
+                    </div>
+                    
+                    <div class="endpoint-section">
+                        <div class="endpoint-section-title">Response</div>
+                        <div class="schema-example">
+                            <pre>Status: 200 OK
+Content-Type: application/json</pre>
+                            <pre>{
+    "config": {
+        // Current configuration parameters
+    },
+    "status": "running|paused|stopped"
+}</pre>
+                        </div>
+                        
+                        <div class="endpoint-section-title">Response Schema</div>
+                        <div class="schema-property">
+                            <div class="schema-property-name">config</div>
+                            <div class="schema-property-type">object</div>
+                            <div class="schema-property-desc">A dictionary of all current configuration parameters</div>
+                        </div>
+                        <div class="schema-property">
+                            <div class="schema-property-name">status</div>
+                            <div class="schema-property-type">string</div>
+                            <div class="schema-property-desc">The status of the plugin (default: "paused")</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stop Endpoint -->
+                <div class="endpoint-card">
+                    <div class="endpoint-header">
+                        <div class="endpoint-method method-get">GET</div>
+                        <div class="endpoint-path">/stop</div>
+                    </div>
+                    <div class="endpoint-description">
+                        Sends a signal to stop the plugin. Note that this endpoint returns no body on success.
+                    </div>
+                    
+                    <div class="endpoint-section">
+                        <div class="endpoint-section-title">Response</div>
+                        <div class="schema-example">
+                            <pre>Status: 200 OK
+Content-Type: application/json</pre>
+                            <pre>{}</pre>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Status Endpoint -->
+                <div class="endpoint-card">
+                    <div class="endpoint-header">
+                        <div class="endpoint-method method-get">GET</div>
+                        <div class="endpoint-path">/status</div>
+                    </div>
+                    <div class="endpoint-description">
+                        Provides real-time status, uptime, and environment information for the plugin.
+                    </div>
+                    
+                    <div class="endpoint-section">
+                        <div class="endpoint-section-title">Response</div>
+                        <div class="schema-example">
+                            <pre>Status: 200 OK
+Content-Type: application/json</pre>
+                            <pre>{
+    "plugin": "Plugin Name",
+    "status": "running",
+    "init_time": "2023-08-15T12:30:45Z",
+    "current_time": "2023-08-15T12:35:22Z",
+    "uptime": "4 minutes 37 seconds",
+    "environment": {
+        "python": "3.10.6",
+        "os": "Linux",
+        "os_version": "5.15.0-78-generic",
+        "host": "plotune-dev",
+        "ip": "192.168.1.42"
+    }
+}</pre>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Form Endpoint -->
+                <div class="endpoint-card">
+                    <div class="endpoint-header">
+                        <div class="endpoint-method method-get">GET</div>
+                        <div class="endpoint-path">/form</div>
+                    </div>
+                    <div class="endpoint-description">
+                        Retrieves the JSON schema for a user input form, allowing a client to dynamically build a UI.
+                    </div>
+                    
+                    <div class="endpoint-section">
+                        <div class="endpoint-section-title">Response</div>
+                        <div class="schema-example">
+                            <pre>Status: 200 OK
+Content-Type: application/json</pre>
+                            <pre>{
+    "title": "Data Source Configuration",
+    "type": "object",
+    "properties": {
+        "source_name": {
+            "type": "string",
+            "title": "Source Name"
+        },
+        "sample_rate": {
+            "type": "number",
+            "title": "Sample Rate (Hz)",
+            "default": 1000
+        }
+    },
+    "required": ["source_name"]
+}</pre>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- More endpoints would go here -->
+            </div>
+            
+            <!-- WebSockets Section -->
+            <div class="docs-card" id="websockets">
+                <h2>WebSocket API <span class="version-badge">v1.0.0</span></h2>
+                <p>For real-time data streaming, Plotune uses WebSocket connections. This is essential for live data visualization.</p>
+                
+                <div class="endpoint-card">
+                    <div class="endpoint-header">
+                        <div class="endpoint-method method-websocket">WebSocket</div>
+                        <div class="endpoint-path">/fetch/{signal_name}</div>
+                    </div>
+                    <div class="endpoint-description">
+                        A WebSocket endpoint that continuously streams data for a specified signal. The connection closes if an exception occurs during data fetching.
+                    </div>
+                    
+                    <div class="endpoint-section">
+                        <div class="endpoint-section-title">Parameters</div>
+                        <table class="params-table">
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                    <th>Required</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="param-name">signal_name</td>
+                                    <td class="param-type">string</td>
+                                    <td>Name of the signal to stream</td>
+                                    <td><span class="param-required">Yes</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="endpoint-section">
+                        <div class="endpoint-section-title">Message Format</div>
+                        <div class="schema-example">
+                            <pre>{
+    "timestamp": 1692100000.123456,
+    "value": 42.5,
+    "desc": "Temperature Sensor",
+    "status": true
+}</pre>
+                        </div>
+                        
+                        <div class="endpoint-section-title">Message Schema</div>
+                        <div class="schema-property">
+                            <div class="schema-property-name">timestamp</div>
+                            <div class="schema-property-type">float</div>
+                            <div class="schema-property-desc">Unix timestamp with microsecond precision</div>
+                        </div>
+                        <div class="schema-property">
+                            <div class="schema-property-name">value</div>
+                            <div class="schema-property-type">float</div>
+                            <div class="schema-property-desc">Current value of the signal</div>
+                        </div>
+                        <div class="schema-property">
+                            <div class="schema-property-name">desc</div>
+                            <div class="schema-property-type">string</div>
+                            <div class="schema-property-desc">Description of the signal</div>
+                        </div>
+                        <div class="schema-property">
+                            <div class="schema-property-name">status</div>
+                            <div class="schema-property-type">bool</div>
+                            <div class="schema-property-desc">Signal validity status (true = valid)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="endpoint-section">
+                        <div class="endpoint-section-title">Example Implementation</div>
+                        <div class="schema-example">
+                            <pre>@router.websocket("/fetch/{signal_name}")
+async def websocket_endpoint(websocket: WebSocket, signal_name: str):
+    """
+    A WebSocket endpoint that continuously streams data for a specified signal.
+    The connection closes if an exception occurs during data fetching.
+    """
+    await websocket.accept()
+    try:
+        while True:
+            await asyncio.sleep(INTERVAL)
+            payload = {
+                "timestamp": time.time(),
+                "value": get_sensor_value(signal_name),
+                "desc": f"{signal_name}",
+                "status": True
+            }
+            await websocket.send_json(payload)
+    except Exception as e:
+        await websocket.close()</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Best Practices Section -->
+            <div class="docs-card" id="best-practices">
+                <h2>Extension Development Best Practices</h2>
+                
+                <h3>Performance Considerations</h3>
+                <ul style="margin-left: 20px; margin-bottom: 20px;">
+                    <li>Optimize for low-latency data processing</li>
+                    <li>Use asynchronous programming where possible</li>
+                    <li>Limit the frequency of expensive operations</li>
+                    <li>Implement proper error handling and recovery</li>
+                </ul>
+                
+                <h3>Security Guidelines</h3>
+                <ul style="margin-left: 20px; margin-bottom: 20px;">
+                    <li>Validate all input parameters</li>
+                    <li>Sanitize data before processing</li>
+                    <li>Use secure communication protocols</li>
+                    <li>Implement proper authentication and authorization</li>
+                </ul>
+                
+                <h3>User Experience</h3>
+                <ul style="margin-left: 20px; margin-bottom: 20px;">
+                    <li>Provide clear error messages</li>
+                    <li>Implement meaningful status indicators</li>
+                    <li>Design intuitive configuration forms</li>
+                    <li>Include comprehensive documentation</li>
+                </ul>
+            </div>
+            
+            <!-- More sections would go here -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="logo">
+                        <img src="logo.png" alt="Plotune Logo" style="height: 36px;">
+                        <h1 style="font-size: 1.5rem;">Plotune</h1>
+                    </div>
+                    <p style="margin-top: 20px; color: var(--gray-text); max-width: 300px;">
+                        Empowering engineers, analysts, and researchers with real-time data visualization tools.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h3>Product</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Features</a></li>
+                        <li><a href="extensions.html">Extensions</a></li>
+                        <li><a href="download.html">Download</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="docs.html">Documentation</a></li>
+                        <li><a href="tutorials.html">Tutorials</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="community.html">Community</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="careers.html">Careers</a></li>
+                        <li><a href="legal.html">Legal</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2023 Plotune. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            const nav = document.querySelector('nav ul');
+            nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // Smooth scrolling for sidebar links
+        document.querySelectorAll('.sidebar-nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all links
+                document.querySelectorAll('.sidebar-nav a').forEach(link => {
+                    link.classList.remove('active');
+                });
+                
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                const targetId = this.getAttribute('href');
+                const target = document.querySelector(targetId);
+                
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Highlight active section in sidebar
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.docs-card');
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                
+                if (window.scrollY >= (sectionTop - 150)) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            // Update active link
+            document.querySelectorAll('.sidebar-nav a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${currentSection}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extensions Marketplace | Plotune</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #26A69A;
+            --primary-dark: #00796B;
+            --secondary: #3f51b5;
+            --dark-bg: #121212;
+            --dark-surface: #1e1e1e;
+            --dark-card: #252525;
+            --dark-text: #e0e0e0;
+            --light-text: #f5f5f5;
+            --gray-text: #9e9e9e;
+            --transition: all 0.3s ease;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--dark-surface);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            padding: 15px 0;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--light-text);
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: var(--dark-text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary);
+            transition: var(--transition);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--dark-text);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .marketplace-hero {
+            min-height: 50vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 150px 0 60px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(38, 166, 154, 0.1), rgba(63, 81, 181, 0.1));
+            text-align: center;
+        }
+
+        .marketplace-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: var(--light-text);
+        }
+
+        .marketplace-hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: var(--gray-text);
+        }
+
+        /* Marketplace Controls */
+        .marketplace-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 30px 0;
+            background-color: var(--dark-surface);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            border-radius: 50px;
+            background-color: var(--dark-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--light-text);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(38, 166, 154, 0.2);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-text);
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background-color: var(--dark-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            color: var(--gray-text);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Extensions Grid */
+        .extensions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            padding: 40px 0;
+        }
+
+        .extension-card {
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .extension-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow);
+            border-color: rgba(38, 166, 154, 0.3);
+        }
+
+        .extension-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .extension-tags {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .extension-tag {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .tag-lite {
+            background-color: rgba(38, 166, 154, 0.15);
+            color: var(--primary);
+        }
+
+        .tag-pro {
+            background-color: rgba(63, 81, 181, 0.15);
+            color: var(--secondary);
+        }
+
+        .tag-special {
+            background-color: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+        }
+
+        .extension-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .extension-title h3 {
+            font-size: 1.5rem;
+            color: var(--light-text);
+        }
+
+        .extension-author {
+            font-size: 0.9rem;
+            color: var(--gray-text);
+            margin-bottom: 15px;
+        }
+
+        .extension-description {
+            color: var(--gray-text);
+            margin-bottom: 20px;
+            min-height: 60px;
+        }
+
+        .extension-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--gray-text);
+            font-size: 0.85rem;
+        }
+
+        .extension-body {
+            padding: 20px;
+        }
+
+        .extension-features {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .extension-features li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .extension-features li:last-child {
+            border-bottom: none;
+        }
+
+        .extension-features i {
+            color: var(--primary);
+        }
+
+        .extension-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .extension-actions .btn {
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+
+        .btn-toggle {
+            background-color: rgba(38, 166, 154, 0.15);
+            color: var(--primary);
+        }
+
+        .btn-toggle:hover {
+            background-color: rgba(38, 166, 154, 0.25);
+        }
+
+        .btn-install {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-install:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-buy {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-buy:hover {
+            background-color: #303f9f;
+        }
+
+        .btn-website {
+            background-color: transparent;
+            border: 1px solid var(--gray-text);
+            color: var(--gray-text);
+        }
+
+        .btn-website:hover {
+            border-color: var(--light-text);
+            color: var(--light-text);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-surface);
+            padding: 60px 0 30px;
+            margin-top: 60px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h3 {
+            color: var(--light-text);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: var(--gray-text);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--gray-text);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .extensions-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .marketplace-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .marketplace-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .extensions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .extension-actions .btn {
+                min-width: 100%;
+            }
+            
+            .marketplace-hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <img src="logo.png" alt="Plotune Logo">
+                <h1>Plotune</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="extensions.html" class="active">Extensions</a></li>
+                    <li><a href="docs.html">Docs</a></li>
+                    <li><a href="download.html">Download</a></li>
+                </ul>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Marketplace Hero -->
+    <section class="marketplace-hero">
+        <div class="container">
+            <h1>Extensions Marketplace</h1>
+            <p>Enhance your Plotune experience with powerful extensions. Add new capabilities, connect to more data sources, and customize your workflow.</p>
+        </div>
+    </section>
+
+    <!-- Marketplace Controls -->
+    <div class="marketplace-controls">
+        <div class="container">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="Search extensions...">
+            </div>
+            <div class="filter-controls">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="installed">Installed</button>
+                <button class="filter-btn" data-filter="free">Free</button>
+                <button class="filter-btn" data-filter="premium">Premium</button>
+                <button class="filter-btn" data-filter="recorder">Recorder</button>
+                <button class="filter-btn" data-filter="visualization">Visualization</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Extensions Grid -->
+    <div class="container">
+        <div class="extensions-grid" id="extensions-container">
+            <!-- Extensions will be dynamically loaded here -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="logo">
+                        <img src="logo.png" alt="Plotune Logo" style="height: 36px;">
+                        <h1 style="font-size: 1.5rem;">Plotune</h1>
+                    </div>
+                    <p style="margin-top: 20px; color: var(--gray-text); max-width: 300px;">
+                        Empowering engineers, analysts, and researchers with real-time data visualization tools.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h3>Product</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Features</a></li>
+                        <li><a href="extensions.html">Extensions</a></li>
+                        <li><a href="download.html">Download</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="docs.html">Documentation</a></li>
+                        <li><a href="tutorials.html">Tutorials</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="community.html">Community</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="careers.html">Careers</a></li>
+                        <li><a href="legal.html">Legal</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2023 Plotune. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Import placeholder API script -->
+    <script src="api_extension.js"></script>
+    
+    <script>
+        // DOM Elements
+        const extensionsContainer = document.getElementById('extensions-container');
+        const searchInput = document.getElementById('search-input');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        
+        // Current filter state
+        let currentFilter = 'all';
+        let currentSearch = '';
+        
+        // Function to render extension cards
+        function renderExtensions(extensions) {
+            extensionsContainer.innerHTML = '';
+            
+            extensions.forEach(extension => {
+                // Skip if doesn't match filter
+                if (!matchesFilter(extension)) return;
+                
+                const card = document.createElement('div');
+                card.className = 'extension-card';
+                
+                // Create tags based on extension properties
+                let tagsHTML = '';
+                if (extension.mode === 'hybrid') {
+                    tagsHTML += '<span class="extension-tag tag-special">Hybrid</span>';
+                }
+                if (extension.category === 'Recorder') {
+                    tagsHTML += '<span class="extension-tag tag-lite">Lite</span>';
+                } else if (extension.category === 'Visualization') {
+                    tagsHTML += '<span class="extension-tag tag-pro">Pro</span>';
+                }
+                
+                // Create action buttons based on state
+                let actionsHTML = '';
+                if (extension.installed) {
+                    actionsHTML += `
+                        <button class="btn btn-toggle" data-id="${extension.id}">
+                            <i class="fas fa-power-off"></i> ${extension.enabled ? 'Disable' : 'Enable'}
+                        </button>
+                    `;
+                } else {
+                    actionsHTML += `
+                        <button class="btn btn-install" data-id="${extension.id}">
+                            <i class="fas fa-download"></i> Install
+                        </button>
+                    `;
+                    
+                    if (extension.category === 'Visualization') {
+                        actionsHTML += `
+                            <button class="btn btn-buy" data-id="${extension.id}">
+                                <i class="fas fa-shopping-cart"></i> Buy ($5)
+                            </button>
+                        `;
+                    }
+                }
+                
+                actionsHTML += `
+                    <button class="btn btn-website" data-id="${extension.id}" data-url="${extension.git_path}">
+                        <i class="fas fa-external-link-alt"></i> Website
+                    </button>
+                `;
+                
+                card.innerHTML = `
+                    <div class="extension-header">
+                        <div class="extension-tags">
+                            ${tagsHTML}
+                        </div>
+                        <div class="extension-title">
+                            <h3>${extension.name}</h3>
+                            <span class="extension-version">v${extension.version}</span>
+                        </div>
+                        <div class="extension-author">by ${extension.author}</div>
+                        <div class="extension-description">${extension.description}</div>
+                        <div class="extension-meta">
+                            <span>${extension.category}</span>
+                            <span>Updated: ${formatDate(extension.last_updated)}</span>
+                        </div>
+                    </div>
+                    <div class="extension-body">
+                        <ul class="extension-features">
+                            <li><i class="fas fa-check-circle"></i> ${extension.file_formats.length} file formats supported</li>
+                            <li><i class="fas fa-plug"></i> ${extension.mode} mode</li>
+                            <li><i class="fas fa-server"></i> Runs on ${extension.os}</li>
+                        </ul>
+                        <div class="extension-actions">
+                            ${actionsHTML}
+                        </div>
+                    </div>
+                `;
+                
+                extensionsContainer.appendChild(card);
+            });
+            
+            // Add event listeners to action buttons
+            document.querySelectorAll('.btn-toggle').forEach(btn => {
+                btn.addEventListener('click', toggleExtension);
+            });
+            
+            document.querySelectorAll('.btn-install').forEach(btn => {
+                btn.addEventListener('click', installExtension);
+            });
+            
+            document.querySelectorAll('.btn-buy').forEach(btn => {
+                btn.addEventListener('click', buyExtension);
+            });
+            
+            document.querySelectorAll('.btn-website').forEach(btn => {
+                btn.addEventListener('click', visitWebsite);
+            });
+        }
+        
+        // Filter matching function
+        function matchesFilter(extension) {
+            // Search filter
+            if (currentSearch && 
+                !extension.name.toLowerCase().includes(currentSearch) && 
+                !extension.description.toLowerCase().includes(currentSearch) &&
+                !extension.category.toLowerCase().includes(currentSearch)) {
+                return false;
+            }
+            
+            // Category filters
+            switch(currentFilter) {
+                case 'installed':
+                    return extension.installed;
+                case 'free':
+                    return extension.category === 'Recorder';
+                case 'premium':
+                    return extension.category === 'Visualization';
+                case 'recorder':
+                    return extension.category === 'Recorder';
+                case 'visualization':
+                    return extension.category === 'Visualization';
+                default:
+                    return true;
+            }
+        }
+        
+        // Format date for display
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+        
+        // Action functions
+        function toggleExtension(e) {
+            const id = e.target.dataset.id;
+            const extension = extensionsData.find(ext => ext.id === id);
+            
+            if (extension) {
+                extension.enabled = !extension.enabled;
+                renderExtensions(extensionsData);
+                
+                // Show notification
+                showNotification(`Extension ${extension.enabled ? 'enabled' : 'disabled'}: ${extension.name}`);
+            }
+        }
+        
+        function installExtension(e) {
+            const id = e.target.dataset.id;
+            const extension = extensionsData.find(ext => ext.id === id);
+            
+            if (extension) {
+                extension.installed = true;
+                extension.enabled = true;
+                renderExtensions(extensionsData);
+                
+                // Show notification
+                showNotification(`Extension installed: ${extension.name}`);
+            }
+        }
+        
+        function buyExtension(e) {
+            const id = e.target.dataset.id;
+            const extension = extensionsData.find(ext => ext.id === id);
+            
+            if (extension) {
+                // Show notification
+                showNotification(`Redirecting to purchase: ${extension.name}`);
+                
+                // In a real app, this would redirect to payment page
+                setTimeout(() => {
+                    alert(`Would redirect to purchase page for ${extension.name}`);
+                }, 500);
+            }
+        }
+        
+        function visitWebsite(e) {
+            const url = e.target.dataset.url;
+            
+            // Show notification
+            showNotification(`Opening extension website in new tab`);
+            
+            // Open in new tab
+            window.open(url, '_blank');
+        }
+        
+        // Show notification function
+        function showNotification(message) {
+            // In a real app, this would show a proper notification
+            console.log(`Notification: ${message}`);
+        }
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Filter button event listeners
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.dataset.filter;
+                    renderExtensions(extensionsData);
+                });
+            });
+            
+            // Search input event listener
+            searchInput.addEventListener('input', function() {
+                currentSearch = this.value.toLowerCase();
+                renderExtensions(extensionsData);
+            });
+            
+            // Mobile menu toggle
+            document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+                const nav = document.querySelector('nav ul');
+                nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+            });
+            
+            // Render extensions initially
+            renderExtensions(extensionsData);
+        });
+    </script>
+</body>
+</html>
