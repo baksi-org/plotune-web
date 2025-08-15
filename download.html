@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Plotune | Real-time Data Visualization</title>
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #26A69A;
+            --primary-dark: #00796B;
+            --secondary: #3f51b5;
+            --dark-bg: #121212;
+            --dark-surface: #1e1e1e;
+            --dark-card: #252525;
+            --dark-text: #e0e0e0;
+            --light-text: #f5f5f5;
+            --gray-text: #9e9e9e;
+            --transition: all 0.3s ease;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--dark-surface);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            padding: 15px 0;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--light-text);
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: var(--dark-text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary);
+            transition: var(--transition);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--dark-text);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .download-hero {
+            min-height: 50vh;
+            display: flex;
+            align-items: center;
+            padding: 150px 0 60px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(38, 166, 154, 0.1), rgba(63, 81, 181, 0.1));
+            text-align: center;
+        }
+
+        .download-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: var(--light-text);
+        }
+
+        .download-hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: var(--gray-text);
+        }
+
+        /* Download Options */
+        .download-section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--light-text);
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            color: var(--gray-text);
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        .download-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tab-btn {
+            padding: 12px 25px;
+            background: none;
+            border: none;
+            color: var(--gray-text);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .version-selector {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 15px;
+        }
+
+        .version-btn {
+            padding: 10px 20px;
+            background-color: var(--dark-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            color: var(--gray-text);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .version-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .download-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .download-card {
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .download-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow);
+            border-color: rgba(38, 166, 154, 0.3);
+        }
+
+        .os-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .download-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--light-text);
+        }
+
+        .download-card p {
+            color: var(--gray-text);
+            margin-bottom: 25px;
+            min-height: 60px;
+        }
+
+        .download-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--gray-text);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-block;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(38, 166, 154, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .version-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .stable {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+        }
+
+        .alpha {
+            background-color: rgba(255, 152, 0, 0.2);
+            color: #FF9800;
+        }
+
+        /* Pricing Section */
+        .pricing-section {
+            padding: 80px 0;
+            background-color: var(--dark-surface);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .pricing-card {
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--primary);
+            transform: scale(1.05);
+            box-shadow: var(--shadow);
+        }
+
+        .pricing-card.featured::before {
+            content: 'Popular';
+            position: absolute;
+            top: 15px;
+            right: -30px;
+            background-color: var(--primary);
+            color: white;
+            padding: 5px 30px;
+            transform: rotate(45deg);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .pricing-header {
+            margin-bottom: 25px;
+        }
+
+        .pricing-name {
+            font-size: 1.5rem;
+            color: var(--light-text);
+            margin-bottom: 10px;
+        }
+
+        .pricing-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .pricing-period {
+            color: var(--gray-text);
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin: 30px 0;
+        }
+
+        .pricing-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 80px 0;
+        }
+
+        .faq-grid {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .faq-question {
+            padding: 20px 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--light-text);
+            transition: var(--transition);
+        }
+
+        .faq-question:hover {
+            background-color: rgba(255, 255, 255, 0.03);
+        }
+
+        .faq-question i {
+            transition: var(--transition);
+        }
+
+        .faq-answer {
+            padding: 0 25px;
+            max-height: 0;
+            overflow: hidden;
+            transition: var(--transition);
+            color: var(--gray-text);
+        }
+
+        .faq-item.active .faq-question {
+            color: var(--primary);
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 25px 20px;
+            max-height: 500px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-surface);
+            padding: 60px 0 30px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h3 {
+            color: var(--light-text);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: var(--gray-text);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--gray-text);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .download-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .download-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .download-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .version-selector {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <img src="assets/logo.png" alt="Plotune Logo">
+                <h1>Plotune</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="extensions.html">Extensions</a></li>
+                    <li><a href="docs.html">Docs</a></li>
+                    <li><a href="download.html" class="active">Download</a></li>
+                </ul>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="download-hero">
+        <div class="container">
+            <h1>Download Plotune</h1>
+            <p>Get started with Plotune today. Choose your operating system and version to download the software that fits your needs.</p>
+        </div>
+    </section>
+
+    <!-- Download Options -->
+    <section class="download-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Available Downloads</h2>
+                <p>Select your platform and version to get started with Plotune</p>
+            </div>
+            
+            <div class="download-tabs">
+                <button class="tab-btn active" data-tab="windows">Windows</button>
+                <button class="tab-btn" data-tab="linux">Linux</button>
+            </div>
+            
+            <div class="version-selector">
+                <button class="version-btn active" data-version="stable">Stable (v1.0.0)</button>
+                <button class="version-btn" data-version="alpha">Alpha (v0.9.0-alpha)</button>
+            </div>
+            
+            <!-- Windows Downloads -->
+            <div class="tab-content active" id="windows-tab">
+                <div class="download-grid">
+                    <div class="download-card">
+                        <div class="os-icon">
+                            <i class="fab fa-windows"></i>
+                        </div>
+                        <h3>Windows Installer <span class="version-badge stable">Stable</span></h3>
+                        <p>Recommended for most users. Includes all stable features with automatic updates.</p>
+                        <div class="download-meta">
+                            <span>Version: 1.0.0</span>
+                            <span>Size: 85 MB</span>
+                        </div>
+                        <a href="#" class="btn btn-primary">
+                            <i class="fas fa-download"></i> Download (64-bit)
+                        </a>
+                    </div>
+                    
+                    <div class="download-card">
+                        <div class="os-icon">
+                            <i class="fab fa-windows"></i>
+                        </div>
+                        <h3>Windows Portable <span class="version-badge stable">Stable</span></h3>
+                        <p>Portable version that doesn't require installation. Run directly from any folder.</p>
+                        <div class="download-meta">
+                            <span>Version: 1.0.0</span>
+                            <span>Size: 92 MB</span>
+                        </div>
+                        <a href="#" class="btn btn-secondary">
+                            <i class="fas fa-download"></i> Download Portable
+                        </a>
+                    </div>
+                    
+                    <div class="download-card" id="windows-alpha" style="display: none;">
+                        <div class="os-icon">
+                            <i class="fab fa-windows"></i>
+                        </div>
+                        <h3>Windows Alpha <span class="version-badge alpha">Alpha</span></h3>
+                        <p>Early access to upcoming features. Not recommended for production use.</p>
+                        <div class="download-meta">
+                            <span>Version: 0.9.0-alpha</span>
+                            <span>Size: 88 MB</span>
+                        </div>
+                        <a href="#" class="btn btn-secondary">
+                            <i class="fas fa-download"></i> Download Alpha
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Linux Downloads -->
+            <div class="tab-content" id="linux-tab">
+                <div class="download-grid">
+                    <div class="download-card">
+                        <div class="os-icon">
+                            <i class="fab fa-linux"></i>
+                        </div>
+                        <h3>Linux DEB Package <span class="version-badge stable">Stable</span></h3>
+                        <p>For Debian/Ubuntu based distributions. Install with your package manager.</p>
+                        <div class="download-meta">
+                            <span>Version: 1.0.0</span>
+                            <span>Size: 78 MB</span>
+                        </div>
+                        <a href="#" class="btn btn-primary">
+                            <i class="fas fa-download"></i> Download DEB
+                        </a>
+                    </div>
+                    
+                    <div class="download-card">
+                        <div class="os-icon">
+                            <i class="fab fa-linux"></i>
+                        </div>
+                        <h3>Linux RPM Package <span class="version-badge stable">Stable</span></h3>
+                        <p>For Red Hat/Fedora based distributions. Install with your package manager.</p>
+                        <div class="download-meta">
+                            <span>Version: 1.0.0</span>
+                            <span>Size: 80 MB</span>
+                        </div>
+                        <a href="#" class="btn btn-primary">
+                            <i class="fas fa-download"></i> Download RPM
+                        </a>
+                    </div>
+                    
+                    <div class="download-card" id="linux-alpha" style="display: none;">
+                        <div class="os-icon">
+                            <i class="fab fa-linux"></i>
+                        </div>
+                        <h3>Linux Alpha Build <span class="version-badge alpha">Alpha</span></h3>
+                        <p>Early access build for Linux. Includes experimental features.</p>
+                        <div class="download-meta">
+                            <span>Version: 0.9.0-alpha</span>
+                            <span>Size: 82 MB</span>
+                        </div>
+                        <a href="#" class="btn btn-secondary">
+                            <i class="fas fa-download"></i> Download Alpha
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Simple, Transparent Pricing</h2>
+                <p>Choose the plan that fits your needs and budget</p>
+            </div>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3 class="pricing-name">Lite</h3>
+                        <div class="pricing-price">Free</div>
+                        <div class="pricing-period">Forever</div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>Basic visualization tools</li>
+                        <li>CSV data import</li>
+                        <li>Real-time plotting (1 source)</li>
+                        <li>Community support</li>
+                        <li>5 extension slots</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary">Get Started</a>
+                </div>
+                
+                <div class="pricing-card featured">
+                    <div class="pricing-header">
+                        <h3 class="pricing-name">Pro</h3>
+                        <div class="pricing-price">$5</div>
+                        <div class="pricing-period">per month</div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>All Lite features</li>
+                        <li>Advanced visualization tools</li>
+                        <li>Multiple data sources (UART, CAN, Bluetooth)</li>
+                        <li>Priority support</li>
+                        <li>Unlimited extensions</li>
+                        <li>Auto-save & replay</li>
+                        <li>Custom dashboard layouts</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary">Get Pro</a>
+                </div>
+                
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3 class="pricing-name">Enterprise</h3>
+                        <div class="pricing-price">Custom</div>
+                        <div class="pricing-period">Tailored solution</div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>All Pro features</li>
+                        <li>Custom data source integration</li>
+                        <li>White-label solution</li>
+                        <li>Dedicated support</li>
+                        <li>Team management</li>
+                        <li>On-premises deployment</li>
+                        <li>Custom extension development</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Download FAQs</h2>
+                <p>Common questions about installing and using Plotune</p>
+            </div>
+            
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        What are the system requirements for Plotune?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Plotune runs on Windows 10/11 (64-bit) and most modern Linux distributions. Minimum requirements:</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li><strong>Processor:</strong> 2 GHz dual-core</li>
+                            <li><strong>Memory:</strong> 4 GB RAM</li>
+                            <li><strong>Storage:</strong> 500 MB available space</li>
+                            <li><strong>Graphics:</strong> OpenGL 3.3 compatible</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        What's the difference between stable and alpha versions?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p><strong>Stable versions</strong> (v1.0.0) are production-ready releases that have been thoroughly tested. These are recommended for most users.</p>
+                        <p><strong>Alpha versions</strong> (v0.9.0-alpha) are early access releases that include experimental features. These may be unstable and are intended for testing and development purposes only.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Can I upgrade from Lite to Pro without reinstalling?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! You can upgrade from Lite to Pro at any time without reinstalling the software. Simply purchase a Pro license and enter your activation key in the application settings.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How do I install the Linux version?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>For <strong>.deb</strong> packages (Debian/Ubuntu):</p>
+                        <pre style="background-color: var(--dark-surface); padding: 10px; border-radius: var(--border-radius); margin: 10px 0;">sudo dpkg -i plotune_1.0.0_amd64.deb
+sudo apt install -f</pre>
+                        
+                        <p>For <strong>.rpm</strong> packages (Red Hat/Fedora):</p>
+                        <pre style="background-color: var(--dark-surface); padding: 10px; border-radius: var(--border-radius); margin: 10px 0;">sudo rpm -i plotune-1.0.0-1.x86_64.rpm</pre>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Where can I get older versions of Plotune?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Previous stable versions of Plotune are available in our <a href="#" style="color: var(--primary);">version archive</a>. We recommend always using the latest stable version unless you have specific compatibility requirements.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="logo">
+                        <img src="assets/logo.png" alt="Plotune Logo" style="height: 36px;">
+                        <h1 style="font-size: 1.5rem;">Plotune</h1>
+                    </div>
+                    <p style="margin-top: 20px; color: var(--gray-text); max-width: 300px;">
+                        Empowering engineers, analysts, and researchers with real-time data visualization tools.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h3>Product</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Features</a></li>
+                        <li><a href="extensions.html">Extensions</a></li>
+                        <li><a href="download.html">Download</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="docs.html">Documentation</a></li>
+                        <li><a href="tutorials.html">Tutorials</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="community.html">Community</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="careers.html">Careers</a></li>
+                        <li><a href="legal.html">Legal</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2023 Plotune. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            const nav = document.querySelector('nav ul');
+            nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // Tab functionality
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all tabs
+                tabBtns.forEach(b => b.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Hide all tab contents
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Show selected tab content
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+            });
+        });
+
+        // Version selector functionality
+        const versionBtns = document.querySelectorAll('.version-btn');
+        versionBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all version buttons
+                versionBtns.forEach(b => b.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Get selected version
+                const version = this.getAttribute('data-version');
+                
+                // Toggle alpha downloads visibility
+                if (version === 'alpha') {
+                    document.querySelectorAll('#windows-alpha, #linux-alpha').forEach(el => {
+                        el.style.display = 'block';
+                    });
+                } else {
+                    document.querySelectorAll('#windows-alpha, #linux-alpha').forEach(el => {
+                        el.style.display = 'none';
+                    });
+                }
+            });
+        });
+
+        // FAQ accordion functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                faqItem.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>
