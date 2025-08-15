@@ -1,4 +1,4 @@
-// Mock extensions data
+// api_extension.js (unchanged; this is the static catalog)
 const extensionsData = [
     {
         "name": "Simple Reader",

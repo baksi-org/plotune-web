@@ -7,464 +7,7 @@
     <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #26A69A;
-            --primary-dark: #00796B;
-            --secondary: #3f51b5;
-            --dark-bg: #121212;
-            --dark-surface: #1e1e1e;
-            --dark-card: #252525;
-            --dark-text: #e0e0e0;
-            --light-text: #f5f5f5;
-            --gray-text: #9e9e9e;
-            --transition: all 0.3s ease;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-            --border-radius: 8px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--dark-bg);
-            color: var(--dark-text);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header Styles */
-        header {
-            background-color: var(--dark-surface);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            box-shadow: var(--shadow);
-            padding: 15px 0;
-        }
-
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo img {
-            height: 40px;
-            width: auto;
-        }
-
-        .logo h1 {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--light-text);
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 30px;
-        }
-
-        nav a {
-            color: var(--dark-text);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 16px;
-            transition: var(--transition);
-            position: relative;
-        }
-
-        nav a:hover {
-            color: var(--primary);
-        }
-
-        nav a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--primary);
-            transition: var(--transition);
-        }
-
-        nav a:hover::after {
-            width: 100%;
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--dark-text);
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        /* Hero Section */
-        .marketplace-hero {
-            min-height: 50vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 150px 0 60px;
-            position: relative;
-            overflow: hidden;
-            background: linear-gradient(135deg, rgba(38, 166, 154, 0.1), rgba(63, 81, 181, 0.1));
-            text-align: center;
-        }
-
-        .marketplace-hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-            color: var(--light-text);
-        }
-
-        .marketplace-hero p {
-            font-size: 1.2rem;
-            max-width: 700px;
-            margin: 0 auto 30px;
-            color: var(--gray-text);
-        }
-
-        /* Marketplace Controls */
-        .marketplace-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            padding: 30px 0;
-            background-color: var(--dark-surface);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .search-bar {
-            flex: 1;
-            max-width: 500px;
-            position: relative;
-        }
-
-        .search-bar input {
-            width: 100%;
-            padding: 12px 20px 12px 45px;
-            border-radius: 50px;
-            background-color: var(--dark-card);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--light-text);
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        .search-bar input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(38, 166, 154, 0.2);
-        }
-
-        .search-bar i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--gray-text);
-        }
-
-        .filter-controls {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            padding: 8px 16px;
-            background-color: var(--dark-card);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50px;
-            color: var(--gray-text);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .filter-btn.active, .filter-btn:hover {
-            background-color: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        /* Extensions Grid */
-        .extensions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 30px;
-            padding: 40px 0;
-        }
-
-        .extension-card {
-            background-color: var(--dark-card);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            transition: var(--transition);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            position: relative;
-        }
-
-        .extension-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow);
-            border-color: rgba(38, 166, 154, 0.3);
-        }
-
-        .extension-header {
-            padding: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .extension-tags {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .extension-tag {
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .tag-lite {
-            background-color: rgba(38, 166, 154, 0.15);
-            color: var(--primary);
-        }
-
-        .tag-pro {
-            background-color: rgba(63, 81, 181, 0.15);
-            color: var(--secondary);
-        }
-
-        .tag-special {
-            background-color: rgba(255, 193, 7, 0.15);
-            color: #ffc107;
-        }
-
-        .extension-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .extension-title h3 {
-            font-size: 1.5rem;
-            color: var(--light-text);
-        }
-
-        .extension-author {
-            font-size: 0.9rem;
-            color: var(--gray-text);
-            margin-bottom: 15px;
-        }
-
-        .extension-description {
-            color: var(--gray-text);
-            margin-bottom: 20px;
-            min-height: 60px;
-        }
-
-        .extension-meta {
-            display: flex;
-            justify-content: space-between;
-            color: var(--gray-text);
-            font-size: 0.85rem;
-        }
-
-        .extension-body {
-            padding: 20px;
-        }
-
-        .extension-features {
-            list-style: none;
-            margin-bottom: 25px;
-        }
-
-        .extension-features li {
-            padding: 8px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .extension-features li:last-child {
-            border-bottom: none;
-        }
-
-        .extension-features i {
-            color: var(--primary);
-        }
-
-        .extension-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .extension-actions .btn {
-            flex: 1;
-            min-width: 120px;
-            text-align: center;
-            padding: 10px;
-            font-size: 0.9rem;
-        }
-
-        .btn-toggle {
-            background-color: rgba(38, 166, 154, 0.15);
-            color: var(--primary);
-        }
-
-        .btn-toggle:hover {
-            background-color: rgba(38, 166, 154, 0.25);
-        }
-
-        .btn-install {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .btn-install:hover {
-            background-color: var(--primary-dark);
-        }
-
-        .btn-buy {
-            background-color: var(--secondary);
-            color: white;
-        }
-
-        .btn-buy:hover {
-            background-color: #303f9f;
-        }
-
-        .btn-website {
-            background-color: transparent;
-            border: 1px solid var(--gray-text);
-            color: var(--gray-text);
-        }
-
-        .btn-website:hover {
-            border-color: var(--light-text);
-            color: var(--light-text);
-        }
-
-        /* Footer */
-        footer {
-            background-color: var(--dark-surface);
-            padding: 60px 0 30px;
-            margin-top: 60px;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        .footer-col h3 {
-            color: var(--light-text);
-            margin-bottom: 20px;
-            font-size: 1.3rem;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 12px;
-        }
-
-        .footer-links a {
-            color: var(--gray-text);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .footer-links a:hover {
-            color: var(--primary);
-        }
-
-        .copyright {
-            text-align: center;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            color: var(--gray-text);
-            font-size: 0.9rem;
-        }
-
-        /* Responsive Styles */
-        @media (max-width: 992px) {
-            .extensions-grid {
-                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            }
-        }
-
-        @media (max-width: 768px) {
-            nav ul {
-                display: none;
-            }
-            
-            .mobile-menu-btn {
-                display: block;
-            }
-            
-            .marketplace-hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .marketplace-controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .extensions-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .extension-actions .btn {
-                min-width: 100%;
-            }
-            
-            .marketplace-hero h1 {
-                font-size: 2rem;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="extension_styles.css">
 </head>
 <body>
     <!-- Header -->
@@ -568,7 +111,6 @@
         </div>
     </footer>
 
-    <!-- Import placeholder API script -->
     <script src="api_extension.js"></script>
     <script src="software_watcher.js"></script>
     
@@ -604,9 +146,9 @@
                     tagsHTML += '<span class="extension-tag tag-pro">Pro</span>';
                 }
                 
-                // Create action buttons based on state
+                // Create action buttons based on state and connection
                 let actionsHTML = '';
-                if (extension.installed) {
+                if (backendUrl && extension.installed) {
                     actionsHTML += `
                         <button class="btn btn-toggle" data-id="${extension.id}">
                             <i class="fas fa-power-off"></i> ${extension.enabled ? 'Disable' : 'Enable'}
@@ -666,18 +208,17 @@
             });
             
             // Add event listeners to action buttons
-            document.querySelectorAll('.btn-toggle').forEach(btn => {
-                btn.addEventListener('click', toggleExtension);
-            });
-            
+            if (backendUrl) {
+                document.querySelectorAll('.btn-toggle').forEach(btn => {
+                    btn.addEventListener('click', toggleExtension);
+                });
+            }
             document.querySelectorAll('.btn-install').forEach(btn => {
                 btn.addEventListener('click', installExtension);
             });
-            
             document.querySelectorAll('.btn-buy').forEach(btn => {
                 btn.addEventListener('click', buyExtension);
             });
-            
             document.querySelectorAll('.btn-website').forEach(btn => {
                 btn.addEventListener('click', visitWebsite);
             });
@@ -693,7 +234,10 @@
                 return false;
             }
             
-            // Category filters
+            // Category filters (disable 'installed' filter if no backend)
+            if (!backendUrl && currentFilter === 'installed') {
+                return false; // No installed extensions without backend
+            }
             switch(currentFilter) {
                 case 'installed':
                     return extension.installed;
@@ -716,67 +260,162 @@
             return new Date(dateString).toLocaleDateString(undefined, options);
         }
         
-        // Action functions
-        function toggleExtension(e) {
+        // Fetch and merge extensions
+        async function fetchAndMergeExtensions() {
+            if (!backendUrl) {
+                console.log('No backend connection; showing all extensions as not installed.');
+                return extensionsData.map(ext => ({
+                    ...ext,
+                    installed: false,
+                    enabled: false
+                }));
+            }
+
+            console.log('Fetching extensions status from backend...');
+            try {
+                const response = await fetch(`${backendUrl}/api/extensions`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const localExtensions = await response.json();
+                console.log('Extensions status fetched:', localExtensions);
+
+                // Merge by id
+                return extensionsData.map(ext => {
+                    const local = localExtensions.find(le => le.id === ext.id);
+                    return {
+                        ...ext,
+                        installed: local ? local.installed : false,
+                        enabled: local ? local.enabled : false,
+                        version: local ? local.version : ext.version
+                    };
+                });
+            } catch (err) {
+                console.error('Failed to fetch/merge extensions:', err.message, err.stack);
+                showNotification('Error fetching extension status. Showing catalog.');
+                return extensionsData.map(ext => ({
+                    ...ext,
+                    installed: false,
+                    enabled: false
+                }));
+            }
+        }
+        
+        // Toggle extension (only in connected mode)
+        async function toggleExtension(e) {
+            if (!backendUrl) return; // Shouldn't be called without backend
+
             const id = e.target.dataset.id;
             const extension = extensionsData.find(ext => ext.id === id);
             
             if (extension) {
-                extension.enabled = !extension.enabled;
-                renderExtensions(extensionsData);
+                const newEnabled = !extension.enabled;
+                console.log('Toggling extension:', id, 'to', newEnabled ? 'enabled' : 'disabled');
                 
-                // Show notification
-                showNotification(`Extension ${extension.enabled ? 'enabled' : 'disabled'}: ${extension.name}`);
+                try {
+                    const endpoint = newEnabled ? `/api/start/${id}` : `/api/disable/${id}`;
+                    const response = await fetch(`${backendUrl}${endpoint}`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    if (data.status) {
+                        extension.enabled = newEnabled;
+                        showNotification(`Extension ${newEnabled ? 'enabled' : 'disabled'}: ${extension.name}`);
+                    } else {
+                        throw new Error('Backend operation failed');
+                    }
+                } catch (err) {
+                    console.error('Toggle failed:', err.message, err.stack);
+                    showNotification(`Error toggling ${extension.name}. Please try again.`);
+                    return;
+                }
+                
+                // Refresh and re-render
+                const updatedData = await fetchAndMergeExtensions();
+                renderExtensions(updatedData);
             }
         }
         
-        function installExtension(e) {
+        // Install extension
+        async function installExtension(e) {
             const id = e.target.dataset.id;
             const extension = extensionsData.find(ext => ext.id === id);
             
             if (extension) {
-                extension.installed = true;
-                extension.enabled = true;
-                renderExtensions(extensionsData);
+                console.log('Install clicked for extension:', id);
                 
-                // Show notification
-                showNotification(`Extension installed: ${extension.name}`);
+                if (!backendUrl) {
+                    // Visitor mode: redirect to download page
+                    showNotification(`Redirecting to download page for ${extension.name}`);
+                    window.location.href = 'download.html';
+                    return;
+                }
+                
+                // Connected mode: call API
+                try {
+                    const response = await fetch(`${backendUrl}/api/install/${id}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({})
+                    });
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    extension.installed = true;
+                    extension.enabled = true;
+                    showNotification(`Extension installed: ${extension.name}`);
+                } catch (err) {
+                    console.error('Install failed:', err.message, err.stack);
+                    showNotification(`Error installing ${extension.name}. ${err.message.includes('NotImplementedError') ? 'Install not yet supported on backend.' : 'Please try again.'}`);
+                    return;
+                }
+                
+                // Refresh and re-render
+                const updatedData = await fetchAndMergeExtensions();
+                renderExtensions(updatedData);
             }
         }
         
+        // Buy extension
         function buyExtension(e) {
             const id = e.target.dataset.id;
             const extension = extensionsData.find(ext => ext.id === id);
             
             if (extension) {
-                // Show notification
+                console.log('Buying extension:', id);
                 showNotification(`Redirecting to purchase: ${extension.name}`);
-                
-                // In a real app, this would redirect to payment page
                 setTimeout(() => {
                     alert(`Would redirect to purchase page for ${extension.name}`);
                 }, 500);
             }
         }
         
+        // Visit website
         function visitWebsite(e) {
             const url = e.target.dataset.url;
-            
-            // Show notification
-            showNotification(`Opening extension website in new tab`);
-            
-            // Open in new tab
-            window.open(url, '_blank');
+            if (url) {
+                console.log('Opening website:', url);
+                showNotification(`Opening extension website in new tab`);
+                window.open(url, '_blank');
+            } else {
+                console.warn('No URL for extension:', e.target.dataset.id);
+                showNotification('Error: No website available for this extension.');
+            }
         }
         
-        // Show notification function
+        // Show notification
         function showNotification(message) {
-            // In a real app, this would show a proper notification
             console.log(`Notification: ${message}`);
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
         }
         
         // Initialize page
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             // Filter button event listeners
             filterButtons.forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -799,8 +438,10 @@
                 nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
             });
             
-            // Render extensions initially
-            renderExtensions(extensionsData);
+            // Load and render
+            extensionsContainer.innerHTML = '<div class="loading">Loading extensions...</div>';
+            const updatedData = await fetchAndMergeExtensions();
+            renderExtensions(updatedData);
         });
     </script>
 </body>
