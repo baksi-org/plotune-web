@@ -12,7 +12,7 @@ const extensionsData = [
             "python",
             "__main__.py"
         ],
-        "enabled": true,
+        "enabled": false,
         "last_updated": "2025-06-15",
         "git_path": "https://github.com/plotune/simple-reader",
         "category": "Recorder",
@@ -34,7 +34,7 @@ const extensionsData = [
                 "default": ""
             }
         },
-        "installed": true
+        "installed": false
     },
     {
         "name": "Advanced Plotter",
@@ -73,7 +73,7 @@ const extensionsData = [
                 "default": "Line"
             }
         },
-        "installed": true
+        "installed": false
     },
     {
         "name": "CAN Bus Analyzer",
@@ -87,7 +87,7 @@ const extensionsData = [
             "python",
             "can_main.py"
         ],
-        "enabled": true,
+        "enabled": false,
         "last_updated": "2025-05-30",
         "git_path": "https://github.com/automotive-solutions/can-analyzer",
         "category": "Recorder",
@@ -163,7 +163,7 @@ const extensionsData = [
             "python",
             "bt_hub.py"
         ],
-        "enabled": true,
+        "enabled": false,
         "last_updated": "2025-07-15",
         "git_path": "https://github.com/iot-devices/bluetooth-sensor-hub",
         "category": "Recorder",
@@ -186,7 +186,7 @@ const extensionsData = [
                 "default": "5"
             }
         },
-        "installed": true
+        "installed": false
     },
     {
         "name": "AI Data Insights",
@@ -236,7 +236,7 @@ const extensionsData = [
         "author": "Plotune Official",
         "os": "Windows, Linux, macOS",
         "cmd": ["python", "serial_logger.py"],
-        "enabled": true,
+        "enabled": false,
         "last_updated": "2025-08-20",
         "git_path": "https://github.com/plotune/serial-data-logger",
         "category": "Recorder",
@@ -256,7 +256,7 @@ const extensionsData = [
                 "default": "9600"
             }
         },
-        "installed": true
+        "installed": false
     },
     {
         "name": "Time Series Analyzer",
@@ -298,7 +298,7 @@ const extensionsData = [
         "author": "IoT Solutions",
         "os": "Linux, macOS",
         "cmd": ["python", "mqtt_connect.py"],
-        "enabled": true,
+        "enabled": false,
         "last_updated": "2025-06-25",
         "git_path": "https://github.com/iot-solutions/mqtt-connector",
         "category": "Recorder",
@@ -318,7 +318,7 @@ const extensionsData = [
                 "default": "mqtt://localhost"
             }
         },
-        "installed": true
+        "installed": false
     },
     {
         "name": "Heatmap Generator",
@@ -361,7 +361,7 @@ const extensionsData = [
         "author": "Plotune Official",
         "os": "Windows, Linux, macOS",
         "cmd": ["python", "db_connect.py"],
-        "enabled": true,
+        "enabled": false,
         "last_updated": "2025-07-10",
         "git_path": "https://github.com/plotune/db-connector",
         "category": "Recorder",
@@ -382,7 +382,7 @@ const extensionsData = [
                 "default": "SQLite"
             }
         },
-        "installed": true
+        "installed": false
     },
     {
         "name": "Signal Processor",
@@ -425,7 +425,7 @@ const extensionsData = [
         "author": "NetSec Solutions",
         "os": "Linux, macOS",
         "cmd": ["python", "network_monitor.py"],
-        "enabled": true,
+        "enabled": false,
         "last_updated": "2025-06-10",
         "git_path": "https://github.com/netsec-solutions/network-monitor",
         "category": "Recorder",
@@ -445,7 +445,7 @@ const extensionsData = [
                 "default": "eth0"
             }
         },
-        "installed": true
+        "installed": false
     },
     {
         "name": "Geo Data Plotter",
@@ -488,7 +488,7 @@ const extensionsData = [
         "author": "Plotune Official",
         "os": "Windows, Linux, macOS",
         "cmd": ["python", "data_cleaner.py"],
-        "enabled": true,
+        "enabled": false,
         "last_updated": "2025-07-05",
         "git_path": "https://github.com/plotune/data-cleaner",
         "category": "Recorder",
@@ -508,7 +508,7 @@ const extensionsData = [
                 "default": "3"
             }
         },
-        "installed": true
+        "installed": false
     },
     {
         "name": "Custom Script Runner",
