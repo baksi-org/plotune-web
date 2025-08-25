@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/plotune-web/static/css/main.a89b3bfd.css",
+    "main.js": "/plotune-web/static/js/main.c961229f.js",
+    "static/media/logo.png": "/plotune-web/static/media/logo.68f6b6f816def703f8e0.png",
+    "index.html": "/plotune-web/index.html",
+    "main.a89b3bfd.css.map": "/plotune-web/static/css/main.a89b3bfd.css.map",
+    "main.c961229f.js.map": "/plotune-web/static/js/main.c961229f.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a89b3bfd.css",
+    "static/js/main.c961229f.js"
+  ]
+}
