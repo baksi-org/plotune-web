@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/plotune-web/static/css/main.34a7c9d2.css",
-    "main.js": "/plotune-web/static/js/main.9b823b51.js",
-    "static/media/logo.png": "/plotune-web/static/media/logo.68f6b6f816def703f8e0.png",
-    "index.html": "/plotune-web/index.html",
-    "main.34a7c9d2.css.map": "/plotune-web/static/css/main.34a7c9d2.css.map",
-    "main.9b823b51.js.map": "/plotune-web/static/js/main.9b823b51.js.map"
+    "main.css": "/static/css/main.a89b3bfd.css",
+    "main.js": "/static/js/main.a998cd40.js",
+    "static/media/logo.png": "/static/media/logo.68f6b6f816def703f8e0.png",
+    "index.html": "/index.html",
+    "main.a89b3bfd.css.map": "/static/css/main.a89b3bfd.css.map",
+    "main.a998cd40.js.map": "/static/js/main.a998cd40.js.map"
   },
   "entrypoints": [
-    "static/css/main.34a7c9d2.css",
-    "static/js/main.9b823b51.js"
+    "static/css/main.a89b3bfd.css",
+    "static/js/main.a998cd40.js"
   ]
 }
