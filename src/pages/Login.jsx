@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { toast } from 'react-toastify';
+import api from '../services/api';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -22,8 +22,7 @@ const Login = () => {
     if (!validate()) return;
 
     try {
-      const response = await axios.post('/api/login', { email, password, rememberMe });
-      // Handle success, e.g., store token, redirect to dashboard
+      const response = await api.post('/login', { email, password, rememberMe });
       toast.success('Login successful');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Login failed');
@@ -72,9 +71,6 @@ const Login = () => {
         <div className="space-y-3">
           <button className="w-full py-3 bg-dark-surface border border-white/10 rounded text-light-text hover:bg-white/5">
             <i className="fab fa-google mr-2"></i> Google
-          </button>
-          <button className="w-full py-3 bg-dark-surface border border-white/10 rounded text-light-text hover:bg-white/5">
-            <i className="fab fa-microsoft mr-2"></i> Microsoft
           </button>
           <button className="w-full py-3 bg-dark-surface border border-white/10 rounded text-light-text hover:bg-white/5">
             <i className="fab fa-github mr-2"></i> GitHub

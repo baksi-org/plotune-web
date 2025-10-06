@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import { toast } from 'react-toastify';
 
 const Register = () => {
@@ -111,7 +111,7 @@ const Register = () => {
     setIsSubmitting(true);
     
     try {
-      const response = await axios.post('/api/register', {
+      const response = await api.post('/register', {
         ...formData,
         newsletter,
       });
@@ -438,12 +438,6 @@ const Register = () => {
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
             </svg>
             Google
-          </button>
-          <button className="py-2.5 px-4 bg-dark-surface border border-white/10 rounded-lg text-light-text hover:bg-white/5 transition flex items-center justify-center">
-            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1.999 18.945c-1.119 0-2.027-.908-2.027-2.027s.908-2.027 2.027-2.027 2.027.908 2.027 2.027-.908 2.027-2.027 2.027zm7.947-2.027c0 1.119-.908 2.027-2.027 2.027s-2.027-.908-2.027-2.027.908-2.027 2.027-2.027 2.027.908 2.027 2.027zm-2.027-10.918c-1.119 0-2.027.908-2.027 2.027s.908 2.027 2.027 2.027 2.027-.908 2.027-2.027-.908-2.027-2.027-2.027zm-5.919 0c-1.119 0-2.027.908-2.027 2.027s.908 2.027 2.027 2.027 2.027-.908 2.027-2.027-.908-2.027-2.027-2.027z"/>
-            </svg>
-            Microsoft
           </button>
           <button className="py-2.5 px-4 bg-dark-surface border border-white/10 rounded-lg text-light-text hover:bg-white/5 transition flex items-center justify-center">
             <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
