@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/logo.png';
+import { AuthContext } from '../context/AuthContext'; // Import AuthContext
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Replace with auth context
+  const { user, logout } = useContext(AuthContext); // Use context
+  const isLoggedIn = !!user; // Derive from user
   const location = useLocation();
 
   const toggleMobileMenu = () => {
@@ -17,8 +19,7 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    // Implement logout logic (e.g., clear token, call API)
-    setIsLoggedIn(false);
+    logout();
     setIsDropdownOpen(false);
   };
 
@@ -73,6 +74,16 @@ const Header = () => {
                 About
               </Link>
             </li>
+            {isLoggedIn && (
+              <li>
+                <Link
+                  to="/dashboard"
+                  className={`text-dark-text font-medium text-base hover:text-primary relative transition-colors duration-300 ${location.pathname === '/dashboard' ? 'text-primary after:w-full after:h-0.5 after:bg-primary after:absolute after:bottom-[-5px] after:left-0' : 'after:w-0 after:h-0.5 after:bg-primary after:absolute after:bottom-[-5px] after:left-0 after:transition-all after:duration-300 hover:after:w-full'}`}
+                >
+                  Dashboard
+                </Link>
+              </li>
+            )}
           </ul>
           <div className="relative ml-4">
             <button
@@ -93,6 +104,15 @@ const Header = () => {
                         onClick={() => setIsDropdownOpen(false)}
                       >
                         Profile
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/dashboard"
+                        className="block px-4 py-2 text-gray-text hover:bg-primary/10 hover:text-primary"
+                        onClick={() => setIsDropdownOpen(false)}
+                      >
+                        Dashboard
                       </Link>
                     </li>
                     <li>

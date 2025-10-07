@@ -112,8 +112,17 @@ const Register = () => {
     
     try {
       const response = await api.post('/register', {
-        ...formData,
-        newsletter,
+        full_name: formData.fullName, // Rename fullName to full_name
+        email: formData.email,
+        username: formData.username,
+        password: formData.password,
+        confirm_password: formData.confirmPassword, // Rename confirmPassword to confirm_password
+        sector: formData.sector,
+        country: formData.country,
+        company: formData.company,
+        newsletter_subscribed: newsletter, // Rename newsletter to newsletter_subscribed
+        agreed_to_terms: termsAgreed, // Include termsAgreed
+        mac_address: null // Optional: Include mac_address if needed
       });
       toast.success('Registration successful. Please verify your email.');
       // Redirect to login or verification page
