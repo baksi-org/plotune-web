@@ -1,23 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react'; // Ensure useContext is imported
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 
-const { login } = useContext(AuthContext);
-
 const Login = () => {
-  const [usernameOrEmail, setUsernameOrEmail] = useState(''); // Changed from email to usernameOrEmail
+  const { login } = useContext(AuthContext); // Move useContext inside component
+  const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // Added for password visibility
-  const [isSubmitting, setIsSubmitting] = useState(false); // Added for loading state
+  const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate(); // For redirect after login
+  const navigate = useNavigate();
 
   const validate = () => {
     const newErrors = {};
-    // Validate username_or_email (allow username or email)
     if (!usernameOrEmail) {
       newErrors.usernameOrEmail = 'Username or email is required';
     } else if (usernameOrEmail.includes('@') && !usernameOrEmail.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
@@ -30,40 +28,40 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!validate()) return;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
 
-  setIsSubmitting(true);
-  try {
-    const response = await api.post('/login', {
-      username_or_email: usernameOrEmail,
-      password,
-    });
-    const { access_token, token_type, expires_in } = response.data;
-    const newToken = `${token_type} ${access_token}`;
-    // Fetch user data (from /auth/validate or assume from response)
-    const userResponse = await api.post('/auth/validate', {}, {
-      headers: { Authorization: newToken },
-    });
-    const newUser = userResponse.data; // { message, user_id, username }
-    // Store token
-    if (rememberMe) {
-      localStorage.setItem('token', newToken);
-    } else {
-      sessionStorage.setItem('token', newToken);
+    setIsSubmitting(true);
+    try {
+      const response = await api.post('/login', {
+        username_or_email: usernameOrEmail,
+        password,
+      });
+      const { access_token, token_type, expires_in } = response.data;
+      const newToken = `${token_type} ${access_token}`;
+      // Fetch user data
+      const userResponse = await api.post('/auth/validate', {}, {
+        headers: { Authorization: newToken },
+      });
+      const newUser = userResponse.data; // { message, user_id, username }
+      // Store token
+      if (rememberMe) {
+        localStorage.setItem('token', newToken);
+      } else {
+        sessionStorage.setItem('token', newToken);
+      }
+      // Set auth context
+      login(newToken, newUser);
+      toast.success('Login successful');
+      navigate('/dashboard');
+    } catch (err) {
+      console.error('Error response:', err.response?.data);
+      toast.error(err.response?.data?.detail || 'Login failed');
+    } finally {
+      setIsSubmitting(false);
     }
-    // Set auth context
-    login(newToken, newUser);
-    toast.success('Login successful');
-    navigate('/dashboard');
-  } catch (err) {
-    console.error('Error response:', err.response?.data);
-    toast.error(err.response?.data?.detail || 'Login failed');
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-dark-bg to-gray-900 flex items-center justify-center py-8 px-4">
@@ -74,7 +72,7 @@ const handleSubmit = async (e) => {
           <div>
             <label className="block text-gray-text mb-2 text-sm font-medium">Username or Email</label>
             <input
-              type="text" // Changed from email to text to allow usernames
+              type="text"
               value={usernameOrEmail}
               onChange={(e) => {
                 setUsernameOrEmail(e.target.value);
