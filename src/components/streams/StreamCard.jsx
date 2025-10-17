@@ -1,5 +1,6 @@
 // components/streams/StreamCard.jsx
 import React from 'react';
+import StreamIcon from '../../assets/icons/stream.svg';
 
 const StreamCard = ({ stream, isOwner, onEdit, onShare }) => {
   const getStatusColor = (status) => {
@@ -24,8 +25,12 @@ const StreamCard = ({ stream, isOwner, onEdit, onShare }) => {
       {/* Header */}
       <div className="flex justify-between items-start mb-4">
         <div className="flex items-center">
-          <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center text-primary">
-            🌊
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center text-primary">
+            <img 
+                src={StreamIcon} 
+                alt="Streams" 
+                className="mx-auto mb-2 w-8 h-8 opacity-70 group-hover:opacity-100 transition"
+            />
           </div>
           <div className="ml-3">
             <h4 className="text-light-text font-semibold">{stream.name}</h4>

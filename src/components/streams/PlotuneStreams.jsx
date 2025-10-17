@@ -6,6 +6,7 @@ import { AuthContext } from '../../context/AuthContext';
 import CreateStreamModal from './CreateStreamModal';
 import StreamManagementModal from './StreamManagementModal';
 import StreamCard from './StreamCard';
+import StreamIcon from '../../assets/icons/stream.svg';
 
 const PlotuneStreams = () => {
   const { user, token } = useContext(AuthContext);
@@ -89,7 +90,11 @@ const PlotuneStreams = () => {
         {/* Empty State */}
         {streams.length === 0 && (
           <div className="col-span-full text-center py-12">
-            <div className="text-6xl mb-4">🌊</div>
+            <div className="text-6xl mb-4"><img 
+        src={StreamIcon} 
+        alt="Streams" 
+        className="mx-auto mb-2 w-8 h-8 opacity-70 group-hover:opacity-100 transition"
+      /></div>
             <h3 className="text-lg font-medium text-light-text mb-2">No streams yet</h3>
             <p className="text-gray-text mb-4">Create your first stream to get started</p>
             <button
