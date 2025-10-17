@@ -27,10 +27,10 @@ const PlotuneStreams = () => {
       // ✅ API V1 + Bearer Token + Direkt Response
       const [myStreamsResponse, sharedStreamsResponse] = await Promise.all([
         api.get('/streams/my-streams', {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: token },
         }),
         api.get('/streams/shared-with-me', {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: token },
         })
       ]);
       
@@ -51,7 +51,7 @@ const PlotuneStreams = () => {
   const handleCreateStream = async (streamData) => {
     try {
       const response = await api.post('/streams/create', streamData, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: token },
       });
       
       setStreams(prev => [...prev, response.data]);
