@@ -23,19 +23,26 @@ const PlotuneStreams = () => {
   const fetchStreams = async () => {
     try {
       setLoading(true);
-      // Mock API calls - replace with actual endpoints
-      const myStreamsResponse = await api.get('/streams/my-streams', {
-        headers: { Authorization: token },
-      });
-      const sharedStreamsResponse = await api.get('/streams/shared-with-me', {
-        headers: { Authorization: token },
-      });
       
-      setStreams(myStreamsResponse.data || []);
-      setSharedStreams(sharedStreamsResponse.data || []);
+      // ✅ API V1 + Bearer Token + Direkt Response
+      const [myStreamsResponse, sharedStreamsResponse] = await Promise.all([
+        api.get('/streams/my-streams', {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        api.get('/streams/shared-with-me', {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+      ]);
+      
+      // ✅ Direkt response.data ALMIYORUZ - BEKEND DİREKT ARRAY DÖNÜYOR
+      setStreams(Array.isArray(myStreamsResponse.data) ? myStreamsResponse.data : []);
+      setSharedStreams(Array.isArray(sharedStreamsResponse.data) ? sharedStreamsResponse.data : []);
+      
     } catch (err) {
-      toast.error('Failed to load streams');
       console.error('Error fetching streams:', err);
+      toast.error(err.response?.data?.detail || 'Failed to load streams');
+      setStreams([]);
+      setSharedStreams([]);
     } finally {
       setLoading(false);
     }
@@ -44,13 +51,16 @@ const PlotuneStreams = () => {
   const handleCreateStream = async (streamData) => {
     try {
       const response = await api.post('/streams/create', streamData, {
-        headers: { Authorization: token },
+        headers: { Authorization: `Bearer ${token}` },
       });
-      setStreams([...streams, response.data]);
+      
+      setStreams(prev => [...prev, response.data]);
       setShowCreateModal(false);
-      toast.success('Stream created successfully');
+      toast.success('Stream created successfully!');
+      fetchStreams(); // ✅ Refresh list
     } catch (err) {
-      toast.error('Failed to create stream');
+      console.error('Create error:', err);
+      toast.error(err.response?.data?.detail || 'Failed to create stream');
     }
   };
 
@@ -87,19 +97,14 @@ const PlotuneStreams = () => {
           />
         ))}
         
-        {/* Empty State */}
         {streams.length === 0 && (
           <div className="col-span-full text-center py-12">
-            <div className="text-6xl mb-4"><img 
-        src={StreamIcon} 
-        alt="Streams" 
-        className="mx-auto mb-2 w-8 h-8 opacity-70 group-hover:opacity-100 transition"
-      /></div>
+            <img src={StreamIcon} alt="Streams" className="mx-auto mb-4 w-16 h-16 opacity-50" />
             <h3 className="text-lg font-medium text-light-text mb-2">No streams yet</h3>
             <p className="text-gray-text mb-4">Create your first stream to get started</p>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
+              className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark"
             >
               Create Your First Stream
             </button>
@@ -107,7 +112,7 @@ const PlotuneStreams = () => {
         )}
       </div>
 
-      {/* Shared Streams Section */}
+      {/* Shared Streams */}
       {sharedStreams.length > 0 && (
         <div className="mt-12">
           <h3 className="text-lg font-semibold text-light-text mb-6">Shared With Me</h3>
@@ -126,12 +131,8 @@ const PlotuneStreams = () => {
 
       {/* Modals */}
       {showCreateModal && (
-        <CreateStreamModal
-          onClose={() => setShowCreateModal(false)}
-          onSubmit={handleCreateStream}
-        />
+        <CreateStreamModal onClose={() => setShowCreateModal(false)} onSubmit={handleCreateStream} />
       )}
-
       {activeStream && (
         <StreamManagementModal
           stream={activeStream}
