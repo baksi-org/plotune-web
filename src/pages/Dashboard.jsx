@@ -101,30 +101,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-dark-bg to-gray-900 pt-20 pb-12">
-      {/* Header */}
-      <div className="container mx-auto px-4 mb-8">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-light-text">Dashboard</h1>
-            <p className="text-gray-text mt-2">Welcome back, {userData.full_name || userData.username}!</p>
-          </div>
-          <div className="flex items-center space-x-4 mt-4 md:mt-0">
-            <Link
-              to="/extensions"
-              className="px-4 py-2 bg-primary/20 text-primary rounded-lg hover:bg-primary/30 transition"
-            >
-              Browse Extensions
-            </Link>
-            <Link
-              to="/download"
-              className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
-            >
-              Download App
-            </Link>
-          </div>
-        </div>
-      </div>
-
+      
       <div className="container mx-auto px-4">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar Navigation */}
