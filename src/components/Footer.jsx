@@ -45,7 +45,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="text-center pt-8 border-t border-white/5 text-gray-text text-sm">
-          &copy; 2023 Plotune. All rights reserved.
+          &copy; 2025 Plotune. All rights reserved.
         </div>
       </div>
     </footer>

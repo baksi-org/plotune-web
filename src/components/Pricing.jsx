@@ -2,37 +2,57 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Pricing = () => {
-  const [plans, setPlans] = useState([
-    {
-      name: 'Lite',
-      price: 'Free',
-      period: 'Forever',
-      features: ['Basic visualization tools', 'Basic data import', 'Real-time plotting (1 source)', 'Community support', '5 extension slots'],
-      link: '/download',
-      buttonText: 'Get Started',
-      featured: false,
-    },
-    {
-      name: 'Pro',
-      price: '$5',
-      period: 'per month',
-      features: ['All Lite features', 'Advanced visualization tools', 'Multiple data sources (UART, CAN, Bluetooth)', 'Priority support', 'Unlimited extensions', 'Auto-save & replay', 'Custom dashboard layouts'],
-      link: '/download',
-      buttonText: 'Get Pro',
-      featured: true,
-    },
-    {
-      name: 'Enterprise',
-      price: 'Custom',
-      period: 'Tailored solution',
-      features: ['All Pro features', 'Custom data source integration', 'White-label solution', 'Dedicated support', 'Team management', 'On-premises deployment', 'Custom extension development'],
-      link: '/download',
-      buttonText: 'Contact Sales',
-      featured: false,
-    },
-  ]);
+const plans = [
+  {
+    name: 'Community',
+    price: 'Free',
+    period: '',
+    features: [
+      'Basic visualization tools',
+      'Single data source (UART, CAN, Bluetooth)',
+      'Community support',
+      'Limited streaming available',
+      'Community extensions',
+    ],
+    link: '/download',
+    buttonText: 'Get Started',
+    featured: false,
+  },
+  {
+    name: 'Professional',
+    price: '5$',
+    period: 'Monthly',
+    features: [
+      'All Developer features',
+      'Multiple data sources',
+      'Priority support',
+      'Unlimited extension slots',
+      'Custom dashboard layouts',
+    ],
+    link: '/contact-sales',
+    buttonText: 'Contact Sales',
+    featured: true,
+  },
+  {
+    name: 'Enterprise',
+    price: 'Custom',
+    period: 'Tailored solutions',
+    features: [
+      'All Professional features',
+      'Custom data source integration',
+      'On-premises deployment',
+      'Dedicated support',
+      'Team management',
+      'Custom plugin development',
+    ],
+    link: '/contact-sales',
+    buttonText: 'Contact Sales',
+    featured: false,
+  },
+];
 
-  // Backend'den veri çekmek için (örnek)
+
+  // Backend'den veri çekmek için (örnek) 
   useEffect(() => {
     // axios.get('YOUR_BACKEND_API_ENDPOINT/pricing')
     //   .then(response => setPlans(response.data))

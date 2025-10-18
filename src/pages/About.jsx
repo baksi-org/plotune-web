@@ -10,7 +10,6 @@ const About = () => {
       <AboutHero />
       <Mission />
       <Values />
-      <Cta />
     </>
   );
 };

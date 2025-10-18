@@ -12,13 +12,39 @@ const Features = () => {
   };
 
   const features = [
-    { icon: 'fa-puzzle-piece', title: 'Modular Components', desc: 'Drag-and-drop interface with modular components for building custom data visualization workflows.' },
-    { icon: 'fa-bolt', title: 'Real-time Dashboards', desc: 'Create and monitor dynamic dashboards that update in real-time as new data streams in.' },
-    { icon: 'fa-plug', title: 'Extension System', desc: 'Extend functionality with plugins and extensions from our marketplace.' },
-    { icon: 'fa-sync-alt', title: 'Multi-source Integration', desc: 'Connect to UART, CAN, Bluetooth, databases, and more with unified interface.' },
-    { icon: 'fa-tachometer-alt', title: 'Low-latency Performance', desc: 'Optimized for high-performance data processing with minimal delay.' },
-    { icon: 'fa-history', title: 'Auto-save & Replay', desc: 'Never lose work with auto-save and replay capabilities for data sessions.' },
+    { 
+      icon: 'fa-puzzle-piece', 
+      title: 'Modular Components', 
+      desc: 'Drag-and-drop, resizable, dockable components for building flexible data visualization workflows.' 
+    },
+    { 
+      icon: 'fa-stream', 
+      title: 'Real-time Data Streams', 
+      desc: 'Kafka-based, plugin-enabled streams for real-time industrial and electronic data capture.' 
+    },
+    { 
+      icon: 'fa-plug', 
+      title: 'Extensible Plugins', 
+      desc: 'Extend functionality with backend & frontend plugins, supporting custom data sources and analytics.' 
+    },
+    { 
+      icon: 'fa-sync-alt', 
+      title: 'Multi-source Integration', 
+      desc: 'Connect to UART, CAN, Bluetooth, OBD-II, databases, and IoT sensors via unified plugin API.' 
+    },
+    { 
+      icon: 'fa-tachometer-alt', 
+      title: 'Low-latency Performance', 
+      desc: 'Optimized for high-performance data processing with minimal delay.' 
+    },
+    { 
+      icon: 'fa-shield-alt', 
+      title: 'Secure & Licensed', 
+      desc: 'User-friendly licensing and access control with secure token verification.' 
+    },
   ];
+
+
 
   return (
     <section id="features" className="py-24" ref={ref}>

@@ -16,8 +16,9 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Legal from './pages/Legal';
 import Docs from './pages/Docs';
-import Privacy from './pages/Privacy';
 import Dashboard from './pages/Dashboard'; // New Dashboard page
+import Privacy from './pages/Privacy';
+import ContactPage from './pages/Contact';
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
             <Route path="/legal" element={<Legal />} />
             <Route path="/docs" element={<Docs />} />
             <Route path="/privacy" element={<Privacy />} />
+            <Route path="/contact" element={<ContactPage />} />
             <Route path="/dashboard" element={<Dashboard />} /> {/* New route */}
           </Routes>
           <Footer />
