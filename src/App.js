@@ -1,8 +1,8 @@
-import React from 'react';
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { AuthProvider } from './context/AuthContext'; // Import AuthProvider
+import { AuthProvider } from './context/AuthContext';
 import Home from './pages/Home';
 import Extensions from './pages/Extensions';
 import RedirectPage from './pages/RedirectPage';
@@ -16,19 +16,46 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Legal from './pages/Legal';
 import Docs from './pages/Docs';
-import Dashboard from './pages/Dashboard'; // New Dashboard page
+import Dashboard from './pages/Dashboard';
 import Privacy from './pages/Privacy';
 import ContactPage from './pages/Contact';
 import VerifyEmail from './pages/VerifyEmail';
-import ForgotPassword from './pages/ForgotPassword'
+import ForgotPassword from './pages/ForgotPassword';
+
+// Scroll'u en üste alan bileşen
+import { useLayoutEffect } from 'react'; // useEffect yerine
+
+const ScrollToTop = () => {
+  const { pathname, hash } = useLocation();
+
+  useLayoutEffect(() => {
+    // Hash varsa → smooth scroll
+    if (hash) {
+      const element = document.querySelector(hash);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+    }
+
+    // Yoksa → en üste, smooth ama hızlı
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }, [pathname, hash]);
+
+  return null;
+};
 
 function App() {
   return (
-    <AuthProvider> {/* Wrap with AuthProvider */}
+    <AuthProvider>
       <Router>
         <div className="app">
           <DevBanner />
           <Header />
+          <ScrollToTop /> {/* Buraya ekle */}
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/extensions" element={<Extensions />} />
@@ -46,7 +73,7 @@ function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/reset-password" element={<ForgotPassword />} />
-            <Route path="/dashboard" element={<Dashboard />} /> {/* New route */}
+            <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
           <Footer />
         </div>

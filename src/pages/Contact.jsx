@@ -5,12 +5,12 @@ const ContactPage = () => {
 
   const contacts = [
       {
-          icon: 'fa-envelope',
-          title: 'Email',
-          info: 'contact@plotune.net',
-          link: 'mailto:contact@plotune.net',
-          bgColor: 'from-green-500 to-teal-600'
-        },
+      icon: 'fa-envelope',
+      title: 'Email',
+      info: 'contact@plotune.net',
+      link: 'mailto:contact@plotune.net',
+      bgColor: 'from-green-500 to-teal-600'
+    },
     {
       icon: 'fa-map-marker-alt',
       title: 'Address',
@@ -18,6 +18,13 @@ const ContactPage = () => {
       link: 'https://goo.gl/maps/XXXXXXX',
       bgColor: 'from-orange-500 to-red-600'
     },
+    {
+      title: 'Discord',
+      icon: 'fa-brands fa-discord',
+      info: 'Join our Discord Server',
+      link: 'https://discord.gg/plotune',
+      bgColor: 'from-indigo-500 to-purple-600'
+    }
   ];
 
   return (
