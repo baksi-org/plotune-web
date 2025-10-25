@@ -17,43 +17,71 @@ const Login = () => {
   const location = useLocation();
 
   // 1. URL'den token'ı al (OAuth sonrası)
-  useEffect(() => {
-    let token = null;
-
-    // 1. ?token=... (normal query string)
-    const queryParams = new URLSearchParams(location.search);
-    token = queryParams.get('token');
-
-    // 2. #/login?token=... (HashRouter)
-    if (!token && location.hash) {
-      const hashParams = new URLSearchParams(location.hash.replace('#', ''));
-      token = hashParams.get('token');
-    }
-
+  const extractTokenFromLocation = () => {
+    // 1) Normal query string: ?token=...
+    const queryParams = new URLSearchParams(window.location.search);
+    let token = queryParams.get('token');
     if (token) {
-      handleOAuthLogin(token);
+      // remove token from URL (so it doesn't stay in history)
+      const clean = window.location.origin + window.location.pathname + window.location.hash.split('?')[0];
+      window.history.replaceState({}, document.title, clean);
+      return token;
     }
-  }, [location]);
+
+    // 2) HashRouter case: "#/auth/success?token=..." veya "#/auth/success&token=..."
+    const hash = window.location.hash || '';
+    const qIdx = hash.indexOf('?');
+    if (qIdx !== -1) {
+      const qs = hash.slice(qIdx + 1); // token=...
+      const params = new URLSearchParams(qs);
+      token = params.get('token');
+      if (token) {
+        // clean hash (remove query part)
+        const cleanHash = hash.slice(0, qIdx); // e.g. "#/auth/success"
+        const clean = window.location.origin + window.location.pathname + cleanHash;
+        window.history.replaceState({}, document.title, clean);
+        return token;
+      }
+    }
+
+    return null;
+  };
+
+  useEffect(() => {
+    const token = extractTokenFromLocation();
+    if (token) handleOAuthLogin(token);
+  }, [location.key]); // watch location.key to run on navigation changes
 
   // 2. OAuth sonrası token ile giriş
-  const handleOAuthLogin = async (token) => {
+  const handleOAuthLogin = async (rawToken) => {
     setIsSubmitting(true);
     try {
+      // Normalize: backend döndürdüğü token JWT string ise burada "Bearer <token>" formatına çevir
+      const bearer = rawToken.startsWith('Bearer ') ? rawToken : `Bearer ${rawToken}`;
+
+      // validate endpoint çoğu implementasyonda Authorization: Bearer <token> bekler
       const userResponse = await api.post('/auth/validate', {}, {
-        headers: { Authorization: token }
+        headers: { Authorization: bearer }
       });
       const user = userResponse.data;
 
-      // Token'ı sakla
-      localStorage.setItem('token', token);
-      login(token, user);
+      // Token'ı sakla (AuthContext/login beklediği formata göre)
+      if (rememberMe) {
+        localStorage.setItem('token', bearer);
+      } else {
+        sessionStorage.setItem('token', bearer);
+      }
+
+      // login fonksiyonunu token + user ile çağır (AuthContext bunu kullanacak)
+      login(bearer, user, rememberMe);
 
       toast.success('Logged in successfully!');
       navigate('/dashboard');
     } catch (err) {
       console.error('OAuth login failed:', err);
       toast.error(err.response?.data?.detail || 'Authentication failed');
-      // Token hatalı → normal login formuna dön
+
+      // temizle (göstergeyi geri al)
       setIsSubmitting(false);
     }
   };
