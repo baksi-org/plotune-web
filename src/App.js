@@ -20,6 +20,7 @@ import Dashboard from './pages/Dashboard'; // New Dashboard page
 import Privacy from './pages/Privacy';
 import ContactPage from './pages/Contact';
 import VerifyEmail from './pages/VerifyEmail';
+import ForgotPassword from './pages/ForgotPassword'
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/verify-email" element={<VerifyEmail />} />
+            <Route path="/reset-password" element={<ForgotPassword />} />
             <Route path="/dashboard" element={<Dashboard />} /> {/* New route */}
           </Routes>
           <Footer />
