@@ -137,8 +137,8 @@ const Register = () => {
   const { strength } = passwordStrength();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-dark-bg to-gray-900 flex items-center justify-center py-8 px-4">
-      <div className="bg-dark-card rounded-2xl p-8 border border-white/10 shadow-xl w-full max-w-md">
+    <div className="min-h-screen mt-20 bg-gradient-to-br from-dark-bg to-gray-900 flex items-center justify-center py-8 px-4">
+      <div className="bg-dark-card rounded-2xl p-8 border border-white/10 shadow-xl">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-light-text mb-2">Create Account</h1>
           <p className="text-gray-text">Join Plotune to access exclusive features</p>

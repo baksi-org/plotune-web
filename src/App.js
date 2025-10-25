@@ -19,6 +19,7 @@ import Docs from './pages/Docs';
 import Dashboard from './pages/Dashboard'; // New Dashboard page
 import Privacy from './pages/Privacy';
 import ContactPage from './pages/Contact';
+import VerifyEmail from './pages/VerifyEmail';
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
             <Route path="/docs" element={<Docs />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/dashboard" element={<Dashboard />} /> {/* New route */}
           </Routes>
           <Footer />

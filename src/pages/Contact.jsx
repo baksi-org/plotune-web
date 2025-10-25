@@ -8,15 +8,8 @@ const ContactPage = () => {
           icon: 'fa-envelope',
           title: 'Email',
           info: 'contact@plotune.net',
-          link: 'mailto:kantrveysel@gmail.com',
+          link: 'mailto:contact@plotune.net',
           bgColor: 'from-green-500 to-teal-600'
-        },
-        {
-          icon: 'fa-phone',
-          title: 'Phone - not available',
-          info: '+90 123 456 7890',
-          link: 'tel:+901234567890',
-          bgColor: 'from-blue-500 to-purple-600'
         },
     {
       icon: 'fa-map-marker-alt',

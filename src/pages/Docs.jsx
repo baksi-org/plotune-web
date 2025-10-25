@@ -4,25 +4,31 @@ import localOpenApiSpec from "../data/openapi.json";
 
 const Docs = () => {
   const [activeSection, setActiveSection] = useState('rest-api');
-  const [apiDocs, setApiDocs] = useState(null);
+  const [apiDocs, setApiDocs] = useState(localOpenApiSpec); // Default to local spec
   const [expandedEndpoints, setExpandedEndpoints] = useState({});
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [dataSource, setDataSource] = useState('local'); // 'local' or 'server'
 
-  // OpenAPI.json verisini çekme
-  useEffect(() => {
-    const fetchOpenApiDocs = async () => {
-      const response = await fetch("http://127.0.0.1:8000/openapi.json").catch(() => null);
-
-      if (response && response.ok) {
+  // Refresh from Plotune server
+  const refreshFromServer = async () => {
+    setIsRefreshing(true);
+    try {
+      const response = await fetch("http://127.0.0.1:8000/openapi.json");
+      if (response.ok) {
         const data = await response.json();
         setApiDocs(data);
+        setDataSource('server');
+        console.log("Successfully fetched from server");
       } else {
-        console.warn("Could not fetch from server, using local JSON.");
-        setApiDocs(localOpenApiSpec);
+        console.warn("Server response not OK, keeping current data");
       }
-    };
-
-    fetchOpenApiDocs();
-  }, []);
+    } catch (error) {
+      console.error("Error fetching from server:", error);
+      // Keep current data on error
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   // Scroll için mevcut mantığı koru
   useEffect(() => {
@@ -284,9 +290,28 @@ const Docs = () => {
       <section className="min-h-[50vh] flex flex-col justify-center py-36 bg-gradient-to-br from-primary/10 to-secondary/10 text-center">
         <div className="container mx-auto px-5">
           <h1 className="text-4xl md:text-5xl font-bold text-light-text mb-5">Plotune Gateway API</h1>
-          <p className="text-lg text-gray-text max-w-2xl mx-auto">
+          <p className="text-lg text-gray-text max-w-2xl mx-auto mb-6">
             Explore the Plotune Gateway API endpoints and data models for building extensions.
           </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <button
+              onClick={refreshFromServer}
+              disabled={isRefreshing}
+              className={`px-6 py-3 rounded-custom font-semibold transition-all duration-300 flex items-center gap-2 ${
+                isRefreshing 
+                  ? 'bg-gray-500 cursor-not-allowed' 
+                  : 'bg-primary hover:bg-primary/80 text-white'
+              }`}
+            >
+              <i className={`fas ${isRefreshing ? 'fa-spinner fa-spin' : 'fa-sync-alt'}`}></i>
+              {isRefreshing ? 'Refreshing...' : 'Refresh from Plotune'}
+            </button>
+            <div className="text-sm text-gray-text">
+              Current data: <span className={dataSource === 'server' ? 'text-green-400' : 'text-yellow-400'}>
+                {dataSource === 'server' ? 'Live from Plotune' : 'Local version'}
+              </span>
+            </div>
+          </div>
         </div>
       </section>
       <div className="container mx-auto px-5 flex flex-col md:flex-row gap-10 py-12">
