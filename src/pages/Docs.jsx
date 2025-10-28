@@ -6,31 +6,7 @@ const Docs = () => {
   const [activeSection, setActiveSection] = useState('rest-api');
   const [apiDocs, setApiDocs] = useState(localOpenApiSpec); // Default to local spec
   const [expandedEndpoints, setExpandedEndpoints] = useState({});
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [dataSource, setDataSource] = useState('local'); // 'local' or 'server'
 
-  // Refresh from Plotune server
-  const refreshFromServer = async () => {
-    setIsRefreshing(true);
-    try {
-      const response = await fetch("http://127.0.0.1:8000/openapi.json");
-      if (response.ok) {
-        const data = await response.json();
-        setApiDocs(data);
-        setDataSource('server');
-        console.log("Successfully fetched from server");
-      } else {
-        console.warn("Server response not OK, keeping current data");
-      }
-    } catch (error) {
-      console.error("Error fetching from server:", error);
-      // Keep current data on error
-    } finally {
-      setIsRefreshing(false);
-    }
-  };
-
-  // Scroll için mevcut mantığı koru
   useEffect(() => {
     const handleScroll = () => {
       const sections = document.querySelectorAll('.docs-card');
@@ -299,25 +275,6 @@ const Docs = () => {
       <div className="container mx-auto px-5 flex flex-col md:flex-row gap-10 py-12">
         
         <div className="md:w-64 flex-shrink-0 md:sticky md:top-24">
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button
-              onClick={refreshFromServer}
-              disabled={isRefreshing}
-              className={`px-6 py-3 rounded-custom font-semibold transition-all duration-300 flex items-center gap-2 ${
-                isRefreshing 
-                  ? 'bg-gray-500 cursor-not-allowed' 
-                  : 'bg-primary hover:bg-primary/80 text-white'
-              }`}
-            >
-              <i className={`fas ${isRefreshing ? 'fa-spinner fa-spin' : 'fa-sync-alt'}`}></i>
-              {isRefreshing ? '' : 'Plotune'}
-            </button>
-            <div className="text-sm text-gray-text">
-              Current data: <span className={dataSource === 'server' ? 'text-green-400' : 'text-yellow-400'}>
-                {dataSource === 'server' ? 'Live from Plotune' : 'Local version'}
-              </span>
-            </div>
-          </div>
           <ul className="bg-dark-card rounded-custom overflow-hidden border border-white/5">
             {getSidebarItems().map((item) => (
               <li key={item.id}>

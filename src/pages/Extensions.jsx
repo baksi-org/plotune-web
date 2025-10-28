@@ -8,8 +8,6 @@ const Extensions = () => {
   const [extensions, setExtensions] = useState([]);
   const [currentFilter, setCurrentFilter] = useState('all');
   const [currentSearch, setCurrentSearch] = useState('');
-  const [isCoreAppConnected, setIsCoreAppConnected] = useState(false);
-  const [coreAppUrl, setCoreAppUrl] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const sampleExtensions = [
@@ -137,96 +135,11 @@ const Extensions = () => {
 
   useEffect(() => {
     console.log("Initializing Extensions component...");
-    initializeExtensions();
+    loadExtensions();
   }, []);
 
-  const initializeExtensions = async () => {
-    const connectionResult = await checkCoreAppConnection();
-    
-    if (connectionResult.connected) {
-      console.log("Proceeding with core app connection");
-      await loadExtensionsWithCoreApp(connectionResult.url);
-    } else {
-      console.log("Proceeding without core app connection");
-      await loadExtensionsWithoutCoreApp();
-    }
-  };
-
-  const checkCoreAppConnection = async () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const hashParams = new URLSearchParams(window.location.hash.split('?')[1]);
-    const conn = urlParams.get("conn") || hashParams.get("conn");
-
-    console.log("Conn parameter:", conn);
-
-    if (!conn) {
-      console.log("No conn parameter found");
-      return { connected: false, url: null };
-    }
-
-    try {
-      const decoded = atob(conn);
-      const [ip, port] = decoded.split(":");
-      
-      if (!ip || !port || isNaN(port) || !/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(ip)) {
-        throw new Error("Invalid IP or port format");
-      }
-
-      const url = `http://${ip}:${port}`;
-      console.log("Testing connection to:", url);
-
-      try {
-        const response = await fetch(`${url}/api/extensions`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (response.ok) {
-          console.log("✅ Core app connection successful");
-          setIsCoreAppConnected(true);
-          setCoreAppUrl(url);
-          return { connected: true, url };
-        } else {
-          console.log("❌ Core app responded with error:", response.status);
-        }
-      } catch (error) {
-        console.log("❌ Core app connection failed:", error.message);
-      }
-    } catch (error) {
-      console.error("Invalid conn parameter:", error.message);
-    }
-
-    setIsCoreAppConnected(false);
-    setCoreAppUrl(null);
-    return { connected: false, url: null };
-  };
-
-  const loadExtensionsWithCoreApp = async (url) => {
-    console.log("Loading extensions WITH core app integration");
-    setLoading(true);
-    
-    try {
-      // First load the base extensions
-      const baseExtensions = await loadBaseExtensions();
-      console.log("Base extensions loaded:", baseExtensions.length);
-      
-      // Then update their status from core app
-      const updatedExtensions = await updateExtensionsStatus(baseExtensions, url);
-      console.log("Extensions after core app update:", updatedExtensions);
-      
-      setExtensions(updatedExtensions);
-    } catch (error) {
-      console.error("Error loading extensions with core app:", error);
-      toast.error("Failed to load extensions");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadExtensionsWithoutCoreApp = async () => {
-    console.log("Loading extensions WITHOUT core app integration");
+  const loadExtensions = async () => {
+    console.log("Loading extensions...");
     setLoading(true);
     
     try {
@@ -234,7 +147,7 @@ const Extensions = () => {
       setExtensions(baseExtensions);
     } catch (error) {
       console.error("Error loading extensions:", error);
-      toast.error("Failed to load extensions");
+      // toast.error("Failed to load extensions");
     } finally {
       setLoading(false);
     }
@@ -271,61 +184,6 @@ const Extensions = () => {
     }
   };
 
-  const updateExtensionsStatus = async (extensionsList, url) => {
-    try {
-      console.log("Fetching installed extensions from core app...");
-      const response = await fetch(`${url}/api/extensions`);
-      
-      if (!response.ok) {
-        throw new Error(`Core app returned ${response.status}`);
-      }
-      
-      const coreExtensions = await response.json();
-      console.log("Core app extensions:", coreExtensions);
-      
-      // Create a map for quick lookup by app_id
-      const coreExtensionsMap = {};
-      coreExtensions.forEach(ext => {
-        coreExtensionsMap[ext.id] = ext;
-      });
-      
-      console.log("Core extensions map:", coreExtensionsMap);
-      
-      const updatedExtensions = extensionsList.map(ext => {
-        const coreExt = coreExtensionsMap[ext.app_id];
-        
-        if (coreExt) {
-          console.log(`✅ Found core app match for: ${ext.name} (app_id: ${ext.app_id})`, {
-            coreData: coreExt,
-            willUpdate: {
-              installed: coreExt.installed !== undefined ? coreExt.installed : true,
-              enabled: coreExt.enabled !== undefined ? coreExt.enabled : false
-            }
-          });
-          
-          return {
-            ...ext,
-            installed: coreExt.installed !== undefined ? coreExt.installed : true,
-            enabled: coreExt.enabled !== undefined ? coreExt.enabled : false,
-            version: coreExt.version || ext.version
-          };
-        } else {
-          console.log(`❌ No core app match for: ${ext.name} (app_id: ${ext.app_id})`);
-        }
-        
-        return ext;
-      });
-      
-      console.log("Final extensions state:", updatedExtensions);
-      return updatedExtensions;
-      
-    } catch (error) {
-      console.error("Error updating extensions status from core app:", error);
-      toast.error("Failed to sync with Plotune software");
-      return extensionsList;
-    }
-  };
-
   const matchesFilter = (extension) => {
     if (currentSearch) {
       const searchLower = currentSearch.toLowerCase();
@@ -339,11 +197,7 @@ const Extensions = () => {
       if (!matchesSearch) return false;
     }
 
-    if (!isCoreAppConnected && currentFilter === 'installed') return false;
-
     switch (currentFilter) {
-      case 'installed':
-        return extension.installed;
       case 'free':
         return extension.premium_level === 0;
       case 'premium':
@@ -367,60 +221,26 @@ const Extensions = () => {
     }
   };
 
-  const executeCustomUrl = (url) => {
-    console.log("Executing custom URL:", url);
-    window.location.href = url;
-    
-    setTimeout(() => {
-      if (!document.hidden) {
-        console.log("Custom URL might have failed");
-        toast.info("If the action didn't work, please ensure Plotune software is running.");
-      }
-    }, 1000);
-  };
-
-  const toggleExtension = async (id) => {
-    if (!isCoreAppConnected) {
-      toast.info('Please connect to Plotune software to manage extensions.');
-      return;
-    }
-
-    const extension = extensions.find(ext => ext.id === id);
-    if (!extension) return;
-
-    const newEnabled = !extension.enabled;
-    const action = newEnabled ? 'enable' : 'disable';
-    const customUrl = `plotune://${action}?id=${extension.app_id}&source=market`;
-
-    executeCustomUrl(customUrl);
-    
-    // Optimistic update
-    setExtensions(prev => prev.map(ext => 
-      ext.id === id ? { ...ext, enabled: newEnabled } : ext
-    ));
-    
-    toast.success(`Extension ${action}d: ${extension.name}`);
-  };
-
   const installExtension = async (id) => {
     const extension = extensions.find(ext => ext.id === id);
     if (!extension) return;
 
-    if (!isCoreAppConnected) {
-      toast.info(`Redirecting to download page for ${extension.name}`);
-      window.open('/#/download', '_blank');
-      return;
-    }
-
     const customUrl = `plotune://install?repo=${encodeURIComponent(extension.deployment)}&method=github&source=market`;
-    executeCustomUrl(customUrl);
     
-    // Optimistic update
-    setExtensions(prev => prev.map(ext => 
-      ext.id === id ? { ...ext, installed: true, enabled: true } : ext
-    ));
+    console.log("Attempting to install via custom URL:", customUrl);
     
-    toast.success(`Extension installation started: ${extension.name}`);
+    // Önce custom URL'yi deneyelim
+    window.location.href = customUrl;
+    
+    // Fallback: Eğer custom URL çalışmazsa (bir süre sonra hala bu sayfadaysak) download sayfasına yönlendir
+    setTimeout(() => {
+      // Hala bu sayfadaysak ve sayfa gizli değilse, custom URL başarısız olmuş demektir
+      if (!document.hidden) {
+        console.log("Custom URL failed, redirecting to download page");
+        // toast.info("Plotune not detected. Redirecting to download page...");
+        window.open('/#/download', '_blank');
+      }
+    }, 1500);
   };
 
   const buyExtension = (id) => {
@@ -452,15 +272,7 @@ const Extensions = () => {
   console.log("Current state:", { 
     extensionsCount: extensions.length, 
     filteredCount: filteredExtensions.length,
-    isCoreAppConnected, 
-    coreAppUrl,
-    loading,
-    extensions: extensions.map(ext => ({
-      name: ext.name,
-      app_id: ext.app_id,
-      installed: ext.installed,
-      enabled: ext.enabled
-    }))
+    loading
   });
 
   return (
@@ -473,13 +285,10 @@ const Extensions = () => {
         setCurrentSearch={setCurrentSearch}
         extensionCount={filteredExtensions.length}
         totalCount={extensions.length}
-        isCoreAppConnected={isCoreAppConnected}
       />
       <ExtensionsGrid
         extensions={filteredExtensions}
         loading={loading}
-        isCoreAppConnected={isCoreAppConnected}
-        toggleExtension={toggleExtension}
         installExtension={installExtension}
         buyExtension={buyExtension}
         visitWebsite={visitWebsite}

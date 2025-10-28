@@ -3,8 +3,6 @@ import React from 'react';
 const ExtensionsGrid = ({ 
   extensions, 
   loading, 
-  isCoreAppConnected, 
-  toggleExtension, 
   installExtension, 
   buyExtension, 
   visitWebsite, 
@@ -98,11 +96,6 @@ const ExtensionsGrid = ({
                         </span>
                       )}
                     </div>
-                    {extension.installed && (
-                      <span className="px-2 py-1 rounded bg-green-500/15 text-green-400 text-xs font-semibold">
-                        Installed
-                      </span>
-                    )}
                   </div>
 
                   {/* Extension info */}
@@ -130,11 +123,6 @@ const ExtensionsGrid = ({
                   {/* Stats */}
                   <div className="flex justify-between text-xs text-gray-text mb-3">
                     <span>v{extension.version}</span>
-                    {extension.installed && (
-                      <span className={extension.enabled ? 'text-green-400' : 'text-orange-400'}>
-                        {extension.enabled ? '● Enabled' : '● Disabled'}
-                      </span>
-                    )}
                   </div>
 
                   {/* Tags */}
@@ -164,44 +152,28 @@ const ExtensionsGrid = ({
 
                   {/* Action Buttons */}
                   <div className="space-y-2">
-                    {isCoreAppConnected && extension.installed ? (
+                    {extension.premium_level === 2 ? (
                       <button
-                        onClick={() => toggleExtension(extension.id)}
-                        className={`w-full py-2.5 px-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
-                          extension.enabled 
-                            ? 'bg-orange-500/15 text-orange-400 hover:bg-orange-500/25' 
-                            : 'bg-primary/15 text-primary hover:bg-primary/25'
-                        }`}
+                        onClick={() => buyExtension(extension.id)}
+                        className="w-full py-2.5 px-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg font-medium hover:from-purple-600 hover:to-purple-700 transition-all duration-200 flex items-center justify-center gap-2"
                       >
-                        <i className={`fas ${extension.enabled ? 'fa-pause' : 'fa-play'}`}></i>
-                        {extension.enabled ? 'Disable' : 'Enable'}
+                        <i className="fas fa-shopping-cart"></i>
+                        Buy - ${extension.price}
+                      </button>
+                    ) : extension.premium_level === 1 ? (
+                      <button
+                        onClick={() => buyExtension(extension.id)}
+                        className="w-full py-2.5 px-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-medium hover:from-blue-600 hover:to-blue-700 transition-all duration-200 flex items-center justify-center gap-2"
+                      >
+                        Upgrade
                       </button>
                     ) : (
-                      <>
-                        {extension.premium_level === 2 ? (
-                          <button
-                            onClick={() => buyExtension(extension.id)}
-                            className="w-full py-2.5 px-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg font-medium hover:from-purple-600 hover:to-purple-700 transition-all duration-200 flex items-center justify-center gap-2"
-                          >
-                            <i className="fas fa-shopping-cart"></i>
-                            Buy - ${extension.price}
-                          </button>
-                        ) : extension.premium_level === 1 ? (
-                          <button
-                            onClick={() => buyExtension(extension.id)}
-                            className="w-full py-2.5 px-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-medium hover:from-blue-600 hover:to-blue-700 transition-all duration-200 flex items-center justify-center gap-2"
-                          >
-                            Upgrade
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => installExtension(extension.id)}
-                            className="w-full py-2.5 px-4 bg-gradient-to-r from-primary to-primary-dark text-white rounded-lg font-medium hover:from-primary-dark hover:to-primary transition-all duration-200 flex items-center justify-center gap-2"
-                          >
-                            {isCoreAppConnected ? 'Install' : 'Download Plotune'}
-                          </button>
-                        )}
-                      </>
+                      <button
+                        onClick={() => installExtension(extension.id)}
+                        className="w-full py-2.5 px-4 bg-gradient-to-r from-primary to-primary-dark text-white rounded-lg font-medium hover:from-primary-dark hover:to-primary transition-all duration-200 flex items-center justify-center gap-2"
+                      >
+                        Install
+                      </button>
                     )}
 
                     <div className="flex gap-2">
