@@ -3,7 +3,7 @@ import React from 'react';
 const ExtensionsGrid = ({ 
   extensions, 
   loading, 
-  backendUrl, 
+  isCoreAppConnected, 
   toggleExtension, 
   installExtension, 
   buyExtension, 
@@ -35,6 +35,10 @@ const ExtensionsGrid = ({
       'Analysis': 'bg-orange-500/15 text-orange-400',
       'Integration': 'bg-teal-500/15 text-teal-400',
       'Utility': 'bg-indigo-500/15 text-indigo-400',
+      'Generator': 'bg-pink-500/15 text-pink-400',
+      'Reader': 'bg-cyan-500/15 text-cyan-400',
+      'Processor': 'bg-amber-500/15 text-amber-400',
+      'Communication': 'bg-lime-500/15 text-lime-400',
       'Other': 'bg-gray-500/15 text-gray-400'
     };
     return colors[category] || colors['Other'];
@@ -76,7 +80,7 @@ const ExtensionsGrid = ({
             return (
               <div
                 key={extension.id}
-                className="bg-dark-card rounded-xl overflow-hidden border border-white/5 hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 group"
+                className="bg-dark-card rounded-xl overflow-hidden border border-white/5 hover:border-primary/25 hover:shadow-2xl transition-all duration-300 group"
               >
                 <div className="p-5 border-b border-white/5">
                   {/* Header with badges */}
@@ -107,6 +111,9 @@ const ExtensionsGrid = ({
                       src={extension.logo} 
                       alt={extension.name}
                       className="w-12 h-12 rounded-lg object-cover flex-shrink-0"
+                      onError={(e) => {
+                        e.target.src = 'https://via.placeholder.com/48x48/2D3748/1A202C?text=PL';
+                      }}
                     />
                     <div className="flex-1 min-w-0">
                       <h3 className="text-lg font-semibold text-light-text truncate">
@@ -122,15 +129,12 @@ const ExtensionsGrid = ({
 
                   {/* Stats */}
                   <div className="flex justify-between text-xs text-gray-text mb-3">
-                    <div className="flex items-center gap-1">
-                      <i className="fas fa-star text-yellow-400"></i>
-                      <span>{extension.rating}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <i className="fas fa-download"></i>
-                      <span>{extension.download_count.toLocaleString()}</span>
-                    </div>
                     <span>v{extension.version}</span>
+                    {extension.installed && (
+                      <span className={extension.enabled ? 'text-green-400' : 'text-orange-400'}>
+                        {extension.enabled ? '● Enabled' : '● Disabled'}
+                      </span>
+                    )}
                   </div>
 
                   {/* Tags */}
@@ -160,7 +164,7 @@ const ExtensionsGrid = ({
 
                   {/* Action Buttons */}
                   <div className="space-y-2">
-                    {backendUrl && extension.installed ? (
+                    {isCoreAppConnected && extension.installed ? (
                       <button
                         onClick={() => toggleExtension(extension.id)}
                         className={`w-full py-2.5 px-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
@@ -194,7 +198,7 @@ const ExtensionsGrid = ({
                             onClick={() => installExtension(extension.id)}
                             className="w-full py-2.5 px-4 bg-gradient-to-r from-primary to-primary-dark text-white rounded-lg font-medium hover:from-primary-dark hover:to-primary transition-all duration-200 flex items-center justify-center gap-2"
                           >
-                            Install
+                            {isCoreAppConnected ? 'Install' : 'Download Plotune'}
                           </button>
                         )}
                       </>
@@ -213,7 +217,7 @@ const ExtensionsGrid = ({
                         className="flex-1 py-2 px-3 border border-gray-600 text-gray-300 rounded-lg hover:border-gray-400 hover:text-white transition-all duration-200 text-sm flex items-center justify-center gap-1"
                       >
                         <i className="fas fa-external-link-alt"></i>
-                        Website
+                        Details
                       </button>
                     </div>
                   </div>

@@ -1,12 +1,14 @@
-import React from 'react';
+// ExtensionsGrid component'inde MarketplaceControls'a isCoreAppConnected prop'unu geçtiğinizden emin olun
+// MarketplaceControls component'inde bağlantı durumunu gösteren kısım:
 
-const MarketplaceControls = ({
-  currentFilter,
-  setCurrentFilter,
-  currentSearch,
-  setCurrentSearch,
-  extensionCount,
-  totalCount
+const MarketplaceControls = ({ 
+  currentFilter, 
+  setCurrentFilter, 
+  currentSearch, 
+  setCurrentSearch, 
+  extensionCount, 
+  totalCount,
+  isCoreAppConnected 
 }) => {
   const filters = [
     { key: 'all', label: 'All Extensions', icon: 'fa-grid' },
@@ -24,6 +26,24 @@ const MarketplaceControls = ({
   return (
     <div className="bg-dark-card border-b border-white/5">
       <div className="container mx-auto px-5 py-6">
+        {/* Header with connection status */}
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
+          <div className="flex items-center gap-4">
+            <h2 className="text-2xl font-bold text-light-text">
+              Extensions
+              <span className="text-gray-text text-lg font-normal ml-2">
+                ({extensionCount}/{totalCount})
+              </span>
+            </h2>
+            {isCoreAppConnected && (
+              <span className="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm font-medium flex items-center gap-2">
+                <i className="fas fa-plug text-xs"></i>
+                Connected to Plotune
+              </span>
+            )}
+          </div>
+        </div>
+
         {/* Search Bar */}
         <div className="relative max-w-2xl mx-auto mb-6">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -62,11 +82,6 @@ const MarketplaceControls = ({
               {filter.label}
             </button>
           ))}
-        </div>
-
-        {/* Results Count */}
-        <div className="text-center mt-4 text-sm text-gray-text">
-          Showing {extensionCount} of {totalCount} extensions
         </div>
       </div>
     </div>

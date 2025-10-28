@@ -293,7 +293,13 @@ const Docs = () => {
           <p className="text-lg text-gray-text max-w-2xl mx-auto mb-6">
             Explore the Plotune Gateway API endpoints and data models for building extensions.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+
+        </div>
+      </section>
+      <div className="container mx-auto px-5 flex flex-col md:flex-row gap-10 py-12">
+        
+        <div className="md:w-64 flex-shrink-0 md:sticky md:top-24">
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button
               onClick={refreshFromServer}
               disabled={isRefreshing}
@@ -304,7 +310,7 @@ const Docs = () => {
               }`}
             >
               <i className={`fas ${isRefreshing ? 'fa-spinner fa-spin' : 'fa-sync-alt'}`}></i>
-              {isRefreshing ? 'Refreshing...' : 'Refresh from Plotune'}
+              {isRefreshing ? '' : 'Plotune'}
             </button>
             <div className="text-sm text-gray-text">
               Current data: <span className={dataSource === 'server' ? 'text-green-400' : 'text-yellow-400'}>
@@ -312,10 +318,6 @@ const Docs = () => {
               </span>
             </div>
           </div>
-        </div>
-      </section>
-      <div className="container mx-auto px-5 flex flex-col md:flex-row gap-10 py-12">
-        <div className="md:w-64 flex-shrink-0 md:sticky md:top-24">
           <ul className="bg-dark-card rounded-custom overflow-hidden border border-white/5">
             {getSidebarItems().map((item) => (
               <li key={item.id}>

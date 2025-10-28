@@ -8,83 +8,127 @@ const Extensions = () => {
   const [extensions, setExtensions] = useState([]);
   const [currentFilter, setCurrentFilter] = useState('all');
   const [currentSearch, setCurrentSearch] = useState('');
-  const [backendUrl, setBackendUrl] = useState(null);
+  const [isCoreAppConnected, setIsCoreAppConnected] = useState(false);
+  const [coreAppUrl, setCoreAppUrl] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Güncellenmiş örnek extensions
   const sampleExtensions = [
     {
-      id: '4ca800c2-75cc-4134-8dbd-950361c0e674',
-      app_id: 'uart_recorder',
-      name: 'UART Recorder',
-      version: '1.2.0',
+      id: '0b2f25a9-3a7e-4e72-b8e4-1a7b7a4dbb01',
+      app_id: 'random_data_stream',
+      name: 'Random Data Stream',
+      version: '1.0.0',
       core_version: '>=1.0.0',
       author: 'Plotune Team',
-      description: 'Advanced UART serial communication recording and analysis tool with real-time data visualization and export capabilities.',
-      category: 'Recorder',
-      tags: ['serial', 'recording', 'analysis', 'real-time'],
+      description: 'Generates synthetic data for testing and simulation of live signal environments.',
+      category: 'Generator',
+      tags: ['random', 'data', 'simulation', 'testing'],
       os: ["Linux", "Windows"],
       last_updated: '2024-01-15',
-      repo: 'https://github.com/plotune/uart-recorder',
-      logo: 'https://i.imgur.com/Zr5Oo4S.png',
-      deployment: 'https://github.com/plotune/uart-recorder/releases/download/v1.2.0/uart_recorder.exe',
-      signature: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz...',
-      web: 'https://plotune.net/uart-recorder',
-      documentation: 'https://docs.plotune.net/uart-recorder',
-      premium_level: 0, // 0: free, 1: premium, 2: enterprise, 3: hidden
-      is_verified: true,
-      rating: 4.8,
-      download_count: 12450,
-      installed: false,
-      enabled: false,
-      price: 0
-    },
-    {
-      id: '9b1d6f4e-2c3a-4f5b-8f7e-123456789abc',
-      app_id: 'data_visualizer_pro',
-      name: 'Data Visualizer Pro',
-      version: '2.1.0',
-      core_version: '>=1.2.0',
-      author: 'Plotune Analytics',
-      description: 'Professional data visualization toolkit with advanced charting, real-time dashboards, and custom widget support.',
-      category: 'Visualization',
-      tags: ['charts', 'dashboard', 'analytics', 'real-time'],
-      os: ["Windows", "Linux"],
-      last_updated: '2024-01-10',
-      repo: 'https://github.com/plotune/data-visualizer',
+      repo: 'https://github.com/plotune/random-data-stream',
       logo: 'https://i.imgur.com/C4l2RaF.jpeg',
-      deployment: 'https://github.com/plotune/data-visualizer/releases/download/v2.1.0/data_visualizer_pro.exe',
+      deployment: 'https://ext.plotune.net/public/random_data_stream.zip',
       signature: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz...',
-      web: 'https://plotune.net/data-visualizer',
-      premium_level: 1, // Premium package
+      web: 'https://plotune.net/random-data-stream',
+      documentation: 'https://docs.plotune.net/random-data-stream',
+      premium_level: 0,
       is_verified: true,
-      rating: 4.9,
-      download_count: 8920,
       installed: false,
       enabled: false,
       price: 0
     },
     {
-      id: '2b3c4d5e-6f7a-8b9c-0d1e-234567890fgh',
-      app_id: 'automation_toolkit',
-      name: 'Automation Toolkit',
-      version: '1.5.0',
+      id: '4ca800c2-75cc-4134-8dbd-950361c0e675',
+      app_id: 'simple_reader',
+      name: 'Simple Reader',
+      version: '1.0.0',
       core_version: '>=1.0.0',
-      author: 'Automation Labs',
-      description: 'Powerful automation framework for repetitive tasks with scripting support and workflow automation.',
-      category: 'Utility',
-      tags: ['automation', 'scripting', 'workflow', 'productivity'],
-      os: ["Windows", "Linux"],
-      last_updated: '2024-01-08',
-      repo: 'https://github.com/plotune/automation-toolkit',
-      logo: 'https://i.imgur.com/D4e5fG3.png',
-      deployment: 'https://github.com/plotune/automation-toolkit/releases/download/v1.5.0/automation_toolkit.exe',
+      author: 'Plotune Team',
+      description: 'Reads PLTX and various file formats for quick data visualization and analysis.',
+      category: 'Reader',
+      tags: ['reader', 'file', 'pltx', 'import'],
+      os: ["Linux", "Windows"],
+      last_updated: '2024-01-15',
+      repo: 'https://github.com/plotune/simple-reader',
+      logo: 'https://i.imgur.com/C4l2RaF.jpeg',
+      deployment: 'https://ext.plotune.net/public/simple_reader.zip',
       signature: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz...',
-      web: 'https://plotune.net/automation',
-      premium_level: 0, // Free
-      is_verified: false,
-      rating: 4.3,
-      download_count: 5670,
+      web: 'https://plotune.net/simple-reader',
+      documentation: 'https://docs.plotune.net/simple-reader',
+      premium_level: 0,
+      is_verified: true,
+      installed: false,
+      enabled: false,
+      price: 0
+    },
+    {
+      id: '5e9f22a1-1b34-4d31-a922-b0f7b5de3a81',
+      app_id: 'table_reader',
+      name: 'Table Reader',
+      version: '1.0.0',
+      core_version: '>=1.0.0',
+      author: 'Plotune Team',
+      description: 'Handles tabular data sources such as CSV, XLSX, and TSV for structured analysis.',
+      category: 'Reader',
+      tags: ['table', 'csv', 'excel', 'data'],
+      os: ["Linux", "Windows"],
+      last_updated: '2024-01-15',
+      repo: 'https://github.com/plotune/table-reader',
+      logo: 'https://i.imgur.com/C4l2RaF.jpeg',
+      deployment: 'https://ext.plotune.net/public/table_reader.zip',
+      signature: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz...',
+      web: 'https://plotune.net/table-reader',
+      documentation: 'https://docs.plotune.net/table-reader',
+      premium_level: 0,
+      is_verified: true,
+      installed: false,
+      enabled: false,
+      price: 0
+    },
+    {
+      id: '7d6b1d3e-46b4-40c0-8c03-9d60b12a6b14',
+      app_id: 'ffmpeg_extension',
+      name: 'FFmpeg Extension',
+      version: '1.0.0',
+      core_version: '>=1.0.0',
+      author: 'Plotune Team',
+      description: 'Adds advanced video and audio processing capabilities using FFmpeg integration.',
+      category: 'Processor',
+      tags: ['ffmpeg', 'video', 'audio', 'media'],
+      os: ["Linux", "Windows"],
+      last_updated: '2024-01-15',
+      repo: 'https://github.com/plotune/ffmpeg-extension',
+      logo: 'https://i.imgur.com/C4l2RaF.jpeg',
+      deployment: 'https://ext.plotune.net/public/ffmpeg_extension.zip',
+      signature: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz...',
+      web: 'https://plotune.net/ffmpeg-extension',
+      documentation: 'https://docs.plotune.net/ffmpeg-extension',
+      premium_level: 0,
+      is_verified: true,
+      installed: false,
+      enabled: false,
+      price: 0
+    },
+    {
+      id: '9f3a5c94-2eab-4821-b68c-1a927ae8cda2',
+      app_id: 'embedded_basic',
+      name: 'Embedded Basic',
+      version: '1.0.0',
+      core_version: '>=1.0.0',
+      author: 'Plotune Team',
+      description: 'Provides UART and embedded system communication capabilities for hardware interfacing.',
+      category: 'Communication',
+      tags: ['uart', 'embedded', 'communication', 'hardware'],
+      os: ["Linux", "Windows"],
+      last_updated: '2024-01-15',
+      repo: 'https://github.com/plotune/embedded-basic',
+      logo: 'https://i.imgur.com/C4l2RaF.jpeg',
+      deployment: 'https://ext.plotune.net/public/embedded_basic.zip',
+      signature: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz...',
+      web: 'https://plotune.net/embedded-basic',
+      documentation: 'https://docs.plotune.net/embedded-basic',
+      premium_level: 0,
+      is_verified: true,
       installed: false,
       enabled: false,
       price: 0
@@ -93,112 +137,196 @@ const Extensions = () => {
 
   useEffect(() => {
     console.log("Initializing Extensions component...");
-    initializeBackendConnection();
-    loadMarketExtensions();
+    initializeExtensions();
   }, []);
 
-  const initializeBackendConnection = () => {
-    let tempBackendUrl = null;
-    const params = new URLSearchParams(window.location.search);
-    const conn = params.get("conn");
+  const initializeExtensions = async () => {
+    const connectionResult = await checkCoreAppConnection();
+    
+    if (connectionResult.connected) {
+      console.log("Proceeding with core app connection");
+      await loadExtensionsWithCoreApp(connectionResult.url);
+    } else {
+      console.log("Proceeding without core app connection");
+      await loadExtensionsWithoutCoreApp();
+    }
+  };
+
+  const checkCoreAppConnection = async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const hashParams = new URLSearchParams(window.location.hash.split('?')[1]);
+    const conn = urlParams.get("conn") || hashParams.get("conn");
 
     console.log("Conn parameter:", conn);
 
-    if (conn) {
-      try {
-        const decoded = atob(conn);
-        const [ip, port] = decoded.split(":");
-        if (!ip || !port || isNaN(port) || !/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(ip)) {
-          throw new Error("Invalid IP or port");
-        }
-        tempBackendUrl = `http://${ip}:${port}`;
-        console.log("Backend URL set:", tempBackendUrl);
-      } catch (err) {
-        console.error("Invalid conn param:", err.message);
-        tempBackendUrl = null;
-        console.warn("No valid backend connection; running in visitor mode.");
-      }
-    } else {
-      console.log("No conn param; running in visitor mode.");
+    if (!conn) {
+      console.log("No conn parameter found");
+      return { connected: false, url: null };
     }
 
-    setBackendUrl(tempBackendUrl);
+    try {
+      const decoded = atob(conn);
+      const [ip, port] = decoded.split(":");
+      
+      if (!ip || !port || isNaN(port) || !/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(ip)) {
+        throw new Error("Invalid IP or port format");
+      }
+
+      const url = `http://${ip}:${port}`;
+      console.log("Testing connection to:", url);
+
+      try {
+        const response = await fetch(`${url}/api/extensions`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          console.log("✅ Core app connection successful");
+          setIsCoreAppConnected(true);
+          setCoreAppUrl(url);
+          return { connected: true, url };
+        } else {
+          console.log("❌ Core app responded with error:", response.status);
+        }
+      } catch (error) {
+        console.log("❌ Core app connection failed:", error.message);
+      }
+    } catch (error) {
+      console.error("Invalid conn parameter:", error.message);
+    }
+
+    setIsCoreAppConnected(false);
+    setCoreAppUrl(null);
+    return { connected: false, url: null };
   };
 
-  const loadMarketExtensions = async () => {
-    console.log("Attempting to load extensions from market API...");
+  const loadExtensionsWithCoreApp = async (url) => {
+    console.log("Loading extensions WITH core app integration");
     setLoading(true);
+    
     try {
-      const response = await fetch('https://api.plotune.net/api/extensions');
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const marketExtensions = await response.json();
-      console.log("Market extensions loaded:", marketExtensions.length);
+      // First load the base extensions
+      const baseExtensions = await loadBaseExtensions();
+      console.log("Base extensions loaded:", baseExtensions.length);
       
-      const filteredExtensions = marketExtensions
-        .filter(ext => ext.premium_level !== 3)
-        .map(ext => ({ 
-          ...ext, 
-          installed: false, 
-          enabled: false 
-        }));
+      // Then update their status from core app
+      const updatedExtensions = await updateExtensionsStatus(baseExtensions, url);
+      console.log("Extensions after core app update:", updatedExtensions);
       
-      setExtensions(filteredExtensions);
-      
-      // If backend connection exists, update statuses
-      if (backendUrl) {
-        await checkBackendExtensions(backendUrl, filteredExtensions);
-      }
-    } catch (err) {
-      console.error('Error fetching from market API:', err);
-      // toast.warn('Unable to fetch from market API. Loading sample extensions.');
-      loadSampleExtensions();
+      setExtensions(updatedExtensions);
+    } catch (error) {
+      console.error("Error loading extensions with core app:", error);
+      toast.error("Failed to load extensions");
     } finally {
       setLoading(false);
     }
   };
 
-  const loadSampleExtensions = () => {
-    console.log("Loading sample extensions...");
-    const updatedExtensions = sampleExtensions
-      .filter(ext => ext.premium_level !== 3)
-      .map(ext => ({ 
-        ...ext, 
-        installed: false, 
-        enabled: false 
-      }));
+  const loadExtensionsWithoutCoreApp = async () => {
+    console.log("Loading extensions WITHOUT core app integration");
+    setLoading(true);
     
-    setExtensions(updatedExtensions);
-    console.log("Sample extensions loaded:", updatedExtensions.length);
+    try {
+      const baseExtensions = await loadBaseExtensions();
+      setExtensions(baseExtensions);
+    } catch (error) {
+      console.error("Error loading extensions:", error);
+      toast.error("Failed to load extensions");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const checkBackendExtensions = async (url, currentExtensions = extensions) => {
+  const loadBaseExtensions = async () => {
     try {
-      console.log("Checking backend for extension status...");
-      const response = await fetch(`${url}/api/extensions`);
-      if (!response.ok) throw new Error('Failed to fetch extension status');
-      const localExtensions = await response.json();
+      console.log("Fetching from market API...");
+      const response = await fetch('https://api.plotune.net/api/extensions');
       
-      console.log("Backend extensions found:", localExtensions.length);
+      if (!response.ok) {
+        throw new Error(`Market API returned ${response.status}`);
+      }
       
-      setExtensions(currentExtensions.map(ext => {
-        const local = localExtensions.find(le => le.id === ext.id);
-        return {
+      const marketExtensions = await response.json();
+      console.log("Market API response:", marketExtensions);
+      
+      return marketExtensions
+        .filter(ext => ext.premium_level !== 3)
+        .map(ext => ({
           ...ext,
-          installed: local ? local.installed : false,
-          enabled: local ? local.enabled : false,
-          version: local ? local.version : ext.version,
-        };
-      }));
-    } catch (err) {
-      console.error('Error fetching extension status from backend:', err);
-      toast.error('Error fetching extension status. Showing catalog.');
+          installed: false,
+          enabled: false
+        }));
+    } catch (error) {
+      console.log("Market API failed, using sample extensions:", error.message);
+      return sampleExtensions
+        .filter(ext => ext.premium_level !== 3)
+        .map(ext => ({
+          ...ext,
+          installed: false,
+          enabled: false
+        }));
+    }
+  };
+
+  const updateExtensionsStatus = async (extensionsList, url) => {
+    try {
+      console.log("Fetching installed extensions from core app...");
+      const response = await fetch(`${url}/api/extensions`);
+      
+      if (!response.ok) {
+        throw new Error(`Core app returned ${response.status}`);
+      }
+      
+      const coreExtensions = await response.json();
+      console.log("Core app extensions:", coreExtensions);
+      
+      // Create a map for quick lookup by app_id
+      const coreExtensionsMap = {};
+      coreExtensions.forEach(ext => {
+        coreExtensionsMap[ext.id] = ext;
+      });
+      
+      console.log("Core extensions map:", coreExtensionsMap);
+      
+      const updatedExtensions = extensionsList.map(ext => {
+        const coreExt = coreExtensionsMap[ext.app_id];
+        
+        if (coreExt) {
+          console.log(`✅ Found core app match for: ${ext.name} (app_id: ${ext.app_id})`, {
+            coreData: coreExt,
+            willUpdate: {
+              installed: coreExt.installed !== undefined ? coreExt.installed : true,
+              enabled: coreExt.enabled !== undefined ? coreExt.enabled : false
+            }
+          });
+          
+          return {
+            ...ext,
+            installed: coreExt.installed !== undefined ? coreExt.installed : true,
+            enabled: coreExt.enabled !== undefined ? coreExt.enabled : false,
+            version: coreExt.version || ext.version
+          };
+        } else {
+          console.log(`❌ No core app match for: ${ext.name} (app_id: ${ext.app_id})`);
+        }
+        
+        return ext;
+      });
+      
+      console.log("Final extensions state:", updatedExtensions);
+      return updatedExtensions;
+      
+    } catch (error) {
+      console.error("Error updating extensions status from core app:", error);
+      toast.error("Failed to sync with Plotune software");
+      return extensionsList;
     }
   };
 
   const matchesFilter = (extension) => {
-    // Search filter
     if (currentSearch) {
       const searchLower = currentSearch.toLowerCase();
       const matchesSearch = 
@@ -211,8 +339,7 @@ const Extensions = () => {
       if (!matchesSearch) return false;
     }
 
-    // Category filters
-    if (!backendUrl && currentFilter === 'installed') return false;
+    if (!isCoreAppConnected && currentFilter === 'installed') return false;
 
     switch (currentFilter) {
       case 'installed':
@@ -240,8 +367,20 @@ const Extensions = () => {
     }
   };
 
+  const executeCustomUrl = (url) => {
+    console.log("Executing custom URL:", url);
+    window.location.href = url;
+    
+    setTimeout(() => {
+      if (!document.hidden) {
+        console.log("Custom URL might have failed");
+        toast.info("If the action didn't work, please ensure Plotune software is running.");
+      }
+    }, 1000);
+  };
+
   const toggleExtension = async (id) => {
-    if (!backendUrl) {
+    if (!isCoreAppConnected) {
       toast.info('Please connect to Plotune software to manage extensions.');
       return;
     }
@@ -250,56 +389,44 @@ const Extensions = () => {
     if (!extension) return;
 
     const newEnabled = !extension.enabled;
+    const action = newEnabled ? 'enable' : 'disable';
+    const customUrl = `plotune://${action}?id=${extension.app_id}&source=market`;
 
-    try {
-      const endpoint = newEnabled ? `/api/start/${id}` : `/api/disable/${id}`;
-      const response = await fetch(`${backendUrl}${endpoint}`);
-      if (!response.ok) throw new Error('Failed to toggle extension');
-      const data = await response.json();
-      if (data.status) {
-        setExtensions(prev => prev.map(ext => 
-          ext.id === id ? { ...ext, enabled: newEnabled } : ext
-        ));
-        toast.success(`Extension ${newEnabled ? 'enabled' : 'disabled'}: ${extension.name}`);
-      }
-    } catch (err) {
-      toast.error(`Error toggling ${extension.name}.`);
-    }
+    executeCustomUrl(customUrl);
+    
+    // Optimistic update
+    setExtensions(prev => prev.map(ext => 
+      ext.id === id ? { ...ext, enabled: newEnabled } : ext
+    ));
+    
+    toast.success(`Extension ${action}d: ${extension.name}`);
   };
 
   const installExtension = async (id) => {
     const extension = extensions.find(ext => ext.id === id);
     if (!extension) return;
 
-    if (!backendUrl) {
+    if (!isCoreAppConnected) {
       toast.info(`Redirecting to download page for ${extension.name}`);
       window.open('/#/download', '_blank');
       return;
     }
 
-    try {
-      const response = await fetch(`${backendUrl}/api/install/${id}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}),
-      });
-      
-      if (!response.ok) throw new Error('Failed to install extension');
-      
-      setExtensions(prev => prev.map(ext => 
-        ext.id === id ? { ...ext, installed: true, enabled: true } : ext
-      ));
-      toast.success(`Extension installed: ${extension.name}`);
-    } catch (err) {
-      toast.error(`Error installing ${extension.name}. Please try again.`);
-    }
+    const customUrl = `plotune://install?repo=${encodeURIComponent(extension.deployment)}&method=github&source=market`;
+    executeCustomUrl(customUrl);
+    
+    // Optimistic update
+    setExtensions(prev => prev.map(ext => 
+      ext.id === id ? { ...ext, installed: true, enabled: true } : ext
+    ));
+    
+    toast.success(`Extension installation started: ${extension.name}`);
   };
 
   const buyExtension = (id) => {
     const extension = extensions.find(ext => ext.id === id);
     if (extension) {
       toast.info(`Redirecting to purchase: ${extension.name} - $${extension.price}`);
-      // Gerçek uygulamada ödeme sayfasına yönlendir
       window.open(`https://plotune.net/purchase/${extension.app_id}`, '_blank');
     }
   };
@@ -325,8 +452,15 @@ const Extensions = () => {
   console.log("Current state:", { 
     extensionsCount: extensions.length, 
     filteredCount: filteredExtensions.length,
-    backendUrl, 
-    loading 
+    isCoreAppConnected, 
+    coreAppUrl,
+    loading,
+    extensions: extensions.map(ext => ({
+      name: ext.name,
+      app_id: ext.app_id,
+      installed: ext.installed,
+      enabled: ext.enabled
+    }))
   });
 
   return (
@@ -339,11 +473,12 @@ const Extensions = () => {
         setCurrentSearch={setCurrentSearch}
         extensionCount={filteredExtensions.length}
         totalCount={extensions.length}
+        isCoreAppConnected={isCoreAppConnected}
       />
       <ExtensionsGrid
         extensions={filteredExtensions}
         loading={loading}
-        backendUrl={backendUrl}
+        isCoreAppConnected={isCoreAppConnected}
         toggleExtension={toggleExtension}
         installExtension={installExtension}
         buyExtension={buyExtension}
