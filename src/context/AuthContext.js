@@ -7,17 +7,39 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
 
   useEffect(() => {
-    // Load token from storage on mount
     const storedToken = localStorage.getItem('token') || sessionStorage.getItem('token');
     if (storedToken) {
       setToken(storedToken);
-      // Optionally fetch user data here
+      // Optionally fetch user data here if needed
     }
   }, []);
 
-  const login = (newToken, newUser) => {
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      if (e.key === 'token') {
+        if (e.newValue === null) {
+          logout();
+        } else {
+          setToken(e.newValue);
+          // Optionally re-fetch user data or trigger a re-render/fetch in consumers
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  const login = (newToken, newUser, remember = false) => {
     setToken(newToken);
     setUser(newUser);
+    if (remember) {
+      localStorage.setItem('token', newToken);
+      sessionStorage.removeItem('token'); // Clean up if switching
+    } else {
+      sessionStorage.setItem('token', newToken);
+      localStorage.removeItem('token');
+    }
   };
 
   const logout = () => {
