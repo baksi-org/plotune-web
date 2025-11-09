@@ -3,7 +3,8 @@ import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
-import PlotuneStreams from '../components/streams/PlotuneStreams'; // ✅ Import doğru
+import PlotuneStreams from '../components/streams/PlotuneStreams';
+import MD5 from 'crypto-js/md5';
 
 import OverviewIcon from '../assets/icons/overview.svg';
 import ProfileIcon from '../assets/icons/profile.svg';
@@ -12,7 +13,7 @@ import BillingIcon from '../assets/icons/billing.svg';
 import SecurityIcon from '../assets/icons/security.svg';
 import StreamIcon from '../assets/icons/stream.svg';
 import DownloadIcon from '../assets/icons/download.svg';
-import ExtensionIcon from '../assets/icons/extensions.svg'
+import ExtensionIcon from '../assets/icons/extensions.svg';
 const Dashboard = () => {
   const { user, token, logout } = useContext(AuthContext);
   const [userData, setUserData] = useState(user || {});
@@ -27,6 +28,44 @@ const Dashboard = () => {
     apiCalls: 0,
     storage: '0MB'
   });
+
+const getGravatarUrl = (email, size = 80) => {
+  if (!email) {
+    const seed = userData.username || 'unknown';
+    return `https://robohash.org/${seed}?set=set2&size=${size}x${size}`;
+  }
+  
+  const hash = MD5(email.trim().toLowerCase()).toString();
+  return `https://www.gravatar.com/avatar/${hash}?d=retro&s=${size}`;
+};
+
+  // Simple MD5 generator (for demo purposes - consider using a proper library)
+  const generateMD5 = (str) => {
+    // This is a very basic implementation - consider using a proper MD5 library
+    // like 'crypto-js/md5' or the built-in crypto module
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32bit integer
+    }
+    return Math.abs(hash).toString(16);
+  };
+
+  // Alternative approach using Web Crypto API for better MD5 hashing
+  const generateSecureMD5 = async (str) => {
+    try {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(str);
+      const hashBuffer = await crypto.subtle.digest('MD5', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    } catch (error) {
+      // Fallback to simple hash if Web Crypto is not available
+      console.warn('Web Crypto not available, using fallback hash');
+      return generateMD5(str);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -108,9 +147,17 @@ const Dashboard = () => {
           <div className="lg:w-1/4">
             <div className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl">
               <div className="flex items-center mb-6">
-                <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-lg font-bold text-primary">
-                  {userData.username?.charAt(0).toUpperCase() || 'U'}
-                </div>
+                {/* Gravatar with monster fallback */}
+                <img
+                  src={getGravatarUrl(userData.email)}
+                  alt="Profile"
+                  className="w-12 h-12 rounded-full object-cover border-2 border-primary/30"
+                  onError={(e) => {
+                    // Fallback if image fails to load
+                    const seed = userData.username || 'unknown';
+                    e.target.src = `https://robohash.org/${seed}?set=set2&size=80x80`;
+                  }}
+                />
                 <div className="ml-4">
                   <h3 className="text-light-text font-semibold">{userData.full_name || userData.username}</h3>
                   <p className="text-gray-text text-sm">{userData.email}</p>
@@ -131,25 +178,24 @@ const Dashboard = () => {
                   { id: 'api', label: 'API Access', icon: ApiIcon },
                   { id: 'billing', label: 'Billing & Plans', icon: BillingIcon },
                   { id: 'security', label: 'Security', icon: SecurityIcon },
-                  { id: 'streams', label: 'Plotune Streams', icon: StreamIcon }, // ✅ Streams sekmesi EKLENDİ
+                  { id: 'streams', label: 'Plotune Streams', icon: StreamIcon },
                 ].map((item) => (
                   <button
-                        key={item.id}
-                        onClick={() => setActiveTab(item.id)}
-                        className={`w-full text-left px-4 py-3 rounded-lg transition flex items-center ${
-                          activeTab === item.id
-                            ? 'bg-primary/20 text-primary border-l-4 border-primary'
-                            : 'text-gray-text hover:text-light-text hover:bg-white/5'
-                        }`}
-                      >
-                        {/* ✅ SVG ICON RENDER */}
-                        <img 
-                          src={item.icon} 
-                          alt={`${item.label} icon`} 
-                          className="mr-3 w-5 h-5 flex-shrink-0"
-                        />
-                        {item.label}
-                      </button>
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id)}
+                    className={`w-full text-left px-4 py-3 rounded-lg transition flex items-center ${
+                      activeTab === item.id
+                        ? 'bg-primary/20 text-primary border-l-4 border-primary'
+                        : 'text-gray-text hover:text-light-text hover:bg-white/5'
+                    }`}
+                  >
+                    <img 
+                      src={item.icon} 
+                      alt={`${item.label} icon`} 
+                      className="mr-3 w-5 h-5 flex-shrink-0"
+                    />
+                    {item.label}
+                  </button>
                 ))}
               </nav>
 
@@ -202,7 +248,7 @@ const Dashboard = () => {
                     >
                       <div className="text-2xl mb-2"><img 
                         src={ExtensionIcon} 
-                        alt="Streams" 
+                        alt="Extensions" 
                         className="mx-auto mb-2 w-8 h-8 opacity-70 group-hover:opacity-100 transition"
                       /></div>
                       <h3 className="text-light-text font-medium">Browse Marketplace</h3>
@@ -214,21 +260,21 @@ const Dashboard = () => {
                     >
                       <div className="text-2xl mb-2"><img 
                         src={DownloadIcon} 
-                        alt="Streams" 
+                        alt="Download" 
                         className="mx-auto mb-2 w-8 h-8 opacity-70 group-hover:opacity-100 transition"
                       /></div>
                       <h3 className="text-light-text font-medium">Download App</h3>
                       <p className="text-gray-text text-sm mt-1">Get the latest version</p>
                     </Link>
                     <button
-                      onClick={() => setActiveTab('streams')} // ✅ Streams'e yönlendir
+                      onClick={() => setActiveTab('streams')}
                       className="p-4 bg-dark-surface rounded-lg border border-white/5 hover:border-primary/50 transition group text-left"
                     >
                       <div className="text-2xl mb-2"><img 
-        src={StreamIcon} 
-        alt="Streams" 
-        className="mx-auto mb-2 w-8 h-8 opacity-70 group-hover:opacity-100 transition"
-      /></div>
+                        src={StreamIcon} 
+                        alt="Streams" 
+                        className="mx-auto mb-2 w-8 h-8 opacity-70 group-hover:opacity-100 transition"
+                      /></div>
                       <h3 className="text-light-text font-medium">Plotune Streams</h3>
                       <p className="text-gray-text text-sm mt-1">Manage your streams</p>
                     </button>
@@ -287,6 +333,32 @@ const Dashboard = () => {
                   )}
                 </div>
 
+                <div className="flex items-center mb-6">
+                  <img
+                    src={getGravatarUrl(userData.email, 120)}
+                    alt="Profile"
+                    className="w-20 h-20 rounded-full object-cover border-2 border-primary/30 mr-6"
+                    onError={(e) => {
+                      const seed = userData.username || 'unknown';
+                      e.target.src = `https://robohash.org/${seed}?set=set2&size=120x120`;
+                    }}
+                  />
+                  <div>
+                    <h3 className="text-light-text font-semibold text-lg">Profile Picture</h3>
+                    <p className="text-gray-text text-sm">
+                      Your profile picture is managed through Gravatar. 
+                      <a 
+                        href="https://gravatar.com" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline ml-1"
+                      >
+                        Change on Gravatar
+                      </a>
+                    </p>
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-gray-text mb-2">Username</label>
@@ -339,6 +411,7 @@ const Dashboard = () => {
               </div>
             )}
 
+            {/* Other tabs remain the same */}
             {/* API Access Tab */}
             {activeTab === 'api' && (
               <div className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl">
@@ -443,7 +516,7 @@ const Dashboard = () => {
                         { feature: 'Priority Support', free: false, premium: true },
                         { feature: 'Advanced Analytics', free: false, premium: true },
                         { feature: 'Custom Integrations', free: false, premium: true },
-                        { feature: 'Plotune Streams', free: true, premium: true }, // ✅ Streams özelliği eklendi
+                        { feature: 'Plotune Streams', free: true, premium: true },
                       ].map((item, index) => (
                         <div key={index} className="flex items-center justify-between py-2">
                           <span className="text-light-text">{item.feature}</span>
@@ -505,14 +578,13 @@ const Dashboard = () => {
               </div>
             )}
 
-            {/* ✅ PLOTUNE STREAMS TAB - TAMAMEN GÖRÜNÜR */}
+            {/* Plotune Streams Tab */}
             {activeTab === 'streams' && (
               <div className="space-y-6">
                 <div className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl">
                   <div className="flex items-center justify-between mb-6">
                   </div>
                   
-                  {/* ✅ PlotuneStreams Component'ı buraya render ediyoruz */}
                   <div className="mt-6">
                     <PlotuneStreams />
                   </div>
