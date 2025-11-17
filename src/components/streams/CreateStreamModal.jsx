@@ -5,7 +5,6 @@ const CreateStreamModal = ({ onClose, onSubmit, user }) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    is_public: false
   });
 
   const [errors, setErrors] = useState({});
@@ -35,17 +34,6 @@ const CreateStreamModal = ({ onClose, onSubmit, user }) => {
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
     }
-  };
-
-  // Limits based on user premium status
-  const userLimits = user?.premium ? {
-    max_messages_per_second: 100,
-    max_message_size_bytes: 10240, // 10KB
-    max_retention_messages: 10000
-  } : {
-    max_messages_per_second: 5,
-    max_message_size_bytes: 1024, // 1KB
-    max_retention_messages: 1000
   };
 
   return (
@@ -78,7 +66,7 @@ const CreateStreamModal = ({ onClose, onSubmit, user }) => {
           </div>
 
           <div>
-            <label className="block text-gray-text mb-2 text-sm">Description</label>
+            <label className="block text-gray-text mb-2 text-sm">Description (Optional)</label>
             <textarea
               value={formData.description}
               onChange={(e) => handleChange('description', e.target.value)}
@@ -89,28 +77,15 @@ const CreateStreamModal = ({ onClose, onSubmit, user }) => {
             />
           </div>
 
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="is_public"
-              checked={formData.is_public}
-              onChange={(e) => handleChange('is_public', e.target.checked)}
-              className="mr-2"
-            />
-            <label htmlFor="is_public" className="text-gray-text text-sm">
-              Make this stream public
-            </label>
-          </div>
-
           {/* Plan Limits Display */}
           <div className="bg-dark-surface rounded-lg p-4 border border-white/5">
             <h4 className="text-light-text font-medium mb-2">
               {user?.premium ? 'Premium Plan Limits' : 'Free Plan Limits'}
             </h4>
             <div className="text-sm text-gray-text space-y-1">
-              <p>• {userLimits.max_messages_per_second} messages/second</p>
-              <p>• {userLimits.max_message_size_bytes} bytes max message size</p>
-              <p>• {userLimits.max_retention_messages} messages retention</p>
+              <p>• {user?.premium ? '100' : '5'} messages/second</p>
+              <p>• {user?.premium ? '10KB' : '1KB'} max message size</p>
+              <p>• {user?.premium ? '10,000' : '1,000'} messages retention</p>
               {!user?.premium && (
                 <p className="text-primary text-xs mt-2">
                   Upgrade to premium for higher limits

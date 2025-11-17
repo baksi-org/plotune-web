@@ -1,7 +1,7 @@
 // components/streams/PlotuneStreams.jsx
 import React, { useState, useContext, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import api from '../../services/api';
+import api, { streamApi } from '../../services/api';
 import { AuthContext } from '../../context/AuthContext';
 import CreateStreamModal from './CreateStreamModal';
 import StreamManagementModal from './StreamManagementModal';
@@ -26,21 +26,29 @@ const PlotuneStreams = () => {
       const response = await api.get('/auth/stream', {
         headers: { Authorization: token },
       });
-      setStreamToken(response.data.token);
-      fetchStreams(response.data.token);
+      
+      if (response.data && response.data.token) {
+        setStreamToken(response.data.token);
+        fetchStreams(response.data.token);
+      } else {
+        throw new Error('No token received');
+      }
     } catch (err) {
       console.error('Error fetching stream token:', err);
-      toast.error('Failed to get stream access token');
+      toast.error('Failed to get stream access');
       setLoading(false);
     }
   };
 
   const fetchStreams = async (tokenToUse = streamToken) => {
-    if (!tokenToUse) return;
+    if (!tokenToUse) {
+      setLoading(false);
+      return;
+    }
 
     try {
       setLoading(true);
-      const response = await api.post('/stream/streams/list', {}, {
+      const response = await streamApi.post('/streams/list', {}, {
         headers: { Authorization: tokenToUse },
       });
       
@@ -48,7 +56,7 @@ const PlotuneStreams = () => {
       
     } catch (err) {
       console.error('Error fetching streams:', err);
-      toast.error(err.response?.data?.detail || 'Failed to load streams');
+      toast.error('Failed to load streams');
       setStreams([]);
     } finally {
       setLoading(false);
@@ -57,65 +65,80 @@ const PlotuneStreams = () => {
 
   const handleCreateStream = async (streamData) => {
     if (!streamToken) {
-      toast.error('Stream access token not available');
+      toast.error('Stream access not available');
       return;
     }
 
     try {
-      // Backend expects { name: string, owner: string } and optional limits
+      // Match the exact StreamCreate model from backend
       const createData = {
         name: streamData.name,
-        owner: user.email,
-        description: streamData.description || '',
-        max_messages_per_second: streamData.max_messages_per_second,
-        max_message_size_bytes: streamData.max_message_size_bytes,
-        max_retention_messages: streamData.max_retention_messages
+        owner: user?.username,
+        // These are optional in backend with default=None
+        max_messages_per_second: 1000,
+        max_message_size_bytes: 1000,
+        max_retention_messages: 1000,
+        max_consumers_per_group: 1000,
+        max_consumer_group: 1000
       };
 
-      const response = await api.post('/stream/streams/create', createData, {
+      const response = await streamApi.post('/streams/create', createData, {
         headers: { Authorization: streamToken },
       });
       
       setShowCreateModal(false);
       toast.success('Stream created successfully!');
-      fetchStreams(); // Refresh list
+      fetchStreams();
     } catch (err) {
       console.error('Create error:', err);
-      toast.error(err.response?.data?.detail || 'Failed to create stream');
+      if (err.response?.status === 422) {
+        toast.error('Invalid stream data. Please check the stream name.');
+      } else {
+        toast.error('Failed to create stream');
+      }
     }
   };
 
-  const handleDeleteStream = async (streamName) => {
-    if (!streamToken) {
-      toast.error('Stream access token not available');
-      return;
-    }
+const handleDeleteStream = async (streamName) => {
+  if (!streamToken) {
+    toast.error('Stream access not available');
+    return;
+  }
 
-    if (!window.confirm('Are you sure you want to delete this stream? This action cannot be undone.')) {
-      return;
-    }
+  if (!window.confirm('Are you sure you want to delete this stream? This action cannot be undone.')) {
+    return;
+  }
 
-    try {
-      await api.post('/stream/streams/delete', { name: streamName }, {
-        headers: { Authorization: streamToken },
-      });
-      
-      toast.success('Stream deleted successfully');
-      fetchStreams(); // Refresh list
-    } catch (err) {
-      console.error('Delete error:', err);
-      toast.error(err.response?.data?.detail || 'Failed to delete stream');
-    }
-  };
+  try {
+    // This matches EXACTLY what your backend expects (StreamCreate model)
+    await streamApi.post('/streams/delete', {
+      name: streamName,
+      owner: user?.username,                    // required field
+      max_messages_per_second: 0,               // can be any number (backend ignores it)
+      max_message_size_bytes: 0,                // same
+      max_retention_messages: 0,                // same
+      max_consumers_per_group: 0,              // same
+      max_consumer_group: 0                     // same
+    }, {
+      headers: { Authorization: streamToken },
+    });
+
+    toast.success('Stream deleted successfully');
+    fetchStreams();
+  } catch (err) {
+    console.error('Delete error:', err);
+    toast.error('Failed to delete stream');
+  }
+};
 
   const handleShareStream = async (streamName, shareEmail, permissions) => {
     if (!streamToken) {
-      toast.error('Stream access token not available');
+      toast.error('Stream access not available');
       return;
     }
 
     try {
-      await api.post('/stream/streams/share', 
+      await streamApi.post('/streams/share', 
         {
           stream_name: streamName,
           user_email: shareEmail,
@@ -125,20 +148,20 @@ const PlotuneStreams = () => {
         { headers: { Authorization: streamToken } }
       );
       toast.success(`Stream shared with ${shareEmail}`);
-      fetchStreams(); // Refresh to get updated shared users
+      fetchStreams();
     } catch (err) {
-      toast.error(err.response?.data?.detail || 'Failed to share stream');
+      toast.error('Failed to share stream');
     }
   };
 
   const handleUnshareStream = async (streamName, userEmail) => {
     if (!streamToken) {
-      toast.error('Stream access token not available');
+      toast.error('Stream access not available');
       return;
     }
 
     try {
-      await api.post('/stream/streams/unshare', 
+      await streamApi.post('/streams/unshare', 
         {
           stream_name: streamName,
           user_email: userEmail
@@ -146,9 +169,9 @@ const PlotuneStreams = () => {
         { headers: { Authorization: streamToken } }
       );
       toast.success('User removed from stream');
-      fetchStreams(); // Refresh to get updated shared users
+      fetchStreams();
     } catch (err) {
-      toast.error(err.response?.data?.detail || 'Failed to remove user');
+      toast.error('Failed to remove user');
     }
   };
 
@@ -163,14 +186,16 @@ const PlotuneStreams = () => {
   if (!streamToken && !loading) {
     return (
       <div className="text-center py-12">
-        <div className="bg-red-500/20 text-red-400 p-4 rounded-lg max-w-md mx-auto">
-          <h3 className="text-lg font-medium mb-2">Stream Access Error</h3>
-          <p>Unable to get stream access token. Please try refreshing the page.</p>
+        <div className="bg-red-500/20 text-red-400 p-6 rounded-lg max-w-md mx-auto">
+          <h3 className="text-lg font-medium mb-2">Access Required</h3>
+          <p className="text-sm mb-4">
+            Unable to access stream services.
+          </p>
           <button
             onClick={fetchStreamToken}
-            className="mt-4 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
+            className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
           >
-            Retry
+            Try Again
           </button>
         </div>
       </div>
@@ -183,7 +208,7 @@ const PlotuneStreams = () => {
       <div className="flex justify-between items-center">
         <div>
           <h3 className="text-lg font-semibold text-light-text">My Streams</h3>
-          <p className="text-gray-text text-sm">Real-time data streams for your applications</p>
+          <p className="text-gray-text text-sm">Manage your data streams</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
@@ -208,7 +233,7 @@ const PlotuneStreams = () => {
           <div className="col-span-full text-center py-12">
             <img src={StreamIcon} alt="Streams" className="mx-auto mb-4 w-16 h-16 opacity-50" />
             <h3 className="text-lg font-medium text-light-text mb-2">No streams yet</h3>
-            <p className="text-gray-text mb-4">Create your first stream to start streaming data</p>
+            <p className="text-gray-text mb-4">Create your first stream to get started</p>
             <button
               onClick={() => setShowCreateModal(true)}
               className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark"
@@ -221,23 +246,20 @@ const PlotuneStreams = () => {
 
       {/* Connection Information */}
       <div className="bg-dark-surface rounded-xl p-6 border border-white/10">
-        <h4 className="text-light-text font-medium mb-4">WebSocket Connection Details</h4>
+        <h4 className="text-light-text font-medium mb-4">Connection Details</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div>
-            <p className="text-gray-text">Producer Endpoint:</p>
-            <code className="text-primary bg-dark-card px-2 py-1 rounded">
-              /ws/producer/{user?.username}/[stream_name]
+            <p className="text-gray-text">Producer Endpoint</p>
+            <code className="text-primary bg-dark-card px-2 py-1 rounded break-all">
+              wss://stream.plotune.net/ws/producer/{user?.username}/[stream_name]
             </code>
           </div>
           <div>
-            <p className="text-gray-text">Consumer Endpoint:</p>
-            <code className="text-primary bg-dark-card px-2 py-1 rounded">
-              /ws/consumer/{user?.username}/[stream_name]/[group_name]
+            <p className="text-gray-text">Consumer Endpoint</p>
+            <code className="text-primary bg-dark-card px-2 py-1 rounded break-all">
+              wss://stream.plotune.net/ws/consumer/{user?.username}/[stream_name]/[group_name]
             </code>
           </div>
-        </div>
-        <div className="mt-4 text-xs text-gray-text">
-          <p>Note: WebSocket connections require proper authentication headers</p>
         </div>
       </div>
 
@@ -257,6 +279,7 @@ const PlotuneStreams = () => {
           onShare={handleShareStream}
           onUnshare={handleUnshareStream}
           streamToken={streamToken}
+          user={user}
         />
       )}
     </div>

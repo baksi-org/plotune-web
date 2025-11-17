@@ -1,11 +1,9 @@
 // components/streams/StreamManagementModal.jsx
 import React, { useState, useContext, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import api from '../../services/api';
 import { AuthContext } from '../../context/AuthContext';
 
-const StreamManagementModal = ({ stream, onClose, onUpdate, onShare, onUnshare, streamToken }) => {
-  const { user } = useContext(AuthContext);
+const StreamManagementModal = ({ stream, onClose, onUpdate, onShare, onUnshare, streamToken, user }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const [shareEmail, setShareEmail] = useState('');
   const [sharePermissions, setSharePermissions] = useState({
@@ -15,7 +13,6 @@ const StreamManagementModal = ({ stream, onClose, onUpdate, onShare, onUnshare, 
   const [sharedUsers, setSharedUsers] = useState([]);
   const [loadingSharedUsers, setLoadingSharedUsers] = useState(false);
 
-  // Fetch shared users when share tab is active
   useEffect(() => {
     if (activeTab === 'share' && streamToken) {
       fetchSharedUsers();
@@ -23,17 +20,8 @@ const StreamManagementModal = ({ stream, onClose, onUpdate, onShare, onUnshare, 
   }, [activeTab, streamToken]);
 
   const fetchSharedUsers = async () => {
-    // Note: You'll need to implement an endpoint to get shared users
-    // For now, we'll use the auths relationship from the stream object
     setLoadingSharedUsers(true);
     try {
-      // This is a placeholder - you'll need to implement the actual endpoint
-      // const response = await api.get(`/stream/${stream.id}/shared-users`, {
-      //   headers: { Authorization: streamToken },
-      // });
-      // setSharedUsers(response.data.shared_users || []);
-      
-      // Using the auths from the stream object for now
       setSharedUsers(stream.auths || []);
     } catch (err) {
       console.error('Error fetching shared users:', err);
@@ -50,12 +38,22 @@ const StreamManagementModal = ({ stream, onClose, onUpdate, onShare, onUnshare, 
       return;
     }
 
+    if (!streamToken) {
+      toast.error('Stream access not available');
+      return;
+    }
+
     await onShare(stream.name, shareEmail, sharePermissions);
     setShareEmail('');
     setSharePermissions({ can_read: true, can_write: false });
   };
 
   const handleUnshare = async (userEmail) => {
+    if (!streamToken) {
+      toast.error('Stream access not available');
+      return;
+    }
+
     await onUnshare(stream.name, userEmail);
   };
 
@@ -269,25 +267,24 @@ const StreamManagementModal = ({ stream, onClose, onUpdate, onShare, onUnshare, 
                 <h4 className="text-light-text font-medium mb-4">Connection Details</h4>
                 <div className="space-y-4">
                   <div>
-                    <p className="text-gray-text text-sm mb-2">Producer WebSocket URL</p>
+                    <p className="text-gray-text text-sm mb-2">Producer URL</p>
                     <code className="block w-full p-3 bg-dark-surface rounded-lg border border-white/10 text-primary text-sm break-all">
-                      wss://api.plotune.net/ws/producer/{user?.username}/{stream.name}
+                      wss://stream.plotune.net/ws/producer/{user?.username}/{stream.name}
                     </code>
                   </div>
                   <div>
-                    <p className="text-gray-text text-sm mb-2">Consumer WebSocket URL</p>
+                    <p className="text-gray-text text-sm mb-2">Consumer URL</p>
                     <code className="block w-full p-3 bg-dark-surface rounded-lg border border-white/10 text-primary text-sm break-all">
-                      wss://api.plotune.net/ws/consumer/{user?.username}/{stream.name}/[group_name]
+                      wss://stream.plotune.net/ws/consumer/{user?.username}/{stream.name}/[group_name]
                     </code>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-4">
-                <h5 className="text-yellow-400 font-medium mb-2">Authentication Required</h5>
-                <p className="text-yellow-300 text-sm">
-                  WebSocket connections require proper authentication headers. 
-                  Make sure to include the stream token in your connection requests.
+              <div className="bg-blue-500/20 border border-blue-500/30 rounded-lg p-4">
+                <h5 className="text-blue-400 font-medium mb-2">Connection Info</h5>
+                <p className="text-blue-300 text-sm">
+                  Use these WebSocket URLs to connect your applications to this stream.
                 </p>
               </div>
             </div>
