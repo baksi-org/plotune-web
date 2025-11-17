@@ -23,6 +23,7 @@ import VerifyEmail from './pages/VerifyEmail';
 import ForgotPassword from './pages/ForgotPassword';
 import Profile from './pages/Profile';
 import Streams from './pages/Streams';
+import DnsPage from './pages/DnsPage';
 
 // Scroll'u en üste alan bileşen
 import { useLayoutEffect } from 'react'; // useEffect yerine
@@ -78,6 +79,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/streams" element={<Streams />} />
+            <Route path="/dns" element={<DnsPage />} />
           </Routes>
           <Footer />
         </div>
