@@ -1,13 +1,11 @@
 // components/streams/CreateStreamModal.jsx
 import React, { useState } from 'react';
 
-const CreateStreamModal = ({ onClose, onSubmit }) => {
+const CreateStreamModal = ({ onClose, onSubmit, user }) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    partitions: 1,
-    retentionHours: 24,
-    replicationFactor: 1
+    is_public: false
   });
 
   const [errors, setErrors] = useState({});
@@ -18,9 +16,8 @@ const CreateStreamModal = ({ onClose, onSubmit }) => {
       newErrors.name = 'Stream name is required';
     } else if (!formData.name.match(/^[a-zA-Z0-9_-]+$/)) {
       newErrors.name = 'Only letters, numbers, underscores and hyphens allowed';
-    }
-    if (formData.partitions < 1 || formData.partitions > 10) {
-      newErrors.partitions = 'Partitions must be between 1 and 10';
+    } else if (formData.name.length > 100) {
+      newErrors.name = 'Stream name must be less than 100 characters';
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -40,6 +37,17 @@ const CreateStreamModal = ({ onClose, onSubmit }) => {
     }
   };
 
+  // Limits based on user premium status
+  const userLimits = user?.premium ? {
+    max_messages_per_second: 100,
+    max_message_size_bytes: 10240, // 10KB
+    max_retention_messages: 10000
+  } : {
+    max_messages_per_second: 5,
+    max_message_size_bytes: 1024, // 1KB
+    max_retention_messages: 1000
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl w-full max-w-md">
@@ -55,7 +63,7 @@ const CreateStreamModal = ({ onClose, onSubmit }) => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-gray-text mb-2 text-sm">Stream Name</label>
+            <label className="block text-gray-text mb-2 text-sm">Stream Name *</label>
             <input
               type="text"
               value={formData.name}
@@ -64,6 +72,7 @@ const CreateStreamModal = ({ onClose, onSubmit }) => {
                 errors.name ? 'border-red-500' : 'border-white/10 focus:border-primary'
               }`}
               placeholder="my-data-stream"
+              maxLength={100}
             />
             {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
           </div>
@@ -76,48 +85,37 @@ const CreateStreamModal = ({ onClose, onSubmit }) => {
               className="w-full p-3 bg-dark-surface rounded-lg border border-white/10 text-light-text focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
               rows="3"
               placeholder="Describe what this stream will be used for..."
+              maxLength={500}
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-gray-text mb-2 text-sm">Partitions</label>
-              <input
-                type="number"
-                min="1"
-                max="10"
-                value={formData.partitions}
-                onChange={(e) => handleChange('partitions', parseInt(e.target.value))}
-                className={`w-full p-3 bg-dark-surface rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition ${
-                  errors.partitions ? 'border-red-500' : 'border-white/10 focus:border-primary'
-                }`}
-              />
-              {errors.partitions && <p className="text-red-400 text-xs mt-1">{errors.partitions}</p>}
-            </div>
-
-            <div>
-              <label className="block text-gray-text mb-2 text-sm">Retention (hours)</label>
-              <select
-                value={formData.retentionHours}
-                onChange={(e) => handleChange('retentionHours', parseInt(e.target.value))}
-                className="w-full p-3 bg-dark-surface rounded-lg border border-white/10 text-light-text focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
-              >
-                <option value={1}>1 hour</option>
-                <option value={6}>6 hours</option>
-                <option value={24}>24 hours</option>
-                <option value={168}>7 days</option>
-                <option value={720}>30 days</option>
-              </select>
-            </div>
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="is_public"
+              checked={formData.is_public}
+              onChange={(e) => handleChange('is_public', e.target.checked)}
+              className="mr-2"
+            />
+            <label htmlFor="is_public" className="text-gray-text text-sm">
+              Make this stream public
+            </label>
           </div>
 
+          {/* Plan Limits Display */}
           <div className="bg-dark-surface rounded-lg p-4 border border-white/5">
-            <h4 className="text-light-text font-medium mb-2">Standard Plan Limits</h4>
+            <h4 className="text-light-text font-medium mb-2">
+              {user?.premium ? 'Premium Plan Limits' : 'Free Plan Limits'}
+            </h4>
             <div className="text-sm text-gray-text space-y-1">
-              <p>• Max 10 partitions per stream</p>
-              <p>• 1GB storage included</p>
-              <p>• Basic monitoring</p>
-              <p>• Up to 5 shared users</p>
+              <p>• {userLimits.max_messages_per_second} messages/second</p>
+              <p>• {userLimits.max_message_size_bytes} bytes max message size</p>
+              <p>• {userLimits.max_retention_messages} messages retention</p>
+              {!user?.premium && (
+                <p className="text-primary text-xs mt-2">
+                  Upgrade to premium for higher limits
+                </p>
+              )}
             </div>
           </div>
 

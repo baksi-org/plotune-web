@@ -1,85 +1,73 @@
 // components/streams/StreamManagementModal.jsx
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
 import { AuthContext } from '../../context/AuthContext';
 
-const StreamManagementModal = ({ stream, onClose, onUpdate }) => {
-  const { token } = useContext(AuthContext);
-  const [activeTab, setActiveTab] = useState(stream.action === 'share' ? 'share' : 'settings');
+const StreamManagementModal = ({ stream, onClose, onUpdate, onShare, onUnshare, streamToken }) => {
+  const { user } = useContext(AuthContext);
+  const [activeTab, setActiveTab] = useState('overview');
   const [shareEmail, setShareEmail] = useState('');
-  const [performanceConfig, setPerformanceConfig] = useState({
-    partitions: stream.partitions,
-    retentionHours: stream.retentionHours,
-    replicationFactor: stream.replicationFactor
+  const [sharePermissions, setSharePermissions] = useState({
+    can_read: true,
+    can_write: false
   });
+  const [sharedUsers, setSharedUsers] = useState([]);
+  const [loadingSharedUsers, setLoadingSharedUsers] = useState(false);
 
-  const handleShare = async (e) => {
+  // Fetch shared users when share tab is active
+  useEffect(() => {
+    if (activeTab === 'share' && streamToken) {
+      fetchSharedUsers();
+    }
+  }, [activeTab, streamToken]);
+
+  const fetchSharedUsers = async () => {
+    // Note: You'll need to implement an endpoint to get shared users
+    // For now, we'll use the auths relationship from the stream object
+    setLoadingSharedUsers(true);
+    try {
+      // This is a placeholder - you'll need to implement the actual endpoint
+      // const response = await api.get(`/stream/${stream.id}/shared-users`, {
+      //   headers: { Authorization: streamToken },
+      // });
+      // setSharedUsers(response.data.shared_users || []);
+      
+      // Using the auths from the stream object for now
+      setSharedUsers(stream.auths || []);
+    } catch (err) {
+      console.error('Error fetching shared users:', err);
+      toast.error('Failed to load shared users');
+    } finally {
+      setLoadingSharedUsers(false);
+    }
+  };
+
+  const handleShareSubmit = async (e) => {
     e.preventDefault();
     if (!shareEmail.trim()) {
       toast.error('Please enter an email address');
       return;
     }
 
-    try {
-      await api.post(`/streams/${stream.id}/share`, 
-        { email: shareEmail },
-        { headers: { Authorization: token } }
-      );
-      toast.success(`Stream shared with ${shareEmail}`);
-      setShareEmail('');
-      onUpdate();
-    } catch (err) {
-      toast.error('Failed to share stream');
-    }
+    await onShare(stream.name, shareEmail, sharePermissions);
+    setShareEmail('');
+    setSharePermissions({ can_read: true, can_write: false });
   };
 
-  const handleUnshare = async (userId) => {
-    try {
-      await api.post(`/streams/${stream.id}/unshare`, 
-        { user_id: userId },
-        { headers: { Authorization: token } }
-      );
-      toast.success('User removed from stream');
-      onUpdate();
-    } catch (err) {
-      toast.error('Failed to remove user');
-    }
+  const handleUnshare = async (userEmail) => {
+    await onUnshare(stream.name, userEmail);
   };
 
-  const handlePerformanceUpdate = async () => {
-    // Check if performance increase exceeds standard plan
-    const exceedsStandard = performanceConfig.partitions > 10 || 
-                           performanceConfig.replicationFactor > 1;
-
-    if (exceedsStandard) {
-      // Show cost calculation
-      const cost = calculateCost(performanceConfig);
-      if (window.confirm(`This performance upgrade will cost $${cost}/month. Continue?`)) {
-        await updateStreamConfig();
-      }
-    } else {
-      await updateStreamConfig();
-    }
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString();
   };
 
-  const calculateCost = (config) => {
-    let baseCost = 10; // $10 base
-    const partitionCost = Math.max(0, config.partitions - 10) * 2; // $2 per extra partition
-    const replicationCost = (config.replicationFactor - 1) * 5; // $5 per extra replica
-    return baseCost + partitionCost + replicationCost;
-  };
-
-  const updateStreamConfig = async () => {
-    try {
-      await api.put(`/streams/${stream.id}`, performanceConfig, {
-        headers: { Authorization: token }
-      });
-      toast.success('Stream configuration updated');
-      onUpdate();
-    } catch (err) {
-      toast.error('Failed to update stream configuration');
-    }
+  const getPermissionText = (user) => {
+    if (user.can_read && user.can_write) return 'Read & Write';
+    if (user.can_read) return 'Read Only';
+    if (user.can_write) return 'Write Only';
+    return 'No Access';
   };
 
   return (
@@ -102,7 +90,7 @@ const StreamManagementModal = ({ stream, onClose, onUpdate }) => {
         {/* Tabs */}
         <div className="border-b border-white/10">
           <div className="flex space-x-1 px-6">
-            {['settings', 'share', 'metrics'].map((tab) => (
+            {['overview', 'share', 'access'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -123,99 +111,149 @@ const StreamManagementModal = ({ stream, onClose, onUpdate }) => {
 
         {/* Content */}
         <div className="p-6 max-h-[60vh] overflow-y-auto">
-          {/* Settings Tab */}
-          {activeTab === 'settings' && (
+          {/* Overview Tab */}
+          {activeTab === 'overview' && (
             <div className="space-y-6">
               <div>
-                <h4 className="text-light-text font-medium mb-4">Performance Settings</h4>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <h4 className="text-light-text font-medium mb-4">Stream Information</h4>
+                <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <label className="block text-gray-text mb-2 text-sm">Partitions</label>
-                    <input
-                      type="number"
-                      min="1"
-                      max="50"
-                      value={performanceConfig.partitions}
-                      onChange={(e) => setPerformanceConfig(prev => ({
-                        ...prev,
-                        partitions: parseInt(e.target.value)
-                      }))}
-                      className="w-full p-3 bg-dark-surface rounded-lg border border-white/10 text-light-text focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
-                    />
-                    <p className="text-gray-text text-xs mt-1">More partitions increase parallelism</p>
+                    <p className="text-gray-text">Status</p>
+                    <p className="text-light-text">
+                      {stream.is_active ? 'Active' : 'Inactive'}
+                    </p>
                   </div>
-
                   <div>
-                    <label className="block text-gray-text mb-2 text-sm">Replication Factor</label>
-                    <select
-                      value={performanceConfig.replicationFactor}
-                      onChange={(e) => setPerformanceConfig(prev => ({
-                        ...prev,
-                        replicationFactor: parseInt(e.target.value)
-                      }))}
-                      className="w-full p-3 bg-dark-surface rounded-lg border border-white/10 text-light-text focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
-                    >
-                      <option value={1}>1 (Standard)</option>
-                      <option value={2}>2 (High Availability)</option>
-                      <option value={3}>3 (Enterprise)</option>
-                    </select>
+                    <p className="text-gray-text">Public</p>
+                    <p className="text-light-text">
+                      {stream.is_public ? 'Yes' : 'No'}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-text">Created</p>
+                    <p className="text-light-text">
+                      {formatDate(stream.created_at)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-text">Last Updated</p>
+                    <p className="text-light-text">
+                      {stream.updated_at ? formatDate(stream.updated_at) : 'Never'}
+                    </p>
                   </div>
                 </div>
-
-                <button
-                  onClick={handlePerformanceUpdate}
-                  className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
-                >
-                  Update Performance
-                </button>
               </div>
 
-              <div className="pt-4 border-t border-white/10">
-                <h4 className="text-light-text font-medium mb-4">Danger Zone</h4>
-                <button className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
-                  Delete Stream
-                </button>
+              <div>
+                <h4 className="text-light-text font-medium mb-4">Stream Limits</h4>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <p className="text-gray-text">Max Messages/Second</p>
+                    <p className="text-light-text">{stream.max_messages_per_second || 5}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-text">Max Message Size</p>
+                    <p className="text-light-text">{stream.max_message_size_bytes || 1024} bytes</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-text">Max Retention</p>
+                    <p className="text-light-text">{stream.max_retention_messages || 1000} messages</p>
+                  </div>
+                </div>
               </div>
+
+              {stream.description && (
+                <div>
+                  <h4 className="text-light-text font-medium mb-2">Description</h4>
+                  <p className="text-gray-text text-sm">{stream.description}</p>
+                </div>
+              )}
             </div>
           )}
 
           {/* Share Tab */}
           {activeTab === 'share' && (
             <div className="space-y-6">
-              <form onSubmit={handleShare} className="flex space-x-2">
-                <input
-                  type="email"
-                  value={shareEmail}
-                  onChange={(e) => setShareEmail(e.target.value)}
-                  placeholder="Enter user's email address"
-                  className="flex-1 p-3 bg-dark-surface rounded-lg border border-white/10 text-light-text focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
-                />
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
-                >
-                  Share
-                </button>
-              </form>
-
               <div>
-                <h4 className="text-light-text font-medium mb-4">Shared Users</h4>
-                {stream.sharedUsers > 0 ? (
-                  <div className="space-y-2">
-                    {/* Mock shared users - replace with actual data */}
-                    <div className="flex justify-between items-center p-3 bg-dark-surface rounded-lg">
-                      <div>
-                        <p className="text-light-text">user@example.com</p>
-                        <p className="text-gray-text text-sm">Read & Write</p>
-                      </div>
-                      <button
-                        onClick={() => handleUnshare(1)}
-                        className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition"
-                      >
-                        Remove
-                      </button>
+                <h4 className="text-light-text font-medium mb-4">Share Stream</h4>
+                <form onSubmit={handleShareSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-gray-text mb-2 text-sm">Email Address</label>
+                    <input
+                      type="email"
+                      value={shareEmail}
+                      onChange={(e) => setShareEmail(e.target.value)}
+                      placeholder="Enter user's email address"
+                      className="w-full p-3 bg-dark-surface rounded-lg border border-white/10 text-light-text focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id="can_read"
+                        checked={sharePermissions.can_read}
+                        onChange={(e) => setSharePermissions(prev => ({
+                          ...prev,
+                          can_read: e.target.checked
+                        }))}
+                        className="mr-2"
+                      />
+                      <label htmlFor="can_read" className="text-gray-text text-sm">
+                        Can Read (Consumer)
+                      </label>
                     </div>
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id="can_write"
+                        checked={sharePermissions.can_write}
+                        onChange={(e) => setSharePermissions(prev => ({
+                          ...prev,
+                          can_write: e.target.checked
+                        }))}
+                        className="mr-2"
+                      />
+                      <label htmlFor="can_write" className="text-gray-text text-sm">
+                        Can Write (Producer)
+                      </label>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
+                  >
+                    Share Stream
+                  </button>
+                </form>
+              </div>
+
+              <div className="pt-4 border-t border-white/10">
+                <h4 className="text-light-text font-medium mb-4">Shared Users</h4>
+                {loadingSharedUsers ? (
+                  <div className="flex justify-center py-4">
+                    <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary"></div>
+                  </div>
+                ) : sharedUsers.length > 0 ? (
+                  <div className="space-y-3">
+                    {sharedUsers.map((user) => (
+                      <div key={user.id} className="flex justify-between items-center p-3 bg-dark-surface rounded-lg">
+                        <div>
+                          <p className="text-light-text">{user.user_email}</p>
+                          <p className="text-gray-text text-sm">
+                            {getPermissionText(user)}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => handleUnshare(user.user_email)}
+                          className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
                   </div>
                 ) : (
                   <p className="text-gray-text text-center py-4">No users shared with this stream</p>
@@ -224,35 +262,33 @@ const StreamManagementModal = ({ stream, onClose, onUpdate }) => {
             </div>
           )}
 
-          {/* Metrics Tab */}
-          {activeTab === 'metrics' && (
+          {/* Access Tab */}
+          {activeTab === 'access' && (
             <div className="space-y-6">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-dark-surface rounded-lg p-4 text-center">
-                  <p className="text-2xl font-bold text-primary">{stream.messagesPerSecond}/s</p>
-                  <p className="text-gray-text text-sm">Throughput</p>
-                </div>
-                <div className="bg-dark-surface rounded-lg p-4 text-center">
-                  <p className="text-2xl font-bold text-green-500">{stream.latency}ms</p>
-                  <p className="text-gray-text text-sm">Avg Latency</p>
-                </div>
-                <div className="bg-dark-surface rounded-lg p-4 text-center">
-                  <p className="text-2xl font-bold text-blue-500">{stream.partitions}</p>
-                  <p className="text-gray-text text-sm">Partitions</p>
-                </div>
-                <div className="bg-dark-surface rounded-lg p-4 text-center">
-                  <p className="text-2xl font-bold text-yellow-500">{stream.uptime}%</p>
-                  <p className="text-gray-text text-sm">Uptime</p>
+              <div>
+                <h4 className="text-light-text font-medium mb-4">Connection Details</h4>
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-gray-text text-sm mb-2">Producer WebSocket URL</p>
+                    <code className="block w-full p-3 bg-dark-surface rounded-lg border border-white/10 text-primary text-sm break-all">
+                      wss://api.plotune.net/ws/producer/{user?.username}/{stream.name}
+                    </code>
+                  </div>
+                  <div>
+                    <p className="text-gray-text text-sm mb-2">Consumer WebSocket URL</p>
+                    <code className="block w-full p-3 bg-dark-surface rounded-lg border border-white/10 text-primary text-sm break-all">
+                      wss://api.plotune.net/ws/consumer/{user?.username}/{stream.name}/[group_name]
+                    </code>
+                  </div>
                 </div>
               </div>
 
-              <div className="bg-dark-surface rounded-lg p-4">
-                <h4 className="text-light-text font-medium mb-4">Recent Activity</h4>
-                <div className="space-y-2 text-sm text-gray-text">
-                  <p>• Stream created 2 days ago</p>
-                  <p>• Last message received 5 minutes ago</p>
-                  <p>• 1,234,567 total messages</p>
-                </div>
+              <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-4">
+                <h5 className="text-yellow-400 font-medium mb-2">Authentication Required</h5>
+                <p className="text-yellow-300 text-sm">
+                  WebSocket connections require proper authentication headers. 
+                  Make sure to include the stream token in your connection requests.
+                </p>
               </div>
             </div>
           )}
