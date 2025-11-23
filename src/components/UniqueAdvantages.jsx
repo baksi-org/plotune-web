@@ -5,7 +5,7 @@ const UniqueAdvantages = () => {
     { icon: 'fa-layer-group', title: 'Enterprise-Grade GUI', desc: 'Component-based interface with resizable, draggable layers for complex workflows.' },
     { icon: 'fa-store', title: 'Extension Marketplace', desc: 'Enhance functionality with specialized plugins and extensions from our marketplace.' },
     { icon: 'fa-chart-line', title: 'Seamless Real-time Plotting', desc: 'Intuitive tools for real-time data visualization and calculation capabilities.' },
-    { icon: 'fa-stream', title: 'Real-time Data Streams', desc: 'Kafka-based, plugin-enabled streams for real-time industrial and electronic data capture.' },
+    { icon: 'fa-stream', title: 'Real-time Data Streams', desc: 'Websocket-based, plugin-enabled streams for real-time industrial and electronic data capture.' },
   ];
 
   return (

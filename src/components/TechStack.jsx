@@ -6,7 +6,7 @@ const TechStack = () => {
     { icon: 'fa-desktop', title: 'PyQt5 Frontend', desc: 'Cross-platform, resizable, drag-and-drop GUI with modular components.' },
     { icon: 'fa-database', title: 'Redis', desc: 'Fast data processing, caching, and auto-save capabilities.' },
     { icon: 'fa-plug', title: 'Plugin API', desc: 'Extend functionality with custom data sources and visualization plugins.' },
-    { icon: 'fa-network-wired', title: 'Kafka Streams', desc: 'Robust, real-time data streaming for industrial and electronic systems.' },
+    { icon: 'fa-network-wired', title: 'Web Streams', desc: 'Robust, real-time data streaming for industrial and electronic systems.' },
     { icon: 'fa-bolt', title: 'High-Performance Architecture', desc: 'Optimized for low-latency data capture and visualization.' },
   ];
 

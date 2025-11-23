@@ -20,7 +20,7 @@ const Features = () => {
     { 
       icon: 'fa-stream', 
       title: 'Real-time Data Streams', 
-      desc: 'Kafka-based, plugin-enabled streams for real-time industrial and electronic data capture.' 
+      desc: 'Socket based, plugin-enabled streams for real-time industrial and electronic data capture and automation' 
     },
     { 
       icon: 'fa-plug', 
