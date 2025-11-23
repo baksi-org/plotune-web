@@ -34,20 +34,28 @@ const FaqSection = () => {
       ),
     },
     {
-      question: 'How do I install the Linux version?',
+      question: "How do I install the Linux version?",
       answer: (
         <>
-          <p>For <strong>.deb</strong> packages (Debian/Ubuntu):</p>
+          <p>Plotune is currently available on Linux exclusively via <strong>Snap Store</strong>.</p>
+
+          <p>Install using Snap:</p>
           <pre className="bg-dark-surface p-3 rounded-custom my-2 text-gray-text">
-            sudo dpkg -i plotune_1.0.0_amd64.deb
-            sudo apt install -f
+            sudo snap install plotune
           </pre>
-          <p>For <strong>.rpm</strong> packages (Red Hat/Fedora):</p>
+
+          <p>If Snap is not installed on your system, you can enable it:</p>
           <pre className="bg-dark-surface p-3 rounded-custom my-2 text-gray-text">
-            sudo rpm -i plotune-1.0.0-1.x86_64.rpm
+            sudo apt install snapd
+          </pre>
+
+          <p className="mt-2">After installation, you can run Plotune using:</p>
+          <pre className="bg-dark-surface p-3 rounded-custom my-2 text-gray-text">
+            plotune
           </pre>
         </>
       ),
+
     },
     {
       question: 'Where can I get older versions of Plotune?',

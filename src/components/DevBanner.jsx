@@ -1,8 +1,22 @@
-// DevBanner.jsx
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const DevBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
+  const location = useLocation();
+
+  // Define routes where DevBanner should be shown
+  const showOnRoutes = [
+    '/docs',
+    '/profile', 
+    '/dns',
+    '/legal'
+  ];
+
+  // Don't show if not in the allowed routes
+  if (!showOnRoutes.includes(location.pathname)) {
+    return null;
+  }
 
   if (!isVisible) return null;
 
