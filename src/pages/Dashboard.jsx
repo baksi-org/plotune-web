@@ -22,7 +22,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const premiumResponse = await api.get('/premium', {
+        const premiumResponse = await api.get('/user/premium', {
           headers: { Authorization: token },
         });
         setPremiumStatus(premiumResponse.data.is_premium || false);

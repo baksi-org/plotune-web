@@ -31,12 +31,12 @@ const Profile = () => {
         });
         setUserData(profileResponse.data);
         
-        const premiumResponse = await api.get('/premium', {
+        const premiumResponse = await api.get('/user/premium', {
           headers: { Authorization: token },
         });
         setPremiumStatus(premiumResponse.data.is_premium || false);
       } catch (err) {
-        toast.error('Failed to load profile data');
+        // toast.error('Failed to load profile data');
         if (err.response?.status === 401) logout();
       } finally {
         setLoading(false);
