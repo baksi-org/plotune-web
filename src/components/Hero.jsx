@@ -48,13 +48,13 @@ const Hero = () => {
           <p className="text-lg text-gray-text mb-8">{randomMessage.desc}</p>
           <div className="flex gap-4 justify-center md:justify-start">
             <a
-              href="/get-started"
+              href="#/register"
               className="bg-primary text-white px-7 py-3 rounded-full font-semibold hover:bg-primary-dark hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
             >
               {randomMessage.cta1}
             </a>
             <a
-              href="#features"
+              href="#/#features"
               className="border-2 border-primary text-primary px-7 py-3 rounded-full font-semibold hover:bg-primary/10 hover:-translate-y-1 transition-all duration-300"
             >
               {randomMessage.cta2}

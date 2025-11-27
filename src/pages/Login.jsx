@@ -1,4 +1,3 @@
-// src/pages/Login.jsx
 import React, { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -16,28 +15,27 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 1. URL'den token'ı al (OAuth sonrası)
+  // Extract token from URL (OAuth callback)
   const extractTokenFromLocation = () => {
     // 1) Normal query string: ?token=...
     const queryParams = new URLSearchParams(window.location.search);
     let token = queryParams.get('token');
     if (token) {
-      // remove token from URL (so it doesn't stay in history)
+      // Remove token from URL
       const clean = window.location.origin + window.location.pathname + window.location.hash.split('?')[0];
       window.history.replaceState({}, document.title, clean);
       return token;
     }
 
-    // 2) HashRouter case: "#/auth/success?token=..." veya "#/auth/success&token=..."
+    // 2) HashRouter case
     const hash = window.location.hash || '';
     const qIdx = hash.indexOf('?');
     if (qIdx !== -1) {
-      const qs = hash.slice(qIdx + 1); // token=...
+      const qs = hash.slice(qIdx + 1);
       const params = new URLSearchParams(qs);
       token = params.get('token');
       if (token) {
-        // clean hash (remove query part)
-        const cleanHash = hash.slice(0, qIdx); // e.g. "#/auth/success"
+        const cleanHash = hash.slice(0, qIdx);
         const clean = window.location.origin + window.location.pathname + cleanHash;
         window.history.replaceState({}, document.title, clean);
         return token;
@@ -50,29 +48,21 @@ const Login = () => {
   useEffect(() => {
     const token = extractTokenFromLocation();
     if (token) handleOAuthLogin(token);
-  }, [location.key]); // watch location.key to run on navigation changes
+  }, [location.key]);
 
-  // 2. OAuth sonrası token ile giriş
+  // OAuth login with token
   const handleOAuthLogin = async (rawToken) => {
     setIsSubmitting(true);
     try {
-      // Normalize: backend döndürdüğü token JWT string ise burada "Bearer <token>" formatına çevir
+      // Normalize token format
       const bearer = rawToken.startsWith('Bearer ') ? rawToken : `Bearer ${rawToken}`;
 
-      // validate endpoint çoğu implementasyonda Authorization: Bearer <token> bekler
       const userResponse = await api.post('/auth/validate', {}, {
         headers: { Authorization: bearer }
       });
       const user = userResponse.data;
 
-      // Token'ı sakla (AuthContext/login beklediği formata göre)
-      if (rememberMe) {
-        localStorage.setItem('token', bearer);
-      } else {
-        sessionStorage.setItem('token', bearer);
-      }
-
-      // login fonksiyonunu token + user ile çağır (AuthContext bunu kullanacak)
+      // Use AuthContext login (will handle cookie storage)
       login(bearer, user, rememberMe);
 
       toast.success('Logged in successfully!');
@@ -80,13 +70,11 @@ const Login = () => {
     } catch (err) {
       console.error('OAuth login failed:', err);
       toast.error(err.response?.data?.detail || 'Authentication failed');
-
-      // temizle (göstergeyi geri al)
       setIsSubmitting(false);
     }
   };
 
-  // 3. Normal login
+  // Form validation
   const validate = () => {
     const newErrors = {};
     if (!usernameOrEmail) {
@@ -101,6 +89,7 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Normal form login
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
@@ -119,13 +108,9 @@ const Login = () => {
       });
       const newUser = userResponse.data;
 
-      if (rememberMe) {
-        localStorage.setItem('token', newToken);
-      } else {
-        sessionStorage.setItem('token', newToken);
-      }
+      // Use AuthContext login (will handle cookie storage)
+      login(newToken, newUser, rememberMe);
 
-      login(newToken, newUser);
       toast.success('Login successful');
       navigate('/dashboard');
     } catch (err) {
@@ -136,7 +121,7 @@ const Login = () => {
     }
   };
 
-  // 4. GitHub Login Başlat
+  // GitHub OAuth
   const startGitHubLogin = async () => {
     try {
       const res = await api.get('/login/github');
@@ -279,11 +264,16 @@ const Login = () => {
             className="py-2.5 px-4 bg-dark-surface border border-white/10 rounded-lg text-light-text opacity-50 cursor-not-allowed flex items-center justify-center"
             title="Google login not implemented yet"
           >
-            <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">Google SVG</svg>
+            <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+              {/* Google SVG icon */}
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
             Google
           </button>
 
-          {/* GITHUB BUTONU AKTİF */}
           <button
             onClick={startGitHubLogin}
             disabled={isSubmitting}

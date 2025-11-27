@@ -1,5 +1,5 @@
-// src/services/api.js
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 // Main API instance for backend
 const api = axios.create({
@@ -14,12 +14,12 @@ export const streamApi = axios.create({
   baseURL: 'https://stream.plotune.net',
 });
 
-// Add request interceptor to handle authentication
+// Add request interceptor to handle authentication from cookies
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = Cookies.get('auth_token');
     if (token) {
-      config.headers.Authorization = token;
+      config.headers.Authorization = `${token}`;
     }
     return config;
   },
@@ -33,9 +33,9 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Token expired, redirect to login
-      localStorage.removeItem('token');
-      window.location.href = '/login';
+      // Token expired, clear cookie and redirect to login
+      Cookies.remove('auth_token');
+      window.location.href = '#/login';
     }
     return Promise.reject(error);
   }
@@ -44,13 +44,24 @@ api.interceptors.response.use(
 // Same for stream API
 streamApi.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = Cookies.get('auth_token');
     if (token) {
-      config.headers.Authorization = token;
+      config.headers.Authorization = `${token}`;
     }
     return config;
   },
   (error) => {
+    return Promise.reject(error);
+  }
+);
+
+streamApi.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      Cookies.remove('auth_token');
+      window.location.href = '/login';
+    }
     return Promise.reject(error);
   }
 );
