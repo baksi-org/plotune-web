@@ -11,10 +11,9 @@ const Home = () => {
       <Hero />
       <Features />
       <BusinessImpact/>
-      <TechStack />
       <Pricing />
     </>
   );
 };
-
+      // <TechStack /> to show video
 export default Home;
