@@ -24,6 +24,8 @@ import ForgotPassword from './pages/ForgotPassword';
 import Profile from './pages/Profile';
 import Streams from './pages/Streams';
 import DnsPage from './pages/DnsPage';
+import Partnership from './pages/Partnership';
+import PartnerApplication from './pages/PartnerApplication';
 
 // Scroll'u en üste alan bileşen
 import { useLayoutEffect } from 'react'; // useEffect yerine
@@ -80,6 +82,8 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/streams" element={<Streams />} />
             <Route path="/dns" element={<DnsPage />} />
+            <Route path="/partners" element={<Partnership />} />
+            <Route path="/partners/apply" element={<PartnerApplication />} />
           </Routes>
           <Footer />
         </div>
