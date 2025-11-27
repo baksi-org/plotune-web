@@ -1,8 +1,7 @@
 import React from 'react';
 import Hero from '../components/Hero';
 import Features from '../components/Features';
-import UniqueAdvantages from '../components/UniqueAdvantages';
-import TargetUsers from '../components/TargetUsers';
+import BusinessImpact from '../components/BusinessImpact';
 import TechStack from '../components/TechStack';
 import Pricing from '../components/Pricing';
 
@@ -11,8 +10,7 @@ const Home = () => {
     <>
       <Hero />
       <Features />
-      <UniqueAdvantages />
-      <TargetUsers />
+      <BusinessImpact/>
       <TechStack />
       <Pricing />
     </>

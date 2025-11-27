@@ -27,9 +27,9 @@ const Header = () => {
   const guestNavItems = [
     { to: '/', label: 'Home' },
     { to: '/extensions', label: 'Extensions' },
-    { to: '/docs', label: 'Docs' },
     { to: '/download', label: 'Download' },
     { to: '/about', label: 'About' },
+    { to: '/docs', label: 'Docs' },
   ];
 
   // Navigation items for logged-in users with Material Icons
