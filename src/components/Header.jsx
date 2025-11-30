@@ -93,68 +93,63 @@ const Header = () => {
                 {renderNavLink(item)}
               </li>
             ))}
-          </ul>
-          <div className="relative ml-4">
-            <button
-              onClick={toggleDropdown}
-              className="text-dark-text hover:text-primary transition-colors duration-300"
-              aria-label="User menu"
-            >
-              {isLoggedIn ? (
+            {/* Logout button for logged-in users in mobile menu */}
+            {isLoggedIn && isMobileMenuOpen && (
+              <li>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-2 w-full text-left text-dark-text font-medium text-base hover:text-primary transition-colors duration-300"
+                >
+                  <span className="material-icons text-lg">logout</span>
+                </button>
+              </li>
+            )}
+            {/* Login/Register for non-logged-in users in mobile menu */}
+            {!isLoggedIn && isMobileMenuOpen && (
+              <>
+                <li>
+                  <Link
+                    to="/login"
+                    className="block text-dark-text font-medium text-base hover:text-primary transition-colors duration-300"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
                 <span className="material-icons text-2xl">account_circle</span>
-              ) : (
-                <i className="fas fa-user-circle text-2xl"></i>
-              )}
-            </button>
-            {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-dark-card rounded-custom shadow-custom border border-white/5">
-                {isLoggedIn ? (
-                  <ul className="py-2">
-                    <li>
-                      <button
-                        onClick={handleLogout}
-                        className="flex items-center gap-2 w-full text-left px-4 py-2 text-gray-text hover:bg-primary/10 hover:text-primary"
-                      >
-                        <span className="material-icons text-lg">logout</span>
-                        Logout
-                      </button>
-                    </li>
-                  </ul>
-                ) : (
-                  <ul className="py-2">
-                    <li>
-                      <Link
-                        to="/login"
-                        className="block px-4 py-2 text-gray-text hover:bg-primary/10 hover:text-primary"
-                        onClick={() => setIsDropdownOpen(false)}
-                      >
-                        Login
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="/register"
-                        className="block px-4 py-2 text-gray-text hover:bg-primary/10 hover:text-primary"
-                        onClick={() => setIsDropdownOpen(false)}
-                      >
-                        Register
-                      </Link>
-                    </li>
-                  </ul>
-                )}
-              </div>
+                  </Link>
+                </li>
+              </>
+            )}
+          </ul>
+          
+          {/* Desktop view - Auth buttons */}
+          <div className="hidden md:flex items-center gap-4 ml-8">
+            {isLoggedIn ? (
+              // Logout button for logged-in users (desktop)
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 text-dark-text font-medium text-base hover:text-primary transition-colors duration-300"
+              >
+                <span className="material-icons text-lg">logout</span>
+              </button>
+            ) : (
+              // Login/Register for non-logged-in users (desktop)
+              <>
+                <Link
+                  to="/login"
+                  className="text-dark-text font-medium text-base hover:text-primary transition-colors duration-300"
+                >
+                <span className="material-icons text-2xl">account_circle</span>
+                </Link>
+              </>
             )}
           </div>
+
+          {/* Mobile menu button */}
           <button 
             className="md:hidden text-dark-text text-2xl ml-4" 
             onClick={toggleMobileMenu} 
             aria-label="Toggle mobile menu"
           >
-            {isLoggedIn ? (
-              <span className="material-icons">menu</span>
-            ) : (
-              <i className="fas fa-bars"></i>
-            )}
+            <span className="material-icons">menu</span>
           </button>
         </nav>
       </div>
