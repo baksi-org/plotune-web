@@ -24,7 +24,7 @@ const AboutHero = () => {
 
           <div className="pt-4 flex gap-4">
             <a
-              href="#/contact"
+              href="#/partners"
               className="inline-flex items-center px-6 py-3 bg-primary text-white rounded-full hover:bg-primary-dark hover:-translate-y-1 hover:shadow-lg transition-all duration-300 font-semibold"
             >
               Partner With Us
