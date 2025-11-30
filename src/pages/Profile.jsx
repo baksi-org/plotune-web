@@ -418,7 +418,6 @@ const Profile = () => {
                     <p className="text-gray-text mb-4">Review your recent account activity.</p>
                     <div className="text-sm text-gray-text space-y-2">
                       <p>Last login: {new Date().toLocaleDateString()} from your current device</p>
-                      <p>Account created: {new Date(userData.created_at).toLocaleDateString()}</p>
                     </div>
                   </div>
                 </div>
