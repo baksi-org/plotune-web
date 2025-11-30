@@ -19,6 +19,53 @@ const Dashboard = () => {
     storage: '0MB'
   });
 
+  // Quick links configuration - hardcoded enable/disable
+  const quickLinks = [
+    {
+      id: 'support',
+      label: 'Support Center',
+      icon: 'support_agent',
+      link: 'https://support.plotune.net',
+      external: true,
+      enabled: true 
+    },
+    {
+      id: 'dns',
+      label: 'DNS Management',
+      icon: 'dns',
+      link: '/dns',
+      external: false,
+      enabled: true 
+    },
+    {
+      id: 'partnership',
+      label: 'Partnership',
+      icon: 'handshake', // Changed from partner_exchange to handshake
+      link: '/partners',
+      external: false,
+      enabled: true 
+    },
+    {
+      id: 'partner-portal',
+      label: 'Partner Portal',
+      icon: 'business_center',
+      link: '/partner-portal',
+      external: false,
+      enabled: true 
+    },
+    {
+      id: 'flow-designer',
+      label: 'Flow Designer',
+      icon: 'account_tree',
+      link: 'https://flow.plotune.net',
+      external: true,
+      enabled: true 
+    }
+  ];
+
+  // Filter only enabled links
+  const enabledQuickLinks = quickLinks.filter(link => link.enabled);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -59,18 +106,15 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-dark-bg to-gray-900 pt-20 pb-12">
       <div className="container mx-auto px-4">
-        <div className="mb-8">
-          <p className="text-gray-text">Welcome back, <Link to="/profile" className="text-primary hover:underline text-sm">{user?.username}</Link></p>
-        </div>
 
         <div className="space-y-6">
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { label: 'Installed Extensions', value: stats.extensions, icon: '🧩', color: 'blue' },
-              { label: 'Active Projects', value: stats.projects, icon: '📁', color: 'green' },
-              { label: 'API Calls (30d)', value: stats.apiCalls, icon: '📊', color: 'purple' },
-              { label: 'Storage Used', value: stats.storage, icon: '💾', color: 'orange' },
+            //  { label: 'Installed Extensions', value: stats.extensions, icon: '🧩', color: 'blue' },
+            //  { label: 'Active Projects', value: stats.projects, icon: '📁', color: 'green' },
+            //  { label: 'API Calls (30d)', value: stats.apiCalls, icon: '📊', color: 'purple' },
+            //  { label: 'Storage Used', value: stats.storage, icon: '💾', color: 'orange' },
             ].map((stat, index) => (
               <div key={index} className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl">
                 <div className="flex items-center justify-between">
@@ -85,6 +129,46 @@ const Dashboard = () => {
               </div>
             ))}
           </div>
+
+          {/* Quick Links - Only show if there are enabled links */}
+          {enabledQuickLinks.length > 0 && (
+            <div className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl">
+              <h2 className="text-xl font-semibold text-light-text mb-4">Quick Links</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                {enabledQuickLinks.map((link) => (
+                  link.external ? (
+                    <a
+                      key={link.id}
+                      href={link.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block p-4 bg-dark-surface rounded-lg border border-white/5 hover:border-primary/50 transition group text-center"
+                    >
+                      <div className="text-2xl mb-2">
+                        <span className="material-icons text-3xl text-gray-400 group-hover:text-primary transition">
+                          {link.icon}
+                        </span>
+                      </div>
+                      <h3 className="text-light-text font-medium text-sm">{link.label}</h3>
+                    </a>
+                  ) : (
+                    <Link
+                      key={link.id}
+                      to={link.link}
+                      className="block p-4 bg-dark-surface rounded-lg border border-white/5 hover:border-primary/50 transition group text-center"
+                    >
+                      <div className="text-2xl mb-2">
+                        <span className="material-icons text-3xl text-gray-400 group-hover:text-primary transition">
+                          {link.icon}
+                        </span>
+                      </div>
+                      <h3 className="text-light-text font-medium text-sm">{link.label}</h3>
+                    </Link>
+                  )
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Quick Actions */}
           <div className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl">
