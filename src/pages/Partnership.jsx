@@ -67,7 +67,6 @@ const Partnership = () => {
       <section className="py-20 bg-gradient-to-br from-dark-bg to-gray-900">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-light-text mb-6">
-
             <br></br>
             Plotune Partner Network
           </h1>
@@ -146,6 +145,31 @@ const Partnership = () => {
         </div>
       </section>
 
+      {/* Video Section */}
+      <section className="py-16 bg-dark-surface">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-light-text mb-4">
+              See Our Partnership in Action
+            </h2>
+            <p className="text-gray-text max-w-2xl mx-auto text-lg">
+              Discover how our partner program drives success and innovation
+            </p>
+          </div>
+          <div className="max-w-4xl mx-auto">
+            <div className="aspect-w-16 aspect-h-9 rounded-2xl overflow-hidden shadow-2xl">
+              <iframe
+                src="https://www.youtube.com/embed/uudw-lsUGC4"
+                title="Plotune Partnership Program"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-96 md:h-[500px]"
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      </section>
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-primary/10 to-blue-500/10">
         <div className="container mx-auto px-4 text-center">
