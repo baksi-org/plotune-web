@@ -25,6 +25,7 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(false); // Temporarily disable loading for faster UX
       try {
         const profileResponse = await api.get('/profile', {
           headers: { Authorization: token },

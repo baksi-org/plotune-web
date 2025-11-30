@@ -68,6 +68,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(false); // Temporarily disable loading for faster UX
       try {
         const premiumResponse = await api.get('/user/premium', {
           headers: { Authorization: token },
@@ -82,7 +83,7 @@ const Dashboard = () => {
         toast.error('Failed to load dashboard data');
         if (err.response?.status === 401) logout();
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     };
     if (token) fetchData();
