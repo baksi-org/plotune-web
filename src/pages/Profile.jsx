@@ -6,7 +6,7 @@ import MD5 from 'crypto-js/md5';
 
 const Profile = () => {
   const { user, token, logout } = useContext(AuthContext);
-  const [userData, setUserData] = useState(user || {});
+  const [userData, setUserData] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState('profile');
@@ -31,7 +31,7 @@ const Profile = () => {
           headers: { Authorization: token },
         });
         setUserData(profileResponse.data);
-        
+        console.log(profileResponse.username)
         const premiumResponse = await api.get('/user/premium', {
           headers: { Authorization: token },
         });
@@ -44,7 +44,7 @@ const Profile = () => {
       }
     };
     if (token) fetchData();
-  }, [token, logout]);
+  }, [token]);
 
   const handleUpdate = async () => {
     try {

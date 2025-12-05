@@ -75,7 +75,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setToken(null);
     setUser(null);
-    // Clear cookie
+    
     Cookies.remove('auth_token');
     window.location.href = '#/login';
   };

@@ -23,7 +23,9 @@ const PlotuneStreams = () => {
   // Get stream token from backend first
   const fetchStreamToken = async () => {
     try {
-      const response = await api.get('/auth/stream', {
+      const cacheBuster = Math.floor(Date.now() / (1000 * 60 * 20));
+
+      const response = await api.get(`/auth/stream?q=${cacheBuster}&user=${user?.username}`, {
         headers: { Authorization: token },
       });
       
