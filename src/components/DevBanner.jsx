@@ -8,9 +8,9 @@ const DevBanner = () => {
   // Define routes where DevBanner should be shown
   const showOnRoutes = [
     '/docs',
-    '/profile', 
     '/dns',
-    '/legal'
+    '/legal',
+    "/partner-portal"
   ];
 
   // Don't show if not in the allowed routes

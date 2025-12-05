@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import MD5 from 'crypto-js/md5';
+import { v4 as uuidv4 } from 'uuid';
 
 const Profile = () => {
   const { user, token, logout } = useContext(AuthContext);
@@ -23,28 +24,35 @@ const Profile = () => {
     return `https://www.gravatar.com/avatar/${hash}?d=retro&s=${size}`;
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(false); // Temporarily disable loading for faster UX
-      try {
-        const profileResponse = await api.get('/profile', {
-          headers: { Authorization: token },
-        });
-        setUserData(profileResponse.data);
-        console.log(profileResponse.username)
-        const premiumResponse = await api.get('/user/premium', {
-          headers: { Authorization: token },
-        });
-        setPremiumStatus(premiumResponse.data.is_premium || false);
-      } catch (err) {
-        // toast.error('Failed to load profile data');
-        if (err.response?.status === 401) logout();
-      } finally {
-        setLoading(false);
-      }
-    };
-    if (token) fetchData();
-  }, [token]);
+useEffect(() => {
+  const fetchData = async () => {
+    setLoading(true);
+
+    try {
+      // Her istek için kesinlikle unique UUID
+      const cachebuster = uuidv4();
+
+      const profileResponse = await api.get(`/profile?cb=${cachebuster}`, {
+        headers: { Authorization: token },
+      });
+      setUserData(profileResponse.data);
+
+      const premiumResponse = await api.get(
+        `/user/premium?cb=${cachebuster}`,
+        { headers: { Authorization: token } }
+      );
+      setPremiumStatus(premiumResponse.data.is_premium || false);
+    } catch (err) {
+      if (err.response?.status === 401) logout();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (token) fetchData();
+}, [token]);
+
+
 
   const handleUpdate = async () => {
     try {

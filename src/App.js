@@ -26,7 +26,7 @@ import Streams from './pages/Streams';
 import DnsPage from './pages/DnsPage';
 import Partnership from './pages/Partnership';
 import PartnerApplication from './pages/PartnerApplication';
-
+import PartnerPortal from './pages/PartnerPortal';
 // Scroll'u en üste alan bileşen
 import { useLayoutEffect } from 'react'; // useEffect yerine
 
@@ -83,6 +83,7 @@ function App() {
             <Route path="/streams" element={<Streams />} />
             <Route path="/dns" element={<DnsPage />} />
             <Route path="/partners" element={<Partnership />} />
+            <Route path="/partner-portal" element={<PartnerPortal />} />
             <Route path="/partners/apply" element={<PartnerApplication />} />
           </Routes>
           <Footer />
