@@ -46,7 +46,7 @@ const DownloadSection = () => {
           name: 'Snap Store',
           description: 'Recommended for Linux users. Easy installation and automatic updates from the Snap Store.',
           version: 'v1.0.0',
-          size: '~60 MB',
+          size: '~78 MB',
           downloadUrl: 'https://snapcraft.io/plotune',
           type: 'snap',
           command: 'sudo snap install plotune',
