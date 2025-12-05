@@ -27,7 +27,7 @@ const DownloadSection = () => {
           description: 'Recommended for most users. Easy installation with automatic updates.',
           version: 'v1.0.0',
           size: '57.7 MB',
-          downloadUrl: 'https://github.com/baksi-org/plotune-dl/releases/download/v1.0.0-win-beta/Setup.Plotune.zip',
+          downloadUrl: 'https://github.com/baksi-org/plotune-dl/releases/download/v1.0.0-win/Setup.Plotune.zip',
           type: 'exe',
           instructions: [
             'Download the installer above',
