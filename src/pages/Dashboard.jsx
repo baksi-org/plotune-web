@@ -30,10 +30,10 @@ const Dashboard = () => {
       enabled: true 
     },
     {
-      id: 'dns',
-      label: 'DNS Management',
+      id: 's3',
+      label: 'Storage Management',
       icon: 'dns',
-      link: '/dns',
+      link: '/storage',
       external: false,
       enabled: true 
     },

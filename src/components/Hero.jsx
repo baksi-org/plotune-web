@@ -11,7 +11,7 @@ const Hero = () => {
       ),
       desc: "Streamline your data workflows with Plotune - the intelligent data orchestrator. From ingestion to insights, we simplify complex data operations with our Core, Stream, and Cloud solutions.",
       cta1: "Get Started",
-      cta2: "View Services",
+      cta2: "Become Partner",
     },
     {
       title: (
@@ -21,7 +21,7 @@ const Hero = () => {
       ),
       desc: "Transform your data operations with our comprehensive DataOps platform. Plotune orchestrates your entire data lifecycle, making complex workflows simple and manageable.",
       cta1: "Get Started",
-      cta2: "View Services",
+      cta2: "Become Partner",
     },
     {
       title: (
@@ -31,7 +31,7 @@ const Hero = () => {
       ),
       desc: "Choose from Plotune Core for on-premise control, Stream for real-time processing, or Cloud for scalable solutions. Your complete data operations partner.",
       cta1: "Get Started",
-      cta2: "View Services",
+      cta2: "Become Partner",
     },
   ];
 
@@ -54,7 +54,7 @@ const Hero = () => {
               {randomMessage.cta1}
             </a>
             <a
-              href="#/#features"
+              href="#/partners"
               className="border-2 border-primary text-primary px-7 py-3 rounded-full font-semibold hover:bg-primary/10 hover:-translate-y-1 transition-all duration-300"
             >
               {randomMessage.cta2}

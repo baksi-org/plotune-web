@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import { AuthContext } from '../context/AuthContext';
@@ -9,6 +9,11 @@ const Header = () => {
   const { user, logout } = useContext(AuthContext);
   const isLoggedIn = !!user;
   const location = useLocation();
+
+  // Lokasyon değiştiğinde mobile menüyü kapat
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -38,7 +43,7 @@ const Header = () => {
     { to: '/dashboard', label: 'Dashboard', icon: 'dashboard' },
     { to: '/streams', label: 'Streams', icon: 'stream' },
     { to: 'https://flow.plotune.net', label: 'Flows', icon: 'account_tree', isExternal: true },
-    { to: '/dns', label: 'DNS', icon: 'dns' },
+    { to: '/storage', label: 'Storage', icon: 'dns' },
     { to: '/extensions', label: 'Extensions', icon: 'store' },
   ];
 
@@ -59,6 +64,7 @@ const Header = () => {
           target="_blank"
           rel="noopener noreferrer"
           className={`flex items-center gap-2 ${linkClass}`}
+          onClick={() => setIsMobileMenuOpen(false)} // External link tıklandığında menüyü kapat
         >
           {item.icon && <span className="material-icons text-lg">{item.icon}</span>}
           {item.label}
@@ -70,6 +76,9 @@ const Header = () => {
       <Link
         to={item.to}
         className={`flex items-center gap-2 ${linkClass}`}
+        // Internal linkler için de tıklanınca menüyü kapatmak istiyorsak:
+        // onClick={() => setIsMobileMenuOpen(false)}
+        // Ancak useEffect zaten kapatıyor, bu nedenle gerek yok.
       >
         {item.icon && <span className="material-icons text-lg">{item.icon}</span>}
         {item.label}
@@ -80,12 +89,14 @@ const Header = () => {
   return (
     <header className="bg-dark-surface fixed w-full top-0 z-50 shadow-custom py-4">
       <div className="container mx-auto px-5 flex justify-between items-center">
+          <Link  to="/#">
         <div className="flex items-center gap-3">
           <img src={logo} alt="Plotune Logo" className="h-10 w-auto" />
           <h1 className="text-2xl font-bold text-light-text bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             Plotune
           </h1>
         </div>
+          </Link>
         <nav className="flex items-center">
           <ul className={`md:flex gap-8 ${isMobileMenuOpen ? 'flex flex-col absolute top-16 left-0 w-full bg-dark-surface p-5' : 'hidden md:flex'}`}>
             {navItems.map((item) => (

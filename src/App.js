@@ -27,6 +27,7 @@ import DnsPage from './pages/DnsPage';
 import Partnership from './pages/Partnership';
 import PartnerApplication from './pages/PartnerApplication';
 import PartnerPortal from './pages/PartnerPortal';
+import StorageManager from './pages/StorageManager';
 // Scroll'u en üste alan bileşen
 import { useLayoutEffect } from 'react'; // useEffect yerine
 
@@ -85,6 +86,7 @@ function App() {
             <Route path="/partners" element={<Partnership />} />
             <Route path="/partner-portal" element={<PartnerPortal />} />
             <Route path="/partners/apply" element={<PartnerApplication />} />
+            <Route path="/storage" element={<StorageManager />} />
           </Routes>
           <Footer />
         </div>
