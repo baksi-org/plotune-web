@@ -1,10 +1,27 @@
 // components/streams/StreamCard.jsx
-import React from 'react';
+import React, { useState } from 'react';
+import { 
+  FaCog, 
+  FaTrash, 
+  FaPlay, 
+  FaPause, 
+  FaUsers, 
+  FaClock, 
+  FaMemory, 
+  FaEnvelope, 
+  FaGlobe, 
+  FaTag,
+  FaSpinner
+} from 'react-icons/fa';
 import StreamIcon from '../../assets/icons/stream.svg';
 
 const StreamCard = ({ stream, onManage, onDelete }) => {
-  const getStatusColor = (isActive) => {
-    return isActive ? 'bg-green-500' : 'bg-red-500';
+  const [isDeleting, setIsDeleting] = useState(false);
+  
+  const getStatusBadge = (isActive) => {
+    return isActive 
+      ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+      : "bg-rose-500/15 text-rose-400 border border-rose-500/30";
   };
 
   const formatBytes = (bytes) => {
@@ -12,90 +29,185 @@ const StreamCard = ({ stream, onManage, onDelete }) => {
     const k = 1024;
     const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString();
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric', 
+      year: 'numeric' 
+    });
+  };
+
+  const getMessageRateColor = (rate) => {
+    if (rate >= 100) return "text-rose-400";
+    if (rate >= 50) return "text-amber-400";
+    return "text-emerald-400";
+  };
+
+  const handleDeleteClick = async (e) => {
+    e.stopPropagation();
+    setIsDeleting(true);
+    await onDelete(stream);
+    setIsDeleting(false);
   };
 
   return (
-    <div className="bg-dark-surface rounded-xl p-6 border border-white/10 hover:border-primary/30 transition group">
-      {/* Header */}
-      <div className="flex justify-between items-start mb-4">
-        <div className="flex items-center">
-          <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
-            <img 
-              src={StreamIcon} 
-              alt="Stream" 
-              className="w-6 h-6"
-            />
+    <div className="relative bg-gradient-to-br from-dark-card to-dark-surface rounded-2xl p-6 border border-white/10 hover:border-primary/30 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-1 overflow-hidden group">
+      {/* Top Accent Bar */}
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-primary-dark opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      
+      {/* Header Section */}
+      <div className="flex items-start justify-between mb-5">
+        <div className="flex items-center space-x-4">
+          {/* Icon Container */}
+          <div className="relative">
+            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary/20 to-primary-dark/20 flex items-center justify-center border border-primary/30 group-hover:scale-110 transition-transform duration-300">
+              <img 
+                src={StreamIcon} 
+                alt="Stream" 
+                className="w-7 h-7 text-primary filter drop-shadow"
+              />
+            </div>
+            {/* Status Dot */}
+            <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-dark-card ${stream.is_active ? 'bg-emerald-500' : 'bg-rose-500'} animate-pulse`}></div>
           </div>
-          <div className="ml-3">
-            <h4 className="text-light-text font-semibold">{stream.name}</h4>
+          
+          {/* Title & Status */}
+          <div className="flex-1 min-w-0">
+            <h3 className="text-lg font-semibold text-light-text tracking-tight truncate group-hover:text-primary transition-colors">
+              {stream.name}
+            </h3>
             <div className="flex items-center space-x-2 mt-1">
-              <span className={`w-2 h-2 rounded-full ${getStatusColor(stream.is_active)}`}></span>
-              <span className="text-gray-text text-sm capitalize">
+              <span className={`inline-block w-2 h-2 rounded-full ${stream.is_active ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
+              <span className={`text-sm font-medium capitalize ${stream.is_active ? 'text-emerald-400' : 'text-rose-400'}`}>
                 {stream.is_active ? 'Active' : 'Inactive'}
               </span>
+              <span className="text-gray-500">•</span>
+              <div className="flex items-center space-x-1 text-xs text-gray-text">
+                <FaClock />
+                <span>{formatDate(stream.created_at)}</span>
+              </div>
             </div>
           </div>
         </div>
-        <div className="opacity-0 group-hover:opacity-100 transition-opacity flex space-x-1">
-          <button
-            onClick={onManage}
-            className="p-1 text-gray-text hover:text-primary transition"
-            title="Manage stream"
-          >
-            ⚙️
-          </button>
+
+        {/* Quick Actions */}
+        <div className="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          {stream.is_active ? (
+            <button className="p-2 text-gray-text hover:text-amber-400 hover:bg-white/5 rounded-lg transition-all">
+              <FaPause className="w-4 h-4" />
+            </button>
+          ) : (
+            <button className="p-2 text-gray-text hover:text-emerald-400 hover:bg-white/5 rounded-lg transition-all">
+              <FaPlay className="w-4 h-4" />
+            </button>
+          )}
         </div>
       </div>
 
       {/* Description */}
       {stream.description && (
-        <p className="text-gray-text text-sm mb-4 line-clamp-2">{stream.description}</p>
+        <p className="text-gray-text text-sm mb-5 line-clamp-2 leading-relaxed group-hover:text-light-text transition-colors">
+          {stream.description}
+        </p>
       )}
 
-      {/* Stream Limits */}
-      <div className="space-y-3 mb-4">
-        <div>
-          <p className="text-gray-text text-sm">Message Rate</p>
-          <p className="text-light-text font-medium">{stream.max_messages_per_second || 5}/s max</p>
+      {/* Metrics Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
+        {/* Message Rate */}
+        <div className="bg-dark-bg/50 rounded-xl p-3 border border-white/5 hover:border-primary/20 transition-all group-hover:-translate-y-0.5">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-xs text-gray-text flex items-center gap-2">
+              <FaEnvelope className="w-3 h-3" />
+              Rate
+            </span>
+            <span className={`text-xs font-bold ${getMessageRateColor(stream.max_messages_per_second || 5)}`}>
+              {stream.max_messages_per_second || 5}/s
+            </span>
+          </div>
+          <div className="w-full bg-gray-800 rounded-full h-1.5 mt-2 overflow-hidden">
+            <div 
+              className="h-1.5 bg-gradient-to-r from-primary to-primary-dark rounded-full transition-all duration-300"
+              style={{ width: `${Math.min((stream.max_messages_per_second || 5) / 100 * 100, 100)}%` }}
+            ></div>
+          </div>
         </div>
-        <div>
-          <p className="text-gray-text text-sm">Message Size</p>
-          <p className="text-light-text font-medium">
-            {formatBytes(stream.max_message_size_bytes || 1024)} max
-          </p>
+
+        {/* Message Size */}
+        <div className="bg-dark-bg/50 rounded-xl p-3 border border-white/5 hover:border-primary/20 transition-all group-hover:-translate-y-0.5">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-gray-text flex items-center gap-2">
+              <FaMemory className="w-3 h-3" />
+              Size
+            </span>
+            <span className="text-xs font-bold text-light-text">
+              {formatBytes(stream.max_message_size_bytes || 1024)}
+            </span>
+          </div>
+          <p className="text-xs text-gray-500 mt-1">Max limit</p>
         </div>
-        <div>
-          <p className="text-gray-text text-sm">Retention</p>
-          <p className="text-light-text font-medium">
-            {stream.max_retention_messages || 1000} messages
-          </p>
+
+        {/* Retention */}
+        <div className="bg-dark-bg/50 rounded-xl p-3 border border-white/5 hover:border-primary/20 transition-all group-hover:-translate-y-0.5">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-gray-text flex items-center gap-2">
+              <FaMemory className="w-3 h-3" />
+              Retention
+            </span>
+            <span className="text-xs font-bold text-light-text">
+              {stream.max_retention_messages || 1000}
+            </span>
+          </div>
+          <p className="text-xs text-gray-500 mt-1">Messages</p>
         </div>
       </div>
 
-      {/* Metadata */}
-      <div className="text-xs text-gray-text space-y-1 mb-4">
-        <p>Created: {formatDate(stream.created_at)}</p>
-        <p>Public: {stream.is_public ? 'Yes' : 'No'}</p>
+      {/* Metadata Tags */}
+      <div className="flex flex-wrap gap-2 mb-5">
+        {/* Public Status */}
+        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium border ${stream.is_public ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-gray-500/10 text-gray-400 border-gray-500/20'}`}>
+          <FaGlobe className="w-3 h-3" />
+          {stream.is_public ? 'Public' : 'Private'}
+        </span>
+        
+        {/* Message Count Estimate */}
+        {stream.message_count !== undefined && (
+          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+            <FaEnvelope className="w-3 h-3" />
+            {stream.message_count.toLocaleString()} msgs
+          </span>
+        )}
       </div>
 
-      {/* Actions */}
-      <div className="flex justify-between items-center pt-4 border-t border-white/10">
+      {/* Footer Actions */}
+      <div className="flex justify-between items-center pt-4 border-t border-white/5">
         <button
-          onClick={onManage}
-          className="px-3 py-1 bg-primary/20 text-primary rounded-lg text-sm hover:bg-primary/30 transition"
+          onClick={() => onManage(stream)}
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary/20 to-primary-dark/20 text-primary rounded-lg text-sm font-medium hover:from-primary/30 hover:to-primary-dark/30 transition-all duration-200 hover:shadow-md hover:shadow-primary/20"
         >
-          Manage
+          <FaCog className="w-4 h-4" />
+          Configure
         </button>
+        
         <button
-          onClick={onDelete}
-          className="px-3 py-1 bg-red-600/20 text-red-400 rounded-lg text-sm hover:bg-red-600/30 transition"
+          onClick={handleDeleteClick}
+          disabled={isDeleting}
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-rose-500/20 to-rose-600/20 text-rose-400 rounded-lg text-sm font-medium hover:from-rose-500/30 hover:to-rose-600/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Delete
+          {isDeleting ? (
+            <>
+              <div className="w-4 h-4 border-2 border-white/20 border-t-rose-400 rounded-full animate-spin"></div>
+              Deleting...
+            </>
+          ) : (
+            <>
+              <FaTrash className="w-4 h-4" />
+              Delete
+            </>
+          )}
         </button>
       </div>
     </div>

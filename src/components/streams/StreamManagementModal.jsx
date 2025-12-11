@@ -1,294 +1,341 @@
 // components/streams/StreamManagementModal.jsx
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { AuthContext } from '../../context/AuthContext';
+import { streamApi } from '../../services/api';
 
-const StreamManagementModal = ({ stream, onClose, onUpdate, onShare, onUnshare, streamToken, user }) => {
-  const [activeTab, setActiveTab] = useState('overview');
-  const [shareEmail, setShareEmail] = useState('');
-  const [sharePermissions, setSharePermissions] = useState({
+const StreamManagementModal = ({ 
+  stream, 
+  onClose, 
+  onUpdate, 
+  onShare, 
+  onUnshare, 
+  streamToken,
+  user 
+}) => {
+  const [activeTab, setActiveTab] = useState('details');
+  const [sharedUsers, setSharedUsers] = useState([]);
+  const [loadingShared, setLoadingShared] = useState(false);
+  const [shareForm, setShareForm] = useState({
+    email: '',
     can_read: true,
     can_write: false
   });
-  const [sharedUsers, setSharedUsers] = useState([]);
-  const [loadingSharedUsers, setLoadingSharedUsers] = useState(false);
 
-  useEffect(() => {
-    if (activeTab === 'share' && streamToken) {
-      fetchSharedUsers();
-    }
-  }, [activeTab, streamToken]);
-
+  // Stream'in paylaşıldığı kullanıcıları getir
   const fetchSharedUsers = async () => {
-    setLoadingSharedUsers(true);
+    if (!streamToken) return;
+    
+    setLoadingShared(true);
     try {
-      setSharedUsers(stream.auths || []);
+      const response = await streamApi.get('/streams/shared-with', {
+        params: { stream_name: stream.name },
+        headers: { Authorization: streamToken },
+      });
+      
+      setSharedUsers(response.data.shared_with || []);
     } catch (err) {
       console.error('Error fetching shared users:', err);
       toast.error('Failed to load shared users');
     } finally {
-      setLoadingSharedUsers(false);
+      setLoadingShared(false);
     }
   };
 
+  useEffect(() => {
+    if (activeTab === 'sharing' && streamToken) {
+      fetchSharedUsers();
+    }
+  }, [activeTab, streamToken]);
+
   const handleShareSubmit = async (e) => {
     e.preventDefault();
-    if (!shareEmail.trim()) {
+    if (!shareForm.email.trim()) {
       toast.error('Please enter an email address');
       return;
     }
 
-    if (!streamToken) {
-      toast.error('Stream access not available');
+    try {
+      await onShare(stream.name, shareForm.email, {
+        can_read: shareForm.can_read,
+        can_write: shareForm.can_write
+      });
+      
+      setShareForm({ email: '', can_read: true, can_write: false });
+      fetchSharedUsers(); // Listeyi yenile
+    } catch (err) {
+      // Error handled in parent
+    }
+  };
+
+  const handleUnshareUser = async (userEmail) => {
+    if (!window.confirm(`Remove ${userEmail} from this stream?`)) {
       return;
     }
 
-    await onShare(stream.name, shareEmail, sharePermissions);
-    setShareEmail('');
-    setSharePermissions({ can_read: true, can_write: false });
-  };
-
-  const handleUnshare = async (userEmail) => {
-    if (!streamToken) {
-      toast.error('Stream access not available');
-      return;
+    try {
+      await onUnshare(stream.name, userEmail);
+      fetchSharedUsers(); // Listeyi yenile
+    } catch (err) {
+      // Error handled in parent
     }
-
-    await onUnshare(stream.name, userEmail);
-  };
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString();
-  };
-
-  const getPermissionText = (user) => {
-    if (user.can_read && user.can_write) return 'Read & Write';
-    if (user.can_read) return 'Read Only';
-    if (user.can_write) return 'Write Only';
-    return 'No Access';
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-dark-card rounded-2xl border border-white/10 shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+      <div className="bg-dark-card rounded-2xl border border-white/10 shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className="flex justify-between items-center p-6 border-b border-white/10">
+        <div className="flex items-center justify-between p-6 border-b border-white/10">
           <div>
-            <h3 className="text-xl font-semibold text-light-text">{stream.name}</h3>
-            <p className="text-gray-text text-sm">Stream Management</p>
+            <h2 className="text-xl font-semibold text-light-text">Manage Stream</h2>
+            <p className="text-gray-text text-sm mt-1">{stream.name}</p>
           </div>
           <button
             onClick={onClose}
-            className="text-gray-text hover:text-light-text transition p-2"
+            className="text-gray-text hover:text-light-text text-2xl transition"
           >
             ✕
           </button>
         </div>
 
         {/* Tabs */}
-        <div className="border-b border-white/10">
-          <div className="flex space-x-1 px-6">
-            {['overview', 'share', 'access'].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-4 py-3 text-sm font-medium transition relative ${
-                  activeTab === tab
-                    ? 'text-primary'
-                    : 'text-gray-text hover:text-light-text'
-                }`}
-              >
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                {activeTab === tab && (
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"></div>
-                )}
-              </button>
-            ))}
-          </div>
+        <div className="flex border-b border-white/10">
+          <button
+            onClick={() => setActiveTab('details')}
+            className={`flex-1 py-4 text-center font-medium transition ${
+              activeTab === 'details'
+                ? 'text-primary border-b-2 border-primary'
+                : 'text-gray-text hover:text-light-text'
+            }`}
+          >
+            Details
+          </button>
+          <button
+            onClick={() => setActiveTab('sharing')}
+            className={`flex-1 py-4 text-center font-medium transition ${
+              activeTab === 'sharing'
+                ? 'text-primary border-b-2 border-primary'
+                : 'text-gray-text hover:text-light-text'
+            }`}
+          >
+            Sharing
+          </button>
         </div>
 
         {/* Content */}
-        <div className="p-6 max-h-[60vh] overflow-y-auto">
-          {/* Overview Tab */}
-          {activeTab === 'overview' && (
+        <div className="p-6 overflow-y-auto max-h-[60vh]">
+          {/* Details Tab */}
+          {activeTab === 'details' && (
             <div className="space-y-6">
-              <div>
-                <h4 className="text-light-text font-medium mb-4">Stream Information</h4>
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <p className="text-gray-text">Status</p>
-                    <p className="text-light-text">
-                      {stream.is_active ? 'Active' : 'Inactive'}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-gray-text">Public</p>
-                    <p className="text-light-text">
-                      {stream.is_public ? 'Yes' : 'No'}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-gray-text">Created</p>
-                    <p className="text-light-text">
-                      {formatDate(stream.created_at)}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-gray-text">Last Updated</p>
-                    <p className="text-light-text">
-                      {stream.updated_at ? formatDate(stream.updated_at) : 'Never'}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h4 className="text-light-text font-medium mb-4">Stream Limits</h4>
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <p className="text-gray-text">Max Messages/Second</p>
-                    <p className="text-light-text">{stream.max_messages_per_second || 5}</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-text">Max Message Size</p>
-                    <p className="text-light-text">{stream.max_message_size_bytes || 1024} bytes</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-text">Max Retention</p>
-                    <p className="text-light-text">{stream.max_retention_messages || 1000} messages</p>
-                  </div>
-                </div>
-              </div>
-
-              {stream.description && (
+              {/* Stream Info */}
+              <div className="space-y-4">
                 <div>
-                  <h4 className="text-light-text font-medium mb-2">Description</h4>
-                  <p className="text-gray-text text-sm">{stream.description}</p>
+                  <h3 className="text-light-text font-medium mb-2">Stream Information</h3>
+                  <div className="bg-dark-surface rounded-lg p-4 space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-gray-text">Name</span>
+                      <span className="text-light-text font-mono">{stream.name}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-text">Owner</span>
+                      <span className="text-light-text">{stream.owner_email || user?.email}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-text">Created</span>
+                      <span className="text-light-text">
+                        {new Date(stream.created_at).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              )}
+
+                {/* Limits */}
+                <div>
+                  <h3 className="text-light-text font-medium mb-2">Limits</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="bg-dark-surface rounded-lg p-4">
+                      <div className="text-gray-text text-sm mb-1">Max Messages/Sec</div>
+                      <div className="text-light-text font-semibold text-lg">
+                        {stream.max_messages_per_second}
+                      </div>
+                    </div>
+                    <div className="bg-dark-surface rounded-lg p-4">
+                      <div className="text-gray-text text-sm mb-1">Max Message Size</div>
+                      <div className="text-light-text font-semibold text-lg">
+                        {stream.max_message_size_bytes} bytes
+                      </div>
+                    </div>
+                    <div className="bg-dark-surface rounded-lg p-4">
+                      <div className="text-gray-text text-sm mb-1">Max Retention</div>
+                      <div className="text-light-text font-semibold text-lg">
+                        {stream.max_retention_messages} messages
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Danger Zone */}
+              <div className="border border-red-500/30 rounded-lg p-4">
+                <h3 className="text-red-400 font-medium mb-3">Danger Zone</h3>
+                <p className="text-gray-text text-sm mb-4">
+                  Deleting this stream will permanently remove all messages and cannot be undone.
+                </p>
+                <button
+                  onClick={() => {
+                    if (window.confirm('Are you sure you want to delete this stream? This action cannot be undone.')) {
+                      onClose();
+                      // Delete will be handled by parent
+                    }
+                  }}
+                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition"
+                >
+                  Delete Stream
+                </button>
+              </div>
             </div>
           )}
 
-          {/* Share Tab */}
-          {activeTab === 'share' && (
+          {/* Sharing Tab */}
+          {activeTab === 'sharing' && (
             <div className="space-y-6">
-              <div>
-                <h4 className="text-light-text font-medium mb-4">Share Stream</h4>
+              {/* Add User Form */}
+              <div className="bg-dark-surface rounded-xl p-5 border border-white/5">
+                <h3 className="text-light-text font-medium mb-4">Share with New User</h3>
                 <form onSubmit={handleShareSubmit} className="space-y-4">
                   <div>
-                    <label className="block text-gray-text mb-2 text-sm">Email Address</label>
+                    <label className="block text-gray-text mb-2">Email Address</label>
                     <input
                       type="email"
-                      value={shareEmail}
-                      onChange={(e) => setShareEmail(e.target.value)}
-                      placeholder="Enter user's email address"
-                      className="w-full p-3 bg-dark-surface rounded-lg border border-white/10 text-light-text focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                      value={shareForm.email}
+                      onChange={(e) => setShareForm({ ...shareForm, email: e.target.value })}
+                      placeholder="user@example.com"
+                      className="w-full p-3 bg-dark-bg rounded-lg border border-white/10 text-light-text focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent"
+                      required
                     />
                   </div>
-
+                  
                   <div className="grid grid-cols-2 gap-4">
                     <div className="flex items-center">
                       <input
                         type="checkbox"
                         id="can_read"
-                        checked={sharePermissions.can_read}
-                        onChange={(e) => setSharePermissions(prev => ({
-                          ...prev,
-                          can_read: e.target.checked
-                        }))}
-                        className="mr-2"
+                        checked={shareForm.can_read}
+                        onChange={(e) => setShareForm({ ...shareForm, can_read: e.target.checked })}
+                        className="mr-2 h-4 w-4 text-primary bg-dark-bg border-white/20 rounded focus:ring-primary/50"
                       />
-                      <label htmlFor="can_read" className="text-gray-text text-sm">
-                        Can Read (Consumer)
+                      <label htmlFor="can_read" className="text-light-text text-sm">
+                        Can Read
                       </label>
                     </div>
                     <div className="flex items-center">
                       <input
                         type="checkbox"
                         id="can_write"
-                        checked={sharePermissions.can_write}
-                        onChange={(e) => setSharePermissions(prev => ({
-                          ...prev,
-                          can_write: e.target.checked
-                        }))}
-                        className="mr-2"
+                        checked={shareForm.can_write}
+                        onChange={(e) => setShareForm({ ...shareForm, can_write: e.target.checked })}
+                        className="mr-2 h-4 w-4 text-primary bg-dark-bg border-white/20 rounded focus:ring-primary/50"
                       />
-                      <label htmlFor="can_write" className="text-gray-text text-sm">
-                        Can Write (Producer)
+                      <label htmlFor="can_write" className="text-light-text text-sm">
+                        Can Write
                       </label>
                     </div>
                   </div>
 
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
+                    className="w-full py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition font-medium"
                   >
                     Share Stream
                   </button>
                 </form>
               </div>
 
-              <div className="pt-4 border-t border-white/10">
-                <h4 className="text-light-text font-medium mb-4">Shared Users</h4>
-                {loadingSharedUsers ? (
-                  <div className="flex justify-center py-4">
+              {/* Shared Users List */}
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-light-text font-medium">Shared With</h3>
+                  <button
+                    onClick={fetchSharedUsers}
+                    className="text-sm text-primary hover:text-primary-dark transition"
+                    disabled={loadingShared}
+                  >
+                    {loadingShared ? 'Refreshing...' : 'Refresh'}
+                  </button>
+                </div>
+
+                {loadingShared ? (
+                  <div className="flex justify-center py-8">
                     <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary"></div>
                   </div>
-                ) : sharedUsers.length > 0 ? (
+                ) : sharedUsers.length === 0 ? (
+                  <div className="text-center py-8 bg-dark-surface/50 rounded-lg">
+                    <div className="text-gray-text mb-2">No users have been shared with yet</div>
+                    <div className="text-sm text-gray-text">Share this stream with others above</div>
+                  </div>
+                ) : (
                   <div className="space-y-3">
-                    {sharedUsers.map((user) => (
-                      <div key={user.id} className="flex justify-between items-center p-3 bg-dark-surface rounded-lg">
+                    {sharedUsers.map((sharedUser, index) => (
+                      <div
+                        key={index}
+                        className="bg-dark-surface rounded-lg p-4 flex items-center justify-between"
+                      >
                         <div>
-                          <p className="text-light-text">{user.user_email}</p>
-                          <p className="text-gray-text text-sm">
-                            {getPermissionText(user)}
-                          </p>
+                          <div className="text-light-text font-medium">{sharedUser.email}</div>
+                          <div className="flex items-center gap-4 mt-1">
+                            <span className={`text-xs px-2 py-1 rounded-full ${
+                              sharedUser.can_read 
+                                ? 'bg-green-500/20 text-green-400' 
+                                : 'bg-gray-500/20 text-gray-400'
+                            }`}>
+                              {sharedUser.can_read ? 'Can Read' : 'Cannot Read'}
+                            </span>
+                            <span className={`text-xs px-2 py-1 rounded-full ${
+                              sharedUser.can_write 
+                                ? 'bg-blue-500/20 text-blue-400' 
+                                : 'bg-gray-500/20 text-gray-400'
+                            }`}>
+                              {sharedUser.can_write ? 'Can Write' : 'Cannot Write'}
+                            </span>
+                          </div>
                         </div>
                         <button
-                          onClick={() => handleUnshare(user.user_email)}
-                          className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition"
+                          onClick={() => handleUnshareUser(sharedUser.email)}
+                          className="text-red-400 hover:text-red-300 transition p-2 hover:bg-white/10 rounded-lg"
+                          title="Remove access"
                         >
                           Remove
                         </button>
                       </div>
                     ))}
                   </div>
-                ) : (
-                  <p className="text-gray-text text-center py-4">No users shared with this stream</p>
                 )}
               </div>
-            </div>
-          )}
 
-          {/* Access Tab */}
-          {activeTab === 'access' && (
-            <div className="space-y-6">
-              <div>
-                <h4 className="text-light-text font-medium mb-4">Connection Details</h4>
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-gray-text text-sm mb-2">Producer URL</p>
-                    <code className="block w-full p-3 bg-dark-surface rounded-lg border border-white/10 text-primary text-sm break-all">
-                      wss://stream.plotune.net/ws/producer/{user?.username}/{stream.name}
-                    </code>
-                  </div>
-                  <div>
-                    <p className="text-gray-text text-sm mb-2">Consumer URL</p>
-                    <code className="block w-full p-3 bg-dark-surface rounded-lg border border-white/10 text-primary text-sm break-all">
-                      wss://stream.plotune.net/ws/consumer/{user?.username}/{stream.name}/[group_name]
-                    </code>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-blue-500/20 border border-blue-500/30 rounded-lg p-4">
-                <h5 className="text-blue-400 font-medium mb-2">Connection Info</h5>
-                <p className="text-blue-300 text-sm">
-                  Use these WebSocket URLs to connect your applications to this stream.
-                </p>
+              {/* Sharing Info */}
+              <div className="bg-primary/10 border border-primary/20 rounded-lg p-4">
+                <h4 className="text-light-text font-medium mb-2 flex items-center">
+                  <span className="material-icons mr-2 text-primary">info</span>
+                  Sharing Information
+                </h4>
+                <ul className="text-gray-text text-sm space-y-1">
+                  <li>• Shared users can access this stream using their own credentials</li>
+                  <li>• Read permission allows consuming messages from the stream</li>
+                  <li>• Write permission allows publishing messages to the stream</li>
+                  <li>• Owner always has full read and write access</li>
+                </ul>
               </div>
             </div>
           )}
+        </div>
+
+        {/* Footer */}
+        <div className="flex justify-end p-6 border-t border-white/10">
+          <button
+            onClick={onClose}
+            className="px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition"
+          >
+            Close
+          </button>
         </div>
       </div>
     </div>
