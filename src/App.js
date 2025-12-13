@@ -28,6 +28,8 @@ import Partnership from './pages/Partnership';
 import PartnerApplication from './pages/PartnerApplication';
 import PartnerPortal from './pages/PartnerPortal';
 import StorageManager from './pages/StorageManager';
+import PackageMirror from './pages/PackageMirror';
+
 // Scroll'u en üste alan bileşen
 import { useLayoutEffect } from 'react'; // useEffect yerine
 
@@ -87,6 +89,7 @@ function App() {
             <Route path="/partner-portal" element={<PartnerPortal />} />
             <Route path="/partners/apply" element={<PartnerApplication />} />
             <Route path="/storage" element={<StorageManager />} />
+            <Route path="/mirror" element={<PackageMirror />} />
           </Routes>
           <Footer />
         </div>
