@@ -34,42 +34,18 @@ const PackageMirror = () => {
 
   // Mock data for demonstration
   const mockPackages = [
-    {
-      id: 1,
-      name: 'plotune-stream-gateway',
-      displayName: 'Stream Gateway',
-      status: 'active',
-      source: 'ghcr.io/baksi-org/plotune-stream-gateway',
-      tag: 'latest',
-      lastSynced: '2024-01-15T10:30:00Z',
-      size: '245MB',
-      logs: ['2024-01-15 10:30:15 - Successfully synced with latest version', '2024-01-15 10:30:10 - Pulling from GHCR...', '2024-01-15 10:30:05 - Authentication successful'],
-      description: 'Real-time stream processing gateway'
-    },
-    {
-      id: 2,
-      name: 'plotune-api-server',
-      displayName: 'API Server',
-      status: 'inactive',
-      source: 'ghcr.io/baksi-org/plotune-api-server',
-      tag: 'v1.2.0',
-      lastSynced: '2024-01-14T14:20:00Z',
-      size: '189MB',
-      logs: ['2024-01-14 14:20:30 - Synced with tag v1.2.0', '2024-01-14 14:20:25 - Container stopped'],
-      description: 'Main API server for Plotune services'
-    },
-    {
-      id: 3,
-      name: 'plotune-worker',
-      displayName: 'Background Worker',
-      status: 'error',
-      source: 'ghcr.io/baksi-org/plotune-worker',
-      tag: 'latest',
-      lastSynced: '2024-01-13T09:15:00Z',
-      size: '156MB',
-      logs: ['2024-01-13 09:15:45 - Error: Network timeout', '2024-01-13 09:15:40 - Retrying connection...'],
-      description: 'Background job processing worker'
-    }
+    //{
+    //  id: 1,
+    //  name: 'plotune-stream-gateway',
+    //  displayName: 'Stream Gateway',
+    //  status: 'active',
+    //  source: 'ghcr.io/baksi-org/plotune-stream-gateway',
+    //  tag: 'latest',
+    //  lastSynced: '2024-01-15T10:30:00Z',
+    //  size: '245MB',
+    //  logs: ['2024-01-15 10:30:15 - Successfully synced with latest version', '2024-01-15 10:30:10 - Pulling from GHCR...', '2024-01-15 10:30:05 - Authentication successful'],
+    //  description: 'Real-time stream processing gateway'
+    //}
   ];
 
   useEffect(() => {

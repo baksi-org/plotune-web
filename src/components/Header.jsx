@@ -42,7 +42,7 @@ const Header = () => {
     { to: '/profile', label: 'Profile', icon: 'person' },
     { to: '/dashboard', label: 'Dashboard', icon: 'dashboard' },
     { to: '/streams', label: 'Streams', icon: 'stream' },
-    { to: 'https://flow.plotune.net', label: 'Flows', icon: 'account_tree', isExternal: true },
+    { to: '/mirror', label: 'Edge', icon: 'account_tree' },
     { to: '/storage', label: 'Storage', icon: 'dns' },
     { to: '/extensions', label: 'Extensions', icon: 'store' },
   ];
