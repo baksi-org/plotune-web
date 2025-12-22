@@ -8,6 +8,9 @@ import ExtensionIcon from '../assets/icons/extensions.svg';
 import DownloadIcon from '../assets/icons/download.svg';
 import StreamIcon from '../assets/icons/stream.svg';
 
+import { isMobileDevice } from '../context/isMobileDevice';
+import { useAddToHomeScreen } from '../hooks/useAddToHomeScreen';
+
 const Dashboard = () => {
   const { user, token, logout } = useContext(AuthContext);
   const [premiumStatus, setPremiumStatus] = useState(false);
@@ -18,6 +21,10 @@ const Dashboard = () => {
     apiCalls: 0,
     storage: '0MB'
   });
+  
+  // PWA "Add to Home Screen" functionality
+  const { isSupported, promptInstall } = useAddToHomeScreen();
+  const [isMobile, setIsMobile] = useState(false);
 
   // Quick links configuration - hardcoded enable/disable
   const quickLinks = [
@@ -40,7 +47,7 @@ const Dashboard = () => {
     {
       id: 'partnership',
       label: 'Partnership',
-      icon: 'handshake', // Changed from partner_exchange to handshake
+      icon: 'handshake',
       link: '/partners',
       external: false,
       enabled: true 
@@ -86,6 +93,10 @@ const Dashboard = () => {
         // setLoading(false);
       }
     };
+    
+    // Check if device is mobile
+    setIsMobile(isMobileDevice());
+    
     if (token) fetchData();
   }, [token, logout]);
 
@@ -109,7 +120,7 @@ const Dashboard = () => {
       <div className="container mx-auto px-4">
 
         <div className="space-y-6">
-          {/* Stats Cards */}
+          {/* Stats Cards - Currently commented out */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
             //  { label: 'Installed Extensions', value: stats.extensions, icon: '🧩', color: 'blue' },
@@ -235,6 +246,27 @@ const Dashboard = () => {
                   className="mt-4 md:mt-0 px-6 py-3 bg-white text-purple-600 rounded-lg font-semibold hover:bg-gray-100 transition"
                 >
                   Upgrade Now
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Add to Home Screen - Only shows on supported mobile devices */}
+          {isSupported && isMobile && (
+            <div className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-light-text mb-1">Add to Home Screen</h3>
+                  <p className="text-gray-text text-sm">
+                    Install the app for quick access from your home screen
+                  </p>
+                </div>
+                <button
+                  onClick={promptInstall}
+                  className="px-4 py-2 bg-primary/10 text-primary rounded-lg font-medium hover:bg-primary/20 transition-colors border border-primary/20 flex items-center gap-2"
+                >
+                  <span className="material-icons text-sm">add_to_home_screen</span>
+                  Install
                 </button>
               </div>
             </div>

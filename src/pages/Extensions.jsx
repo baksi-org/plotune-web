@@ -127,7 +127,7 @@ const Extensions = () => {
               version: releaseInfo?.version || 'v0.0.0',
               last_updated: releaseInfo?.last_updated || new Date().toISOString().split('T')[0],
               core_version: '>=1.0.0',
-              deployment: releaseInfo?.download_url || ext.deployment
+              deployment: ext.deployment
             };
           } catch (error) {
             console.error(`Error processing extension ${ext.name}:`, error);
