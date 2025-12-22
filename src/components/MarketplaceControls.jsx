@@ -9,64 +9,56 @@ const MarketplaceControls = ({
   totalCount
 }) => {
   const filters = [
-    { key: 'all', label: 'All Extensions', icon: 'fa-grid' },
-    { key: 'free', label: 'Community', icon: 'fa-gift' },
-    { key: 'premium', label: 'Premium', icon: 'fa-crown' },
-    { key: 'enterprise', label: 'Enterprise', icon: 'fa-building' },
-    { key: 'installed', label: 'Installed', icon: 'fa-check-circle' },
-    { key: 'verified', label: 'Verified', icon: 'fa-shield-check' },
-    { key: 'recorder', label: 'Recorder', icon: 'fa-record-vinyl' },
-    { key: 'visualization', label: 'Visualization', icon: 'fa-chart-line' },
-    { key: 'integration', label: 'Integration', icon: 'fa-plug' },
-    { key: 'utility', label: 'Utility', icon: 'fa-tools' },
+    { key: 'all', label: 'All' },
+    { key: 'verified', label: 'Verified' },
+    { key: 'core', label: 'Core' },
+    { key: 'package', label: 'Package' },
+    { key: 'stream', label: 'Stream' },
+    { key: 'cloud', label: 'Cloud' },
   ];
 
   return (
     <div className="bg-dark-card border-b border-white/5">
-      <div className="container mx-auto px-5 py-6">
-        {/* Search Bar */}
-        <div className="relative max-w-2xl mx-auto mb-6">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <i className="fas fa-search text-gray-text"></i>
-          </div>
+      <div className="container mx-auto px-5 py-5">
+        {/* Search Bar - Minimal */}
+        <div className="relative max-w-xl mx-auto mb-5">
           <input
             type="text"
-            placeholder="Search extensions by name, description, category, or tags..."
+            placeholder="Search extensions..."
             value={currentSearch}
             onChange={(e) => setCurrentSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 bg-dark-card border border-white/10 rounded-xl text-light-text placeholder-gray-text focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+            className="w-full px-4 py-2.5 bg-dark-card border border-white/10 rounded-lg text-light-text placeholder-gray-text focus:outline-none focus:border-primary/30 transition-all duration-200 text-sm"
           />
           {currentSearch && (
             <button
               onClick={() => setCurrentSearch('')}
               className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-text hover:text-light-text transition-colors"
             >
-              <i className="fas fa-times"></i>
+              ×
             </button>
           )}
         </div>
 
-        {/* Filter Tabs */}
-        <div className="flex flex-wrap gap-2 justify-center">
+        {/* Filter Tabs - Minimal */}
+        <div className="flex flex-wrap gap-1.5 justify-center">
           {filters.map((filter) => (
             <button
               key={filter.key}
               onClick={() => setCurrentFilter(filter.key)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 ${
                 currentFilter === filter.key
-                  ? 'bg-primary text-white shadow-lg shadow-primary/25'
+                  ? 'bg-primary/10 text-primary border border-primary/20'
                   : 'bg-white/5 text-gray-text hover:bg-white/10 hover:text-light-text'
               }`}
             >
-              <i className={`fas ${filter.icon}`}></i>
               {filter.label}
             </button>
           ))}
         </div>
 
-        {/* Results Count */}
-        <div className="text-center mt-4 text-sm text-gray-text">
-          Showing {extensionCount} of {totalCount} extensions
+        {/* Results Count - Subtle */}
+        <div className="text-center mt-3 text-xs text-gray-text/60">
+          {extensionCount} of {totalCount}
         </div>
       </div>
     </div>

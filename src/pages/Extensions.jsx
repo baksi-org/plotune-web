@@ -10,126 +10,51 @@ const Extensions = () => {
   const [currentSearch, setCurrentSearch] = useState('');
   const [loading, setLoading] = useState(true);
 
-  const sampleExtensions = [
+  const baseExtensions = [
     {
-      id: '0b2f25a9-3a7e-4e72-b8e4-1a7b7a4dbb01',
-      app_id: 'random_data_stream',
-      name: 'Random Data Stream',
-      version: '1.0.0',
-      core_version: '>=1.0.0',
-      author: 'Plotune Team',
-      description: 'Generates synthetic data for testing and simulation of live signal environments.',
-      category: 'Generator',
-      tags: ['random', 'data', 'simulation', 'testing'],
+      id: 'plotune_sandbox_extension',
+      app_id: 'plotune_sandbox_extension',
+      name: 'Plotune SandBox Extension',
+      description: 'Random data generator for SandBox environment in Plotune',
+      tags: ['verified', 'core'],
       os: ["Linux", "Windows"],
-      last_updated: '2024-01-15',
-      repo: 'https://github.com/plotune/random-data-stream',
-      logo: 'https://i.imgur.com/C4l2RaF.jpeg',
-      deployment: 'https://ext.plotune.net/public/random_data_stream.zip',
-      signature: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz...',
-      web: 'https://plotune.net/random-data-stream',
-      documentation: 'https://docs.plotune.net/random-data-stream',
-      premium_level: 0,
+      repo: 'https://github.com/baksi-org/plotune-sandbox-ext',
+      deployment: 'https://github.com/baksi-org/plotune-sandbox-ext/releases',
+      web: 'https://plotune.net/',
+      documentation: 'https://github.com/baksi-org/plotune-sandbox-ext',
       is_verified: true,
-      installed: false,
-      enabled: false,
-      price: 0
+      author: 'Plotune SDK Team',
+      logo: 'https://www.gravatar.com/avatar/5ff75ad1008fe01582efcae23b54f175a947461a3aee3e14ac77c13c0b0c51d3?d=monsterid'
     },
     {
-      id: '4ca800c2-75cc-4134-8dbd-950361c0e675',
-      app_id: 'simple_reader',
-      name: 'Simple Reader',
-      version: '1.0.0',
-      core_version: '>=1.0.0',
-      author: 'Plotune Team',
-      description: 'Reads PLTX and various file formats for quick data visualization and analysis.',
-      category: 'Reader',
-      tags: ['reader', 'file', 'pltx', 'import'],
+      id: 'plotune_relay_ext',
+      app_id: 'plotune_relay_ext',
+      name: 'Plotune Relay Extension',
+      description: 'Universal data relay extension for Plotune Core. Supports WebSocket and HTTP polling sources.',
+      tags: ['verified', 'core'],
       os: ["Linux", "Windows"],
-      last_updated: '2024-01-15',
-      repo: 'https://github.com/plotune/simple-reader',
-      logo: 'https://i.imgur.com/C4l2RaF.jpeg',
-      deployment: 'https://ext.plotune.net/public/simple_reader.zip',
-      signature: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz...',
-      web: 'https://plotune.net/simple-reader',
-      documentation: 'https://docs.plotune.net/simple-reader',
-      premium_level: 0,
+      repo: 'https://github.com/baksi-org/plotune-relay-ext',
+      deployment: 'https://github.com/baksi-org/plotune-relay-ext/releases',
+      web: 'https://plotune.net/',
+      documentation: 'https://github.com/baksi-org/plotune-relay-ext',
       is_verified: true,
-      installed: false,
-      enabled: false,
-      price: 0
+      author: 'Plotune SDK Team',
+      logo: 'https://www.gravatar.com/avatar/eeec87c03bb42a9817b1feeeae3448bf7378381fcc0abc4428d259ee4ebd80ee?d=monsterid'
     },
     {
-      id: '5e9f22a1-1b34-4d31-a922-b0f7b5de3a81',
-      app_id: 'table_reader',
-      name: 'Table Reader',
-      version: '1.0.0',
-      core_version: '>=1.0.0',
-      author: 'Plotune Team',
-      description: 'Handles tabular data sources such as CSV, XLSX, and TSV for structured analysis.',
-      category: 'Reader',
-      tags: ['table', 'csv', 'excel', 'data'],
+      id: 'plotune_arduino_ext',
+      app_id: 'plotune_arduino_ext',
+      name: 'Plotune Arduino Extension',
+      description: 'Plug-and-play Arduino serial data acquisition and real-time streaming for Plotune Core.',
+      tags: ['verified', 'core'],
       os: ["Linux", "Windows"],
-      last_updated: '2024-01-15',
-      repo: 'https://github.com/plotune/table-reader',
-      logo: 'https://i.imgur.com/C4l2RaF.jpeg',
-      deployment: 'https://ext.plotune.net/public/table_reader.zip',
-      signature: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz...',
-      web: 'https://plotune.net/table-reader',
-      documentation: 'https://docs.plotune.net/table-reader',
-      premium_level: 0,
+      repo: 'https://github.com/baksi-org/plotune-arduino-ext',
+      deployment: 'https://github.com/baksi-org/plotune-arduino-ext/releases',
+      web: 'https://plotune.net/',
+      documentation: 'https://github.com/baksi-org/plotune-arduino-ext',
       is_verified: true,
-      installed: false,
-      enabled: false,
-      price: 0
-    },
-    {
-      id: '7d6b1d3e-46b4-40c0-8c03-9d60b12a6b14',
-      app_id: 'ffmpeg_extension',
-      name: 'FFmpeg Extension',
-      version: '1.0.0',
-      core_version: '>=1.0.0',
-      author: 'Plotune Team',
-      description: 'Adds advanced video and audio processing capabilities using FFmpeg integration.',
-      category: 'Processor',
-      tags: ['ffmpeg', 'video', 'audio', 'media'],
-      os: ["Linux", "Windows"],
-      last_updated: '2024-01-15',
-      repo: 'https://github.com/plotune/ffmpeg-extension',
-      logo: 'https://i.imgur.com/C4l2RaF.jpeg',
-      deployment: 'https://ext.plotune.net/public/ffmpeg_extension.zip',
-      signature: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz...',
-      web: 'https://plotune.net/ffmpeg-extension',
-      documentation: 'https://docs.plotune.net/ffmpeg-extension',
-      premium_level: 0,
-      is_verified: true,
-      installed: false,
-      enabled: false,
-      price: 0
-    },
-    {
-      id: '9f3a5c94-2eab-4821-b68c-1a927ae8cda2',
-      app_id: 'embedded_basic',
-      name: 'Embedded Basic',
-      version: '1.0.0',
-      core_version: '>=1.0.0',
-      author: 'Plotune Team',
-      description: 'Provides UART and embedded system communication capabilities for hardware interfacing.',
-      category: 'Communication',
-      tags: ['uart', 'embedded', 'communication', 'hardware'],
-      os: ["Linux", "Windows"],
-      last_updated: '2024-01-15',
-      repo: 'https://github.com/plotune/embedded-basic',
-      logo: 'https://i.imgur.com/C4l2RaF.jpeg',
-      deployment: 'https://ext.plotune.net/public/embedded_basic.zip',
-      signature: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz...',
-      web: 'https://plotune.net/embedded-basic',
-      documentation: 'https://docs.plotune.net/embedded-basic',
-      premium_level: 0,
-      is_verified: true,
-      installed: false,
-      enabled: false,
-      price: 0
+      author: 'Plotune SDK Team',
+      logo: 'https://www.gravatar.com/avatar/c1b5f34e4a0335ace8cc4184e1f5a07b71b1b1dad77933276c646c43a0a83389?d=monsterid'
     }
   ];
 
@@ -138,16 +63,51 @@ const Extensions = () => {
     loadExtensions();
   }, []);
 
+  const fetchLatestRelease = async (repoUrl) => {
+    try {
+      const urlParts = repoUrl.split('/');
+      const owner = urlParts[urlParts.length - 2];
+      const repo = urlParts[urlParts.length - 1];
+      
+      const apiUrl = `https://api.github.com/repos/${owner}/${repo}/releases/latest`;
+      
+      console.log(`Fetching latest release from: ${apiUrl}`);
+      
+      const response = await fetch(apiUrl);
+      
+      if (!response.ok) {
+        if (response.status === 404) {
+          console.log(`No releases found for ${owner}/${repo}`);
+          return null;
+        }
+        throw new Error(`GitHub API returned ${response.status}`);
+      }
+      
+      const releaseData = await response.json();
+      console.log(`Release data for ${owner}/${repo}:`, releaseData);
+      
+      return {
+        version: releaseData.tag_name,
+        last_updated: releaseData.published_at,
+        download_url: releaseData.html_url,
+        assets: releaseData.assets
+      };
+    } catch (error) {
+      console.error(`Error fetching release for ${repoUrl}:`, error);
+      return null;
+    }
+  };
+
   const loadExtensions = async () => {
     console.log("Loading extensions...");
     setLoading(true);
     
     try {
-      const baseExtensions = await loadBaseExtensions();
-      setExtensions(baseExtensions);
+      const extensionsWithReleases = await loadBaseExtensions();
+      setExtensions(extensionsWithReleases);
     } catch (error) {
       console.error("Error loading extensions:", error);
-      // toast.error("Failed to load extensions");
+      toast.error("Failed to load extensions");
     } finally {
       setLoading(false);
     }
@@ -155,32 +115,43 @@ const Extensions = () => {
 
   const loadBaseExtensions = async () => {
     try {
-      console.log("Fetching from market API...");
-      const response = await fetch('https://api.plotune.net/api/extensions');
+      console.log("Fetching release information for extensions...");
       
-      if (!response.ok) {
-        throw new Error(`Market API returned ${response.status}`);
-      }
+      const extensionsWithReleases = await Promise.all(
+        baseExtensions.map(async (ext) => {
+          try {
+            const releaseInfo = await fetchLatestRelease(ext.repo);
+            
+            return {
+              ...ext,
+              version: releaseInfo?.version || 'v0.0.0',
+              last_updated: releaseInfo?.last_updated || new Date().toISOString().split('T')[0],
+              core_version: '>=1.0.0',
+              deployment: releaseInfo?.download_url || ext.deployment
+            };
+          } catch (error) {
+            console.error(`Error processing extension ${ext.name}:`, error);
+            return {
+              ...ext,
+              version: 'v0.0.0',
+              last_updated: new Date().toISOString().split('T')[0],
+              core_version: '>=1.0.0',
+            };
+          }
+        })
+      );
       
-      const marketExtensions = await response.json();
-      console.log("Market API response:", marketExtensions);
-      
-      return marketExtensions
-        .filter(ext => ext.premium_level !== 3)
-        .map(ext => ({
-          ...ext,
-          installed: false,
-          enabled: false
-        }));
+      console.log("Extensions with release info:", extensionsWithReleases);
+      return extensionsWithReleases;
     } catch (error) {
-      console.log("Market API failed, using sample extensions:", error.message);
-      return sampleExtensions
-        .filter(ext => ext.premium_level !== 3)
-        .map(ext => ({
-          ...ext,
-          installed: false,
-          enabled: false
-        }));
+      console.log("Error fetching releases, using base extension data:", error.message);
+      
+      return baseExtensions.map(ext => ({
+        ...ext,
+        version: 'v0.0.0',
+        last_updated: new Date().toISOString().split('T')[0],
+        core_version: '>=1.0.0',
+      }));
     }
   };
 
@@ -190,7 +161,6 @@ const Extensions = () => {
       const matchesSearch = 
         extension.name.toLowerCase().includes(searchLower) ||
         extension.description.toLowerCase().includes(searchLower) ||
-        extension.category.toLowerCase().includes(searchLower) ||
         (extension.tags && extension.tags.some(tag => tag.toLowerCase().includes(searchLower))) ||
         extension.author.toLowerCase().includes(searchLower);
       
@@ -198,24 +168,16 @@ const Extensions = () => {
     }
 
     switch (currentFilter) {
-      case 'free':
-        return extension.premium_level === 0;
-      case 'premium':
-        return extension.premium_level === 1;
-      case 'enterprise':
-        return extension.premium_level === 2;
-      case 'recorder':
-        return extension.category === 'Recorder';
-      case 'visualization':
-        return extension.category === 'Visualization';
-      case 'integration':
-        return extension.category === 'Integration';
-      case 'utility':
-        return extension.category === 'Utility';
-      case 'analysis':
-        return extension.category === 'Analysis';
       case 'verified':
         return extension.is_verified;
+      case 'core':
+        return extension.tags?.includes('core');
+      case 'package':
+        return extension.tags?.includes('package');
+      case 'stream':
+        return extension.tags?.includes('stream');
+      case 'cloud':
+        return extension.tags?.includes('cloud');
       default:
         return true;
     }
@@ -223,32 +185,24 @@ const Extensions = () => {
 
   const installExtension = async (id) => {
     const extension = extensions.find(ext => ext.id === id);
-    if (!extension) return;
+    if (!extension) {
+      toast.error('Extension not found');
+      return;
+    }
 
-    const customUrl = `plotune://install?repo=${encodeURIComponent(extension.deployment)}&method=github&source=market`;
+    const customUrl = `plotune://install?method=github&source=github&repo=${encodeURIComponent(extension.deployment)}&uid=${extension.id}`;
     
     console.log("Attempting to install via custom URL:", customUrl);
     
-    // Önce custom URL'yi deneyelim
     window.location.href = customUrl;
     
-    // Fallback: Eğer custom URL çalışmazsa (bir süre sonra hala bu sayfadaysak) download sayfasına yönlendir
     setTimeout(() => {
-      // Hala bu sayfadaysak ve sayfa gizli değilse, custom URL başarısız olmuş demektir
       if (!document.hidden) {
         console.log("Custom URL failed, redirecting to download page");
-        // toast.info("Plotune not detected. Redirecting to download page...");
+        toast.info("Plotune not detected. Redirecting to download page...");
         window.open('/#/download', '_blank');
       }
     }, 1500);
-  };
-
-  const buyExtension = (id) => {
-    const extension = extensions.find(ext => ext.id === id);
-    if (extension) {
-      toast.info(`Redirecting to purchase: ${extension.name} - $${extension.price}`);
-      window.open(`https://plotune.net/purchase/${extension.app_id}`, '_blank');
-    }
   };
 
   const visitWebsite = (url) => {
@@ -290,7 +244,6 @@ const Extensions = () => {
         extensions={filteredExtensions}
         loading={loading}
         installExtension={installExtension}
-        buyExtension={buyExtension}
         visitWebsite={visitWebsite}
         visitRepo={visitRepo}
       />
