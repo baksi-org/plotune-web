@@ -1,7 +1,6 @@
 import React from 'react';
 
 const TalentPool = () => {
-  // Sadece bu satırı değiştirin
   const email = 'contact@plotune.net'; 
 
   return (
@@ -12,7 +11,7 @@ const TalentPool = () => {
           Interested in joining Plotune in the future? Join our talent pool to be notified when new positions open or to share your skills with us.
         </p>
         <a
-          // email değişkeni artık contact@plotune.net'i içeriyor
+        
           href={`mailto:${email}?subject=Contact Request from Plotune Website`}
           className="py-2 px-4 bg-primary text-white rounded hover:bg-primary-dark transition-all duration-300 inline-flex items-center justify-center"
         >
