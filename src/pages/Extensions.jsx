@@ -63,13 +63,28 @@ const Extensions = () => {
       description: 'File reader, PLTX, HDF5, Arrow, CSV, XLSX',
       tags: ['verified', 'core'],
       os: ["Linux", "Windows"],
-      repo: 'https://github.com/baksi-org/plotune-arduino-ext',
+      repo: 'https://github.com/baksi-org/plotune-simple-reader-ext',
       deployment: 'https://github.com/baksi-org/plotune-simple-reader-ext/releases',
       web: 'https://plotune.net/',
       documentation: 'https://github.com/baksi-org/plotune-simple-reader-ext',
       is_verified: true,
       author: 'Plotune SDK Team',
       logo: 'https://www.gravatar.com/avatar/bf5360a203eea8e897bd60e34c52ac18090ae79464fd56b4800ee1ce9136397e?d=monsterid'
+    },
+    {
+      id: 'plotune_stream_ext',
+      app_id: 'plotune_stream_ext',
+      name: 'Plotune Stream Extension',
+      description: 'Plotune Stream - Producer and Consumer Extension',
+      tags: ['verified', 'core'],
+      os: ["Linux", "Windows"],
+      repo: 'https://github.com/baksi-org/plotune-stream-ext',
+      deployment: 'https://github.com/baksi-org/plotune-stream-ext/releases',
+      web: 'https://plotune.net/',
+      documentation: 'https://github.com/baksi-org/plotune-stream-ext',
+      is_verified: true,
+      author: 'Plotune SDK Team',
+      logo: 'https://www.gravatar.com/avatar/c77effdc1f7d8389bf8515b2182de17627b60ce1b9a8cbda007a9aeae091c730?d=monsterid'
     }
   ];
 
