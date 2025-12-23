@@ -76,7 +76,7 @@ const Extensions = () => {
       app_id: 'plotune_stream_ext',
       name: 'Plotune Stream Extension',
       description: 'Plotune Stream - Producer and Consumer Extension',
-      tags: ['verified', 'core'],
+      tags: ['verified', 'core', 'stream'],
       os: ["Linux", "Windows"],
       repo: 'https://github.com/baksi-org/plotune-stream-ext',
       deployment: 'https://github.com/baksi-org/plotune-stream-ext/releases',
@@ -85,6 +85,36 @@ const Extensions = () => {
       is_verified: true,
       author: 'Plotune SDK Team',
       logo: 'https://www.gravatar.com/avatar/c77effdc1f7d8389bf8515b2182de17627b60ce1b9a8cbda007a9aeae091c730?d=monsterid'
+    },
+    {
+      id: 'plotune_calculation_ext',
+      app_id: 'plotune_calculation_ext',
+      name: 'Plotune Calculations Extension',
+      description: 'Plotune sample aggragate and mathematical calculations',
+      tags: ['verified', 'core'],
+      os: ["Linux", "Windows"],
+      repo: '',
+      deployment: '',
+      web: 'https://plotune.net/',
+      documentation: '',
+      is_verified: false,
+      author: 'Plotune SDK Team',
+      logo: 'https://www.gravatar.com/avatar/4e4ae00dddde96abc03647234ef79ace1c5fb8f9147de8f04f7e773571f55732?d=monsterid'
+    },
+    {
+      id: 'plotune_file_automotive_ext',
+      app_id: 'plotune_file_automotive_ext',
+      name: 'Automotive File Extension',
+      description: 'CAN / MDF Data Reader and Converter Extension',
+      tags: ['verified', 'core'],
+      os: ["Linux", "Windows"],
+      repo: '',
+      deployment: '',
+      web: 'https://plotune.net/',
+      documentation: '',
+      is_verified: false,
+      author: 'Plotune SDK Team',
+      logo: 'https://www.gravatar.com/avatar/067c83890c9bc78057c8398397e1d9abac27b5184ce9aedc43be3d37cbfceb29?d=monsterid'
     }
   ];
 
@@ -132,9 +162,9 @@ const Extensions = () => {
     console.log("Loading extensions...");
     setLoading(true);
     
+    const extensionsWithReleases = await loadBaseExtensions();
+    setExtensions(extensionsWithReleases);
     try {
-      const extensionsWithReleases = await loadBaseExtensions();
-      setExtensions(extensionsWithReleases);
     } catch (error) {
       console.error("Error loading extensions:", error);
       toast.error("Failed to load extensions");

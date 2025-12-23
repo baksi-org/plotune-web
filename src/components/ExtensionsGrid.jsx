@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaSearch } from "react-icons/fa";
 
 const ExtensionsGrid = ({ 
   extensions, 
@@ -46,7 +47,7 @@ const ExtensionsGrid = ({
     <div className="container mx-auto px-5 py-8">
       {extensions.length === 0 ? (
         <div className="text-center py-12">
-          <div className="text-6xl mb-4">🔍</div>
+          <FaSearch className="mx-auto text-5xl text-gray-text/90 mb-5" />
           <h3 className="text-xl font-semibold text-light-text mb-2">No extensions found</h3>
           <p className="text-gray-text">Try adjusting your search or filter criteria</p>
         </div>
@@ -109,13 +110,31 @@ const ExtensionsGrid = ({
 
               {/* Action Buttons - clean and minimal */}
               <div className="space-y-2">
-                <button
-                  onClick={() => installExtension(extension.id)}
-                  className="w-full py-2.5 px-4 bg-primary/10 text-primary rounded-lg font-medium hover:bg-primary/20 transition-all duration-200 flex items-center justify-center gap-2 border border-primary/20"
-                >
-                  <span className="text-sm">↓</span>
-                  Install
-                </button>
+              <button
+                onClick={() => installExtension(extension.id)}
+                disabled={!extension.repo}
+                className={`
+                  w-full py-2.5 px-4
+                  rounded-lg font-medium
+                  flex items-center justify-center gap-2
+                  border transition-all duration-200
+                  ${
+                    extension.repo
+                      ? "bg-primary/10 text-primary border-primary/20 hover:bg-primary/20"
+                      : "bg-primary/5 text-primary/40 border-primary/10 cursor-not-allowed"
+                  }
+                `}
+              >
+                {extension.repo ? (
+                  <>
+                    <span className="text-sm">↓</span>
+                    Install
+                  </>
+                ) : (
+                  "Coming Soon"
+                )}
+              </button>
+
 
                 <div className="flex gap-2">
                   <button
