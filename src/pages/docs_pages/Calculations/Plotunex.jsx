@@ -16,25 +16,25 @@ export default function Plotunex() {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-bolt text-primary"></i>
           </div>
           <div className="text-sm font-semibold text-light-text">Async Recording</div>
         </div>
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-layer-group text-primary"></i>
           </div>
           <div className="text-sm font-semibold text-light-text">Chunked Storage</div>
         </div>
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-compress-alt text-primary"></i>
           </div>
           <div className="text-sm font-semibold text-light-text">ZSTD Compression</div>
         </div>
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-search text-primary"></i>
           </div>
@@ -44,7 +44,7 @@ export default function Plotunex() {
 
       {/* Introduction */}
       <section className="mb-12">
-        <div className="bg-dark-surface rounded-2xl p-8 border border-white/5">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-8 border border-white/5">
           <h2 className="text-2xl font-bold text-light-text mb-4 flex items-center gap-3">
             <div className="w-2 h-8 bg-primary rounded-full"></div>
             Overview
@@ -98,7 +98,7 @@ export default function Plotunex() {
               description: "Data comes from live WebSocket streams, not batch datasets"
             }
           ].map((reason, index) => (
-            <div key={index} className="bg-dark-surface rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
+            <div key={index} className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
                 <i className={`${reason.icon} text-primary`}></i>
               </div>
@@ -116,7 +116,7 @@ export default function Plotunex() {
           Design Philosophy
         </h2>
 
-        <div className="bg-dark-surface rounded-2xl p-6 border border-white/5">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5">
           <p className="text-gray-text mb-6">
             Each <code className="text-primary">.pltx</code> file represents one recording session and follows a clear, minimalistic structure:
           </p>
@@ -208,7 +208,7 @@ export default function Plotunex() {
               description: "Versioned binary layout ensures backward compatibility and structured evolution."
             }
           ].map((feature, index) => (
-            <div key={index} className="bg-dark-surface rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
+            <div key={index} className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
                 <i className={`${feature.icon} text-primary`}></i>
               </div>
@@ -226,7 +226,7 @@ export default function Plotunex() {
           Advantages for Plotune
         </h2>
 
-        <div className="bg-dark-surface rounded-2xl p-6 border border-white/5 overflow-x-auto">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5 overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-white/10">
@@ -278,7 +278,7 @@ export default function Plotunex() {
           Why Not Use Existing Formats?
         </h2>
 
-        <div className="bg-dark-surface rounded-2xl p-6 border border-white/5 overflow-x-auto">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5 overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-white/10">
@@ -395,7 +395,7 @@ export default function Plotunex() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <a href="#/docs?page=components-recorder" className="group">
-            <div className="bg-dark-surface rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
+            <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
                 <i className="fas fa-record-vinyl text-primary"></i>
               </div>
@@ -409,7 +409,7 @@ export default function Plotunex() {
           </a>
 
           <a href="#/docs?page=extensions-offline" className="group">
-            <div className="bg-dark-surface rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
+            <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
                 <i className="fas fa-file-import text-primary"></i>
               </div>
@@ -423,7 +423,7 @@ export default function Plotunex() {
           </a>
 
           <a href="#/docs?page=components-oscilloscope" className="group">
-            <div className="bg-dark-surface rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
+            <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
                 <i className="fas fa-wave-square text-primary"></i>
               </div>

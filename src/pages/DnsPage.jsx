@@ -46,7 +46,7 @@ const DnsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-dark-surface pt-20 pb-10">
+    <div className="min-h-screen bg-dark-surface backdrop-blur-xl pt-20 pb-10">
       <div className="container mx-auto px-5 max-w-4xl">
         {/* Header */}
         <div className="mb-8">
@@ -83,9 +83,9 @@ const DnsPage = () => {
                       value={newDomain}
                       onChange={(e) => setNewDomain(e.target.value)}
                       placeholder="Enter subdomain name"
-                      className="flex-1 px-4 py-2 bg-dark-surface border border-white/10 rounded-l-custom text-light-text placeholder-gray-text focus:outline-none focus:border-primary transition-colors"
+                      className="flex-1 px-4 py-2 bg-dark-surface backdrop-blur-xl border border-white/10 rounded-l-custom text-light-text placeholder-gray-text focus:outline-none focus:border-primary transition-colors"
                     />
-                    <div className="px-4 py-2 bg-dark-surface border border-l-0 border-white/10 rounded-r-custom text-gray-text">
+                    <div className="px-4 py-2 bg-dark-surface backdrop-blur-xl border border-l-0 border-white/10 rounded-r-custom text-gray-text">
                       .dns.plotune.net
                     </div>
                   </div>
@@ -104,7 +104,7 @@ const DnsPage = () => {
                   <button
                     type="button"
                     onClick={() => setIsAdding(false)}
-                    className="px-6 py-2 bg-dark-surface border border-white/10 text-gray-text rounded-custom font-medium hover:bg-white/5 transition-colors"
+                    className="px-6 py-2 bg-dark-surface backdrop-blur-xl border border-white/10 text-gray-text rounded-custom font-medium hover:bg-white/5 transition-colors"
                   >
                     Cancel
                   </button>
@@ -154,7 +154,7 @@ const DnsPage = () => {
                 </div>
 
                 {/* Curl Command */}
-                <div className="bg-dark-surface rounded-custom p-4 border border-white/5">
+                <div className="bg-dark-surface backdrop-blur-xl rounded-custom p-4 border border-white/5">
                   <div className="flex items-center justify-between mb-2">
                     <label className="text-gray-text text-sm font-medium">Update IP with cURL</label>
                     <button

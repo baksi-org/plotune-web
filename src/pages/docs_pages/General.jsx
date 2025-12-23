@@ -16,15 +16,15 @@ export default function General() {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="text-2xl font-bold text-primary mb-2">Real-time</div>
           <div className="text-gray-text">Data Visualization</div>
         </div>
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="text-2xl font-bold text-primary mb-2">Modular</div>
           <div className="text-gray-text">Architecture</div>
         </div>
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="text-2xl font-bold text-primary mb-2">Extensible</div>
           <div className="text-gray-text">Plugin System</div>
         </div>
@@ -32,7 +32,7 @@ export default function General() {
 
       {/* Introduction */}
       <section className="mb-12">
-        <div className="bg-dark-surface rounded-2xl p-8 border border-white/5">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-8 border border-white/5">
           <h2 className="text-2xl font-bold text-light-text mb-4 flex items-center gap-3">
             <div className="w-2 h-8 bg-primary rounded-full"></div>
             Introduction
@@ -53,7 +53,7 @@ export default function General() {
         </h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-dark-surface rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
+          <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
             <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
               <span className="text-primary font-bold text-lg">M</span>
             </div>
@@ -64,7 +64,7 @@ export default function General() {
             </p>
           </div>
 
-          <div className="bg-dark-surface rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
+          <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
             <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
               <span className="text-primary font-bold text-lg">E</span>
             </div>
@@ -75,7 +75,7 @@ export default function General() {
             </p>
           </div>
 
-          <div className="bg-dark-surface rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
+          <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
             <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
               <span className="text-primary font-bold text-lg">P</span>
             </div>
@@ -149,7 +149,7 @@ export default function General() {
           Interface Layout
         </h2>
 
-        <div className="bg-dark-surface rounded-2xl p-6 border border-white/5">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <h4 className="text-lg font-semibold text-light-text mb-3">Main Areas</h4>
@@ -193,7 +193,7 @@ export default function General() {
           Extensibility & Plugins
         </h2>
 
-        <div className="bg-dark-surface rounded-2xl p-8 border border-white/5">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-8 border border-white/5">
           <p className="text-gray-text mb-6">
             Plotune offers a flexible <strong className="text-light-text">Extension SDK</strong> 
             for building plugins that extend both frontend and backend capabilities.
@@ -257,7 +257,7 @@ export default function General() {
               "Custom signal processing and algorithm validation",
               "Educational demonstrations for signal analytics"
             ].map((useCase, index) => (
-              <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface rounded-lg border border-white/5">
+              <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
                 <i className="fas fa-check text-primary mt-1 text-sm"></i>
                 <span className="text-gray-text">{useCase}</span>
               </div>
@@ -278,7 +278,7 @@ export default function General() {
               "Distributed stream processing",
               "Advanced plugin store with auto-deployment"
             ].map((item, index) => (
-              <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface rounded-lg border border-white/5">
+              <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
                 <i className="fas fa-road text-secondary mt-1 text-sm"></i>
                 <span className="text-gray-text">{item}</span>
               </div>

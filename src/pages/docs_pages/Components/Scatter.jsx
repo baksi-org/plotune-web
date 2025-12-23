@@ -16,25 +16,25 @@ export default function Scatter() {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-chart-scatter text-primary"></i>
           </div>
           <div className="text-sm font-semibold text-light-text">X vs Y Plot</div>
         </div>
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-sync text-primary"></i>
           </div>
           <div className="text-sm font-semibold text-light-text">Auto Interpolation</div>
         </div>
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-layer-group text-primary"></i>
           </div>
           <div className="text-sm font-semibold text-light-text">Multi-Y Support</div>
         </div>
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-circle text-primary"></i>
           </div>
@@ -44,7 +44,7 @@ export default function Scatter() {
 
       {/* Introduction */}
       <section className="mb-12">
-        <div className="bg-dark-surface rounded-2xl p-8 border border-white/5">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-8 border border-white/5">
           <h2 className="text-2xl font-bold text-light-text mb-4 flex items-center gap-3">
             <div className="w-2 h-8 bg-primary rounded-full"></div>
             Overview
@@ -72,7 +72,7 @@ export default function Scatter() {
               "Fixed styling with circular markers",
               "Single plot area showing all Y-variables against common X-axis"
             ].map((feature, index) => (
-              <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface rounded-lg border border-white/5">
+              <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
                 <i className="fas fa-check text-primary mt-1 text-sm"></i>
                 <span className="text-gray-text">{feature}</span>
               </div>
@@ -93,7 +93,7 @@ export default function Scatter() {
               "View all Y-values plotted against the X-axis",
               "Use system screenshot to export current view"
             ].map((step, index) => (
-              <li key={index} className="flex items-start gap-3 p-4 bg-dark-surface rounded-lg border border-white/5">
+              <li key={index} className="flex items-start gap-3 p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
                 <span className="bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold flex-shrink-0">
                   {index + 1}
                 </span>
@@ -117,7 +117,7 @@ export default function Scatter() {
             { title: "Markers", description: "Fixed circular points, no customization", icon: "fas fa-circle" },
             { title: "Updates", description: "Live refresh as new data arrives", icon: "fas fa-sync" }
           ].map((item, index) => (
-            <div key={index} className="p-5 bg-dark-surface rounded-xl border border-white/5">
+            <div key={index} className="p-5 bg-dark-surface backdrop-blur-xl rounded-xl border border-white/5">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-secondary/20 rounded-lg flex items-center justify-center">
                   <i className={`${item.icon} text-secondary`}></i>
@@ -145,7 +145,7 @@ export default function Scatter() {
             "Combine with Statistical component for numerical insights",
             "Take screenshots during key correlation moments"
           ].map((tip, index) => (
-            <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface rounded-lg border border-white/5">
+            <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
               <i className="fas fa-lightbulb text-secondary mt-1 text-sm"></i>
               <span className="text-gray-text">{tip}</span>
             </div>
@@ -166,7 +166,7 @@ export default function Scatter() {
             { icon: "fas fa-brain", title: "Signal Relationships", description: "Explore hidden patterns across channels" },
             { icon: "fas fa-search", title: "Data Validation", description: "Verify expected X-Y behavior in logs" }
           ].map((useCase, index) => (
-            <div key={index} className="bg-dark-surface rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
+            <div key={index} className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
                   <i className={`${useCase.icon} text-primary`}></i>
@@ -199,7 +199,7 @@ export default function Scatter() {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <a href="#/docs?page=components-oscilloscope" className="group">
-            <div className="bg-dark-surface rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
+            <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
                 <i className="fas fa-wave-square text-primary"></i>
               </div>
@@ -211,7 +211,7 @@ export default function Scatter() {
           </a>
 
           <a href="#/docs?page=components-statistical" className="group">
-            <div className="bg-dark-surface rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
+            <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
                 <i className="fas fa-table text-primary"></i>
               </div>
@@ -223,7 +223,7 @@ export default function Scatter() {
           </a>
 
           <a href="#/docs?page=calculations-aggregations" className="group">
-            <div className="bg-dark-surface rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
+            <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
                 <i className="fas fa-calculator text-primary"></i>
               </div>

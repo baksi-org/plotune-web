@@ -103,7 +103,7 @@ const Privacy = () => {
             <p className="text-gray-text mb-4">
               You can opt-out of telemetry data collection through your account settings. Disabling telemetry does not affect your ability to use Plotune.
             </p>
-            <div className="bg-dark-surface border-l-4 border-primary p-5 my-5 rounded-r-custom">
+            <div className="bg-dark-surface backdrop-blur-xl border-l-4 border-primary p-5 my-5 rounded-r-custom">
               <p className="text-gray-text"><strong>Note:</strong> Telemetry data is anonymized and cannot be linked to individual users.</p>
             </div>
           </Element>
@@ -168,7 +168,7 @@ const Privacy = () => {
             <p className="text-gray-text mb-4">
               Last updated: August 25, 2025
             </p>
-            <div className="bg-dark-surface border-l-4 border-primary p-5 my-5 rounded-r-custom">
+            <div className="bg-dark-surface backdrop-blur-xl border-l-4 border-primary p-5 my-5 rounded-r-custom">
               <p className="text-gray-text"><strong>Effective Date:</strong> August 25, 2025</p>
             </div>
           </Element>

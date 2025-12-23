@@ -20,21 +20,21 @@ export default function SDK() {
 
       {/* Quick Info Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
             <i className="fas fa-puzzle-piece text-primary"></i>
           </div>
           <div className="text-lg font-semibold text-light-text mb-2">Plugin Development</div>
           <div className="text-gray-text text-sm">Extend with custom data sources and visualizations</div>
         </div>
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
             <i className="fas fa-plug text-primary"></i>
           </div>
           <div className="text-lg font-semibold text-light-text mb-2">Seamless Integration</div>
           <div className="text-gray-text text-sm">Abstract communication between frontend and backend</div>
         </div>
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
             <i className="fas fa-share-alt text-primary"></i>
           </div>
@@ -45,7 +45,7 @@ export default function SDK() {
 
       {/* Introduction */}
       <section className="mb-12">
-        <div className="bg-dark-surface rounded-2xl p-8 border border-white/5">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-8 border border-white/5">
           <h2 className="text-2xl font-bold text-light-text mb-4 flex items-center gap-3">
             <div className="w-2 h-8 bg-primary rounded-full"></div>
             Overview
@@ -66,7 +66,7 @@ export default function SDK() {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-dark-surface rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
+          <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
             <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
               <i className="fas fa-cogs text-primary"></i>
             </div>
@@ -77,7 +77,7 @@ export default function SDK() {
             </p>
           </div>
 
-          <div className="bg-dark-surface rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
+          <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
             <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
               <i className="fas fa-exchange-alt text-primary"></i>
             </div>
@@ -88,7 +88,7 @@ export default function SDK() {
             </p>
           </div>
 
-          <div className="bg-dark-surface rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
+          <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
             <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
               <i className="fas fa-boxes text-primary"></i>
             </div>
@@ -108,7 +108,7 @@ export default function SDK() {
           Installation & Setup
         </h2>
 
-        <div className="bg-dark-surface rounded-2xl p-6 border border-white/5 mb-6">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-semibold text-light-text">Installation</h3>
             <span className="px-3 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium">
@@ -120,7 +120,7 @@ export default function SDK() {
           </div>
         </div>
 
-        <div className="bg-dark-surface rounded-2xl p-6 border border-white/5">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5">
           <h3 className="text-xl font-semibold text-light-text mb-4">Basic Setup</h3>
           <div className="bg-black/50 rounded-lg p-4 border border-white/10 mb-4">
             <pre className="text-light-text font-mono text-sm">
@@ -199,7 +199,7 @@ client = PlotuneClient(
           Quick Start Example
         </h2>
 
-        <div className="bg-dark-surface rounded-2xl p-6 border border-white/5">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-semibold text-light-text">Serial Source Plugin</h3>
             <span className="px-3 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium">
@@ -247,7 +247,7 @@ if __name__ == "__main__":
               "plotune_sdk.plugins.visual — base classes for UI panel definitions",
               "plotune_sdk.nodes.calculation — base classes for calculation nodes"
             ].map((item, index) => (
-              <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface rounded-lg border border-white/5">
+              <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
                 <i className="fas fa-code-branch text-primary mt-1 text-sm"></i>
                 <code className="text-gray-text font-mono text-sm">{item}</code>
               </div>
@@ -262,21 +262,21 @@ if __name__ == "__main__":
             Troubleshooting
           </h2>
           <div className="space-y-4">
-            <div className="p-4 bg-dark-surface rounded-lg border border-white/5">
+            <div className="p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
               <h4 className="font-semibold text-light-text mb-2">"Plugin fails to register"</h4>
               <p className="text-gray-text text-sm">
                 Ensure your API key has the "Plugin Developer" role and that your plugin class 
                 inherits from the correct SDK base class.
               </p>
             </div>
-            <div className="p-4 bg-dark-surface rounded-lg border border-white/5">
+            <div className="p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
               <h4 className="font-semibold text-light-text mb-2">"No data arriving in frontend"</h4>
               <p className="text-gray-text text-sm">
                 Confirm that you called <code className="bg-black/50 px-1 rounded">emit_payload()</code> with the 
                 correct stream channel name and that the frontend is subscribed to it.
               </p>
             </div>
-            <div className="p-4 bg-dark-surface rounded-lg border border-white/5">
+            <div className="p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
               <h4 className="font-semibold text-light-text mb-2">"Version compatibility error"</h4>
               <p className="text-gray-text text-sm">
                 Check that your plugin version is compatible with the installed Plotune backend version.
@@ -293,7 +293,7 @@ if __name__ == "__main__":
           SDK Roadmap
         </h2>
 
-        <div className="bg-dark-surface rounded-2xl p-6 border border-white/5">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
               "Asynchronous plugin support (async/await) for high-frequency streams",

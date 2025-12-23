@@ -382,7 +382,7 @@ const DownloadSection = () => {
                     href={latestRelease.html_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-dark-surface border border-white/10 rounded-lg hover:border-primary hover:text-primary transition-colors text-sm"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-dark-surface backdrop-blur-xl border border-white/10 rounded-lg hover:border-primary hover:text-primary transition-colors text-sm"
                   >
                     <i className="fab fa-github"></i>
                     View Release Notes
@@ -413,7 +413,7 @@ const DownloadSection = () => {
                   href="https://github.com/baksi-org/plotune-dl/releases"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 w-full py-4 px-6 bg-dark-surface border border-white/10 rounded-xl hover:border-primary hover:text-primary transition-all duration-300 group"
+                  className="inline-flex items-center justify-center gap-2 w-full py-4 px-6 bg-dark-surface backdrop-blur-xl border border-white/10 rounded-xl hover:border-primary hover:text-primary transition-all duration-300 group"
                 >
                   <i className="fab fa-github text-lg"></i>
                   <span className="font-medium">All Releases on GitHub</span>

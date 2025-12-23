@@ -2,7 +2,7 @@ import React from 'react';
 
 const Mission = () => {
   return (
-    <section id="mission" className="py-24 bg-dark-surface">
+    <section id="mission" className="py-24 bg-dark-surface backdrop-blur-xl">
       <div className="container mx-auto px-5">
         <div className="max-w-4xl mx-auto">
           {/* Mission Header */}

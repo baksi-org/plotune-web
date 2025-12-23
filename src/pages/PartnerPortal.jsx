@@ -238,7 +238,7 @@ const PartnerPortal = () => {
             {renderTabContent()}
             
             {/* Footer Note */}
-            <div className="mt-8 p-6 bg-dark-surface rounded-xl border border-white/5">
+            <div className="mt-8 p-6 bg-dark-surface backdrop-blur-xl rounded-xl border border-white/5">
               <div className="flex items-center justify-between">
                 <div>
                   <h4 className="text-light-text font-semibold mb-2">Plotune Cloud - Enterprise Partner Tier</h4>
@@ -424,7 +424,7 @@ const OverviewTab = ({ partnerData, alerts, users, extensions, usageData, quickA
         <button 
           key={action.id}
           onClick={() => setActiveTab(action.tab)}
-          className="bg-dark-surface rounded-lg p-4 border border-white/5 hover:border-primary/30 transition-colors group"
+          className="bg-dark-surface backdrop-blur-xl rounded-lg p-4 border border-white/5 hover:border-primary/30 transition-colors group"
         >
           <div className={`text-${action.color} mb-2`}>
             <i className={`fas fa-${action.icon} text-2xl`}></i>
@@ -616,7 +616,7 @@ const AnalyticsTab = ({ handleComingSoon, usageData }) => (
           <p className="text-gray-text text-sm mt-2">Coming Soon in Cloud Tier</p>
         </div>
       </div>
-      <div className="bg-dark-surface rounded-lg p-6 h-96 opacity-30">
+      <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-6 h-96 opacity-30">
         {/* Chart grid lines */}
         <div className="h-full border-l border-b border-white/20 relative">
           {[...Array(6)].map((_, i) => (
@@ -646,7 +646,7 @@ const StorageTab = ({ storageClients, backupStatus, handleComingSoon }) => (
     </div>
 
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div className="bg-dark-surface rounded-lg p-6">
+      <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-6">
         <h3 className="text-light-text font-semibold mb-4">Storage Usage</h3>
         <div className="space-y-4">
           {storageClients.map((client, index) => (
@@ -666,7 +666,7 @@ const StorageTab = ({ storageClients, backupStatus, handleComingSoon }) => (
         </div>
       </div>
 
-      <div className="bg-dark-surface rounded-lg p-6">
+      <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-6">
         <h3 className="text-light-text font-semibold mb-4">Backup Status</h3>
         <div className="space-y-3">
           {backupStatus.map((backup, index) => (
@@ -774,21 +774,21 @@ const SecurityTab = ({ securityEvents, handleComingSoon }) => (
     </div>
 
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      <div className="bg-dark-surface rounded-lg p-6 text-center">
+      <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-6 text-center">
         <div className="text-4xl text-green-500 mb-4">
           <i className="fas fa-shield-check"></i>
         </div>
         <h3 className="text-light-text font-semibold mb-2">GDPR Compliant</h3>
         <p className="text-gray-text text-sm">Fully compliant with EU data protection</p>
       </div>
-      <div className="bg-dark-surface rounded-lg p-6 text-center">
+      <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-6 text-center">
         <div className="text-4xl text-blue-500 mb-4">
           <i className="fas fa-lock"></i>
         </div>
         <h3 className="text-light-text font-semibold mb-2">End-to-End Encryption</h3>
         <p className="text-gray-text text-sm">AES-256 encryption for all data</p>
       </div>
-      <div className="bg-dark-surface rounded-lg p-6 text-center">
+      <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-6 text-center">
         <div className="text-4xl text-purple-500 mb-4">
           <i className="fas fa-audit"></i>
         </div>
@@ -797,7 +797,7 @@ const SecurityTab = ({ securityEvents, handleComingSoon }) => (
       </div>
     </div>
 
-    <div className="bg-dark-surface rounded-lg p-6">
+    <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-6">
       <h3 className="text-light-text font-semibold mb-4">Recent Security Events</h3>
       <div className="space-y-3">
         {securityEvents.map(event => (
@@ -836,7 +836,7 @@ const ApiTab = ({ apiKeys, integrations, handleComingSoon }) => (
     </div>
 
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div className="bg-dark-surface rounded-lg p-6">
+      <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-6">
         <h3 className="text-light-text font-semibold mb-4">API Keys</h3>
         <div className="space-y-3">
           {apiKeys.map(api => (
@@ -862,7 +862,7 @@ const ApiTab = ({ apiKeys, integrations, handleComingSoon }) => (
         </div>
       </div>
 
-      <div className="bg-dark-surface rounded-lg p-6">
+      <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-6">
         <h3 className="text-light-text font-semibold mb-4">Available Integrations</h3>
         <div className="space-y-3">
           {integrations.map(integration => (

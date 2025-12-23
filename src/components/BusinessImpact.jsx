@@ -24,7 +24,7 @@ const BusinessImpact = () => {
   ];
 
   return (
-    <section className="py-24 bg-dark-surface" ref={ref}>
+    <section className="py-24 bg-dark-surface backdrop-blur-xl" ref={ref}>
       <div className="container mx-auto px-5">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-light-text mb-4">

@@ -120,7 +120,7 @@ const VerifyEmail = () => {
               </Link>
               <Link
                 to="/"
-                className="w-full py-3 bg-dark-surface text-gray-text border border-white/10 rounded-lg hover:border-primary/30 transition-all duration-300 font-medium text-center"
+                className="w-full py-3 bg-dark-surface backdrop-blur-xl text-gray-text border border-white/10 rounded-lg hover:border-primary/30 transition-all duration-300 font-medium text-center"
               >
                 Back to Home
               </Link>
@@ -162,7 +162,7 @@ const VerifyEmail = () => {
               
               <Link
                 to="/register"
-                className="w-full py-3 bg-dark-surface text-gray-text border border-white/10 rounded-lg hover:border-primary/30 transition-all duration-300 font-medium text-center"
+                className="w-full py-3 bg-dark-surface backdrop-blur-xl text-gray-text border border-white/10 rounded-lg hover:border-primary/30 transition-all duration-300 font-medium text-center"
               >
                 Create New Account
               </Link>

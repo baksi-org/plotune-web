@@ -88,7 +88,7 @@ const StreamCard = ({ stream, onManage, onDelete }) => {
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
         {/* Message Rate */}
-        <div className="bg-dark-bg/50 rounded-xl p-3 border border-white/5 hover:border-primary/20 transition-all group-hover:-translate-y-0.5">
+        <div className="bg-dark-bg/10 backdrop-blur-xl rounded-xl p-3 border border-white/5 hover:border-primary/20 transition-all group-hover:-translate-y-0.5">
           <div className="flex items-center justify-between mb-1">
             <span className="text-xs text-gray-text flex items-center gap-2">
               <FaEnvelope className="w-3 h-3" />
@@ -107,7 +107,7 @@ const StreamCard = ({ stream, onManage, onDelete }) => {
         </div>
 
         {/* Message Size */}
-        <div className="bg-dark-bg/50 rounded-xl p-3 border border-white/5 hover:border-primary/20 transition-all group-hover:-translate-y-0.5">
+        <div className="bg-dark-bg/10 backdrop-blur-xl rounded-xl p-3 border border-white/5 hover:border-primary/20 transition-all group-hover:-translate-y-0.5">
           <div className="flex items-center justify-between">
             <span className="text-xs text-gray-text flex items-center gap-2">
               <FaMemory className="w-3 h-3" />
@@ -121,7 +121,7 @@ const StreamCard = ({ stream, onManage, onDelete }) => {
         </div>
 
         {/* Retention */}
-        <div className="bg-dark-bg/50 rounded-xl p-3 border border-white/5 hover:border-primary/20 transition-all group-hover:-translate-y-0.5">
+        <div className="bg-dark-bg/10 backdrop-blur-xl rounded-xl p-3 border border-white/5 hover:border-primary/20 transition-all group-hover:-translate-y-0.5">
           <div className="flex items-center justify-between">
             <span className="text-xs text-gray-text flex items-center gap-2">
               <FaMemory className="w-3 h-3" />

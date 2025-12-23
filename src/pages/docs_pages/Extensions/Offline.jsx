@@ -16,25 +16,25 @@ export default function ExtensionsOffline() {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-file-csv text-primary"></i>
           </div>
           <div className="text-sm font-semibold text-light-text">CSV/TSV Files</div>
         </div>
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-database text-primary"></i>
           </div>
           <div className="text-sm font-semibold text-light-text">Binary Logs</div>
         </div>
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-chart-line text-primary"></i>
           </div>
           <div className="text-sm font-semibold text-light-text">Batch Analytics</div>
         </div>
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-vial text-primary"></i>
           </div>
@@ -44,7 +44,7 @@ export default function ExtensionsOffline() {
 
       {/* Introduction */}
       <section className="mb-12">
-        <div className="bg-dark-surface rounded-2xl p-8 border border-white/5">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-8 border border-white/5">
           <h2 className="text-2xl font-bold text-light-text mb-4 flex items-center gap-3">
             <div className="w-2 h-8 bg-primary rounded-full"></div>
             Overview
@@ -73,7 +73,7 @@ export default function ExtensionsOffline() {
               "Converting proprietary binary logs into Plotune-friendly channels",
               "Testing visualizations and calculations without physical hardware"
             ].map((useCase, index) => (
-              <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface rounded-lg border border-white/5">
+              <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
                 <i className="fas fa-check text-primary mt-1 text-sm"></i>
                 <span className="text-gray-text">{useCase}</span>
               </div>
@@ -88,7 +88,7 @@ export default function ExtensionsOffline() {
             Key Characteristics
           </h2>
           <div className="space-y-4">
-            <div className="p-4 bg-dark-surface rounded-lg border border-white/5">
+            <div className="p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
               <h4 className="font-semibold text-light-text mb-2 flex items-center gap-2">
                 <i className="fas fa-redo text-primary"></i>
                 Deterministic
@@ -97,7 +97,7 @@ export default function ExtensionsOffline() {
                 Same input file produces same outputs every run.
               </p>
             </div>
-            <div className="p-4 bg-dark-surface rounded-lg border border-white/5">
+            <div className="p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
               <h4 className="font-semibold text-light-text mb-2 flex items-center gap-2">
                 <i className="fas fa-clock text-primary"></i>
                 Non-realtime
@@ -106,7 +106,7 @@ export default function ExtensionsOffline() {
                 Data processed as fast as resources allow or at configurable playback rate.
               </p>
             </div>
-            <div className="p-4 bg-dark-surface rounded-lg border border-white/5">
+            <div className="p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
               <h4 className="font-semibold text-light-text mb-2 flex items-center gap-2">
                 <i className="fas fa-shield-alt text-primary"></i>
                 Isolated
@@ -126,7 +126,7 @@ export default function ExtensionsOffline() {
           Supported Formats
         </h2>
 
-        <div className="bg-dark-surface rounded-2xl p-6 border border-white/5">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {['CSV/TSV', 'JSON Lines', 'Binary Formats', 'Proprietary Logs'].map((format, index) => (
               <div key={index} className="text-center p-4 bg-black/30 rounded-lg border border-white/10">
@@ -150,7 +150,7 @@ export default function ExtensionsOffline() {
           Extension Manifest
         </h2>
 
-        <div className="bg-dark-surface rounded-2xl p-6 border border-white/5">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-semibold text-light-text">Example Manifest</h3>
             <span className="px-3 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium">
@@ -184,7 +184,7 @@ export default function ExtensionsOffline() {
           Example Implementation
         </h2>
 
-        <div className="bg-dark-surface rounded-2xl p-6 border border-white/5">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-semibold text-light-text">CSV Offline Extension</h3>
             <span className="px-3 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium">
@@ -230,7 +230,7 @@ export default function ExtensionsOffline() {
                 desc: "Emit in small batches to reduce IPC overhead at high throughput"
               }
             ].map((practice, index) => (
-              <div key={index} className="p-4 bg-dark-surface rounded-lg border border-white/5">
+              <div key={index} className="p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
                 <div className="flex items-center gap-3 mb-2">
                   <i className={`${practice.icon} text-primary`}></i>
                   <h4 className="font-semibold text-light-text">{practice.title}</h4>
@@ -254,7 +254,7 @@ export default function ExtensionsOffline() {
               { control: "Playback Rate (0.25x - 2x)", icon: "fas fa-tachometer-alt" },
               { control: "Loop / Repeat", icon: "fas fa-redo" }
             ].map((item, index) => (
-              <div key={index} className="flex items-center gap-4 p-4 bg-dark-surface rounded-lg border border-white/5">
+              <div key={index} className="flex items-center gap-4 p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
                 <div className="w-10 h-10 bg-secondary/20 rounded-lg flex items-center justify-center">
                   <i className={`${item.icon} text-secondary`}></i>
                 </div>
@@ -341,7 +341,7 @@ export default function ExtensionsOffline() {
               answer: "Include a companion JSON manifest or embed metadata headers. Expose through get_metadata() hook."
             }
           ].map((faq, index) => (
-            <div key={index} className="bg-dark-surface rounded-2xl p-6 border border-white/5">
+            <div key={index} className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5">
               <h4 className="text-lg font-semibold text-light-text mb-3 flex items-center gap-2">
                 <i className="fas fa-question-circle text-primary"></i>
                 {faq.question}

@@ -16,25 +16,25 @@ export default function Recorder() {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-record-vinyl text-primary"></i>
           </div>
           <div className="text-sm font-semibold text-light-text">Live Recording</div>
         </div>
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-compress-alt text-primary"></i>
           </div>
           <div className="text-sm font-semibold text-light-text">ZSTD Compression</div>
         </div>
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-bolt text-primary"></i>
           </div>
           <div className="text-sm font-semibold text-light-text">Async Writing</div>
         </div>
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-hand-pointer text-primary"></i>
           </div>
@@ -44,7 +44,7 @@ export default function Recorder() {
 
       {/* Introduction */}
       <section className="mb-12">
-        <div className="bg-dark-surface rounded-2xl p-8 border border-white/5">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-8 border border-white/5">
           <h2 className="text-2xl font-bold text-light-text mb-4 flex items-center gap-3">
             <div className="w-2 h-8 bg-primary rounded-full"></div>
             Overview
@@ -88,7 +88,7 @@ export default function Recorder() {
               description: "Display variable values and recording status with visual activity indicators"
             }
           ].map((responsibility, index) => (
-            <div key={index} className="bg-dark-surface rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
+            <div key={index} className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
                 <i className={`${responsibility.icon} text-primary`}></i>
               </div>
@@ -106,7 +106,7 @@ export default function Recorder() {
           UI Layout
         </h2>
 
-        <div className="bg-dark-surface rounded-2xl p-6 border border-white/5">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="space-y-4">
               <h4 className="text-lg font-semibold text-light-text flex items-center gap-2">
@@ -253,7 +253,7 @@ export default function Recorder() {
           Threading Model
         </h2>
 
-        <div className="bg-dark-surface rounded-2xl p-6 border border-white/5 overflow-x-auto">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5 overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-white/10">
@@ -295,7 +295,7 @@ export default function Recorder() {
           Data Flow Summary
         </h2>
 
-        <div className="bg-dark-surface rounded-2xl p-6 border border-white/5">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5">
           <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             {[
               { icon: "fas fa-plug", label: "Extension" },
@@ -336,7 +336,7 @@ export default function Recorder() {
             { step: "4", icon: "fas fa-pause", action: "Pause/Resume as needed" },
             { step: "5", icon: "fas fa-save", action: "Stop & save .pltx file" }
           ].map((item, index) => (
-            <div key={index} className="bg-dark-surface rounded-xl p-4 border border-white/5 text-center">
+            <div key={index} className="bg-dark-surface backdrop-blur-xl rounded-xl p-4 border border-white/5 text-center">
               <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center mb-2 mx-auto">
                 <span className="text-primary font-bold text-sm">{item.step}</span>
               </div>
@@ -358,7 +358,7 @@ export default function Recorder() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <a href="#/docs?page=extensions-offline" className="group">
-            <div className="bg-dark-surface rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
+            <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
                 <i className="fas fa-file-import text-primary"></i>
               </div>
@@ -372,7 +372,7 @@ export default function Recorder() {
           </a>
 
           <a href="#/docs?page=components-oscilloscope" className="group">
-            <div className="bg-dark-surface rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
+            <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
                 <i className="fas fa-wave-square text-primary"></i>
               </div>
@@ -386,7 +386,7 @@ export default function Recorder() {
           </a>
 
           <a href="#/docs?page=components-statistical" className="group">
-            <div className="bg-dark-surface rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
+            <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
                 <i className="fas fa-chart-bar text-primary"></i>
               </div>

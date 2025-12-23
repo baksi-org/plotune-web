@@ -130,7 +130,7 @@ const StreamManagementModal = ({
               <div className="space-y-4">
                 <div>
                   <h3 className="text-light-text font-medium mb-2">Stream Information</h3>
-                  <div className="bg-dark-surface rounded-lg p-4 space-y-3">
+                  <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4 space-y-3">
                     <div className="flex justify-between">
                       <span className="text-gray-text">Name</span>
                       <span className="text-light-text font-mono">{stream.name}</span>
@@ -152,19 +152,19 @@ const StreamManagementModal = ({
                 <div>
                   <h3 className="text-light-text font-medium mb-2">Limits</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="bg-dark-surface rounded-lg p-4">
+                    <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4">
                       <div className="text-gray-text text-sm mb-1">Max Messages/Sec</div>
                       <div className="text-light-text font-semibold text-lg">
                         {stream.max_messages_per_second}
                       </div>
                     </div>
-                    <div className="bg-dark-surface rounded-lg p-4">
+                    <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4">
                       <div className="text-gray-text text-sm mb-1">Max Message Size</div>
                       <div className="text-light-text font-semibold text-lg">
                         {stream.max_message_size_bytes} bytes
                       </div>
                     </div>
-                    <div className="bg-dark-surface rounded-lg p-4">
+                    <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4">
                       <div className="text-gray-text text-sm mb-1">Max Retention</div>
                       <div className="text-light-text font-semibold text-lg">
                         {stream.max_retention_messages} messages
@@ -199,7 +199,7 @@ const StreamManagementModal = ({
           {activeTab === 'sharing' && (
             <div className="space-y-6">
               {/* Add User Form */}
-              <div className="bg-dark-surface rounded-xl p-5 border border-white/5">
+              <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-5 border border-white/5">
                 <h3 className="text-light-text font-medium mb-4">Share with New User</h3>
                 <form onSubmit={handleShareSubmit} className="space-y-4">
                   <div>
@@ -268,7 +268,7 @@ const StreamManagementModal = ({
                     <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary"></div>
                   </div>
                 ) : sharedUsers.length === 0 ? (
-                  <div className="text-center py-8 bg-dark-surface/50 rounded-lg">
+                  <div className="text-center py-8 bg-dark-surface backdrop-blur-xl/50 rounded-lg">
                     <div className="text-gray-text mb-2">No users have been shared with yet</div>
                     <div className="text-sm text-gray-text">Share this stream with others above</div>
                   </div>
@@ -277,7 +277,7 @@ const StreamManagementModal = ({
                     {sharedUsers.map((sharedUser, index) => (
                       <div
                         key={index}
-                        className="bg-dark-surface rounded-lg p-4 flex items-center justify-between"
+                        className="bg-dark-surface backdrop-blur-xl rounded-lg p-4 flex items-center justify-between"
                       >
                         <div>
                           <div className="text-light-text font-medium">{sharedUser.email}</div>

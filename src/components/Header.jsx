@@ -87,7 +87,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-dark-surface fixed w-full top-0 z-50 shadow-custom py-4">
+    <header className="bg-white/5 backdrop-blur-xl fixed w-full top-0 z-50 shadow-custom py-4">
       <div className="container mx-auto px-5 flex justify-between items-center">
           <Link  to="/#">
         <div className="flex items-center gap-3">
@@ -98,7 +98,7 @@ const Header = () => {
         </div>
           </Link>
         <nav className="flex items-center">
-          <ul className={`md:flex gap-8 ${isMobileMenuOpen ? 'flex flex-col absolute top-16 left-0 w-full bg-dark-surface p-5' : 'hidden md:flex'}`}>
+          <ul className={`md:flex gap-8 ${isMobileMenuOpen ? 'flex flex-col absolute top-16 left-0 w-full bg-dark-surface backdrop-blur-xl p-5' : 'hidden md:flex'}`}>
             {navItems.map((item) => (
               <li key={item.to}>
                 {renderNavLink(item)}

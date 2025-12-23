@@ -258,7 +258,7 @@ const handleUpload = async (file) => {
               
               <div className="space-y-6">
                 {/* Storage Usage */}
-                <div className="bg-dark-surface rounded-lg p-4">
+                <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-gray-text">Used Space</span>
                     <span className="text-light-text font-semibold">{totalUsage.toFixed(2)} MB</span>
@@ -275,7 +275,7 @@ const handleUpload = async (file) => {
                 </div>
 
                 {/* Quick Stats */}
-                <div className="bg-dark-surface rounded-lg p-4">
+                <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4">
                   <h4 className="text-light-text font-medium mb-3">Quick Stats</h4>
                   <div className="space-y-2">
                     <div className="flex justify-between">
@@ -332,7 +332,7 @@ const handleUpload = async (file) => {
                 </div>
 
                 {/* Tips */}
-                <div className="bg-dark-surface rounded-lg p-4">
+                <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4">
                   <h4 className="text-light-text font-medium mb-2">Tips</h4>
                   <ul className="text-gray-text text-sm space-y-1">
                     <li>• Click on a file to download</li>
@@ -363,7 +363,7 @@ const handleUpload = async (file) => {
                       placeholder="Search files..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 pr-4 py-2 bg-dark-surface border border-white/10 rounded-lg text-light-text focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent"
+                      className="pl-10 pr-4 py-2 bg-dark-surface backdrop-blur-xl border border-white/10 rounded-lg text-light-text focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent"
                     />
                     <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                       🔍
@@ -393,7 +393,7 @@ const handleUpload = async (file) => {
               ) : (
                 <div className="overflow-x-auto rounded-lg border border-white/10">
                   <table className="min-w-full divide-y divide-white/10">
-                    <thead className="bg-dark-surface">
+                    <thead className="bg-dark-surface backdrop-blur-xl">
                       <tr>
                         <th 
                           scope="col" 

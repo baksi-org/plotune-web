@@ -56,7 +56,7 @@ const CreateStreamModal = ({ onClose, onSubmit, user }) => {
               type="text"
               value={formData.name}
               onChange={(e) => handleChange('name', e.target.value)}
-              className={`w-full p-3 bg-dark-surface rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition ${
+              className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition ${
                 errors.name ? 'border-red-500' : 'border-white/10 focus:border-primary'
               }`}
               placeholder="my-data-stream"
@@ -70,7 +70,7 @@ const CreateStreamModal = ({ onClose, onSubmit, user }) => {
             <textarea
               value={formData.description}
               onChange={(e) => handleChange('description', e.target.value)}
-              className="w-full p-3 bg-dark-surface rounded-lg border border-white/10 text-light-text focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+              className="w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/10 text-light-text focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
               rows="3"
               placeholder="Describe what this stream will be used for..."
               maxLength={500}
@@ -78,7 +78,7 @@ const CreateStreamModal = ({ onClose, onSubmit, user }) => {
           </div>
 
           {/* Plan Limits Display */}
-          <div className="bg-dark-surface rounded-lg p-4 border border-white/5">
+          <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4 border border-white/5">
             <h4 className="text-light-text font-medium mb-2">
               {user?.premium ? 'Premium Plan Limits' : 'Free Plan Limits'}
             </h4>

@@ -77,7 +77,7 @@ const Legal = () => {
               <li>Upload or transmit viruses or any malicious code</li>
               <li>Interfere with or disrupt the integrity or performance of Plotune</li>
             </ul>
-            <div className="bg-dark-surface border-l-4 border-primary p-5 my-5 rounded-r-custom">
+            <div className="bg-dark-surface backdrop-blur-xl border-l-4 border-primary p-5 my-5 rounded-r-custom">
               <p className="text-gray-text"><strong>Important:</strong> Plotune reserves the right to modify or terminate the service for any reason, without notice at any time.</p>
             </div>
           </Element>
@@ -131,19 +131,19 @@ const Legal = () => {
             <h3 className="text-2xl font-semibold text-light-text mt-8 mb-3">Subscription Plans</h3>
             <p className="text-gray-text mb-4">Plotune offers different licensing options:</p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              <div className="bg-dark-surface rounded-custom p-6 border border-white/5">
+              <div className="bg-dark-surface backdrop-blur-xl rounded-custom p-6 border border-white/5">
                 <h4 className="text-xl font-semibold text-light-text flex items-center gap-2 mb-4">
                   <i className="fas fa-gift text-primary"></i> Lite Edition
                 </h4>
                 <p className="text-gray-text">Free for personal and non-commercial use. Includes basic functionality with limited features.</p>
               </div>
-              <div className="bg-dark-surface rounded-custom p-6 border border-white/5">
+              <div className="bg-dark-surface backdrop-blur-xl rounded-custom p-6 border border-white/5">
                 <h4 className="text-xl font-semibold text-light-text flex items-center gap-2 mb-4">
                   <i className="fas fa-crown text-primary"></i> Pro Edition
                 </h4>
                 <p className="text-gray-text">Subscription-based license ($5/month) for individual professionals. Includes all features and priority support.</p>
               </div>
-              <div className="bg-dark-surface rounded-custom p-6 border border-white/5">
+              <div className="bg-dark-surface backdrop-blur-xl rounded-custom p-6 border border-white/5">
                 <h4 className="text-xl font-semibold text-light-text flex items-center gap-2 mb-4">
                   <i className="fas fa-building text-primary"></i> Enterprise Edition
                 </h4>

@@ -142,7 +142,7 @@ const Dashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Link
                 to="/extensions"
-                className="p-4 bg-dark-surface rounded-lg border border-white/5 hover:border-primary/50 transition group"
+                className="p-4 bg-white/5 backdrop-blur-xl rounded-lg border border-white/5 hover:border-primary/50 transition group"
               >
                 <div className="text-2xl mb-2">
                   <img 
@@ -156,7 +156,7 @@ const Dashboard = () => {
               </Link>
               <Link
                 to="/download"
-                className="p-4 bg-dark-surface rounded-lg border border-white/5 hover:border-primary/50 transition group"
+                className="p-4 bg-white/5 backdrop-blur-xl rounded-lg border border-white/5 hover:border-primary/50 transition group"
               >
                 <div className="text-2xl mb-2">
                   <img 
@@ -170,7 +170,7 @@ const Dashboard = () => {
               </Link>
               <Link
                 to="/streams"
-                className="p-4 bg-dark-surface rounded-lg border border-white/5 hover:border-primary/50 transition group text-left"
+                className="p-4 bg-white/5 backdrop-blur-xl rounded-lg border border-white/5 hover:border-primary/50 transition group text-left"
               >
                 <div className="text-2xl mb-2">
                   <img 
@@ -197,7 +197,7 @@ const Dashboard = () => {
                       href={link.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block p-4 bg-dark-surface rounded-lg border border-white/5 hover:border-primary/50 transition group text-center"
+                      className="block p-4 bg-white/5 backdrop-blur-xl rounded-lg border border-white/5 hover:border-primary/50 transition group text-center"
                     >
                       <div className="text-2xl mb-2">
                         <span className="material-icons text-3xl text-gray-400 group-hover:text-primary transition">
@@ -210,7 +210,7 @@ const Dashboard = () => {
                     <Link
                       key={link.id}
                       to={link.link}
-                      className="block p-4 bg-dark-surface rounded-lg border border-white/5 hover:border-primary/50 transition group text-center"
+                      className="block p-4 bg-white/5 backdrop-blur-xl rounded-lg border border-white/5 hover:border-primary/50 transition group text-center"
                     >
                       <div className="text-2xl mb-2">
                         <span className="material-icons text-3xl text-gray-400 group-hover:text-primary transition">

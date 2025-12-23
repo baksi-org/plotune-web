@@ -221,7 +221,7 @@ useEffect(() => {
                       type="text"
                       value={userData.username || ''}
                       disabled
-                      className="w-full p-3 bg-dark-surface rounded-lg border border-white/10 text-light-text opacity-70"
+                      className="w-full p-3 bg-white/5 backdrop-blur-xl rounded-lg border border-white/10 text-light-text opacity-70"
                     />
                   </div>
                   <div>
@@ -230,7 +230,7 @@ useEffect(() => {
                       type="email"
                       value={userData.email || ''}
                       disabled
-                      className="w-full p-3 bg-dark-surface rounded-lg border border-white/10 text-light-text opacity-70"
+                      className="w-full p-3 bg-white/5 backdrop-blur-xl rounded-lg border border-white/10 text-light-text opacity-70"
                     />
                   </div>
                   <div>
@@ -240,7 +240,7 @@ useEffect(() => {
                       value={userData.full_name || ''}
                       onChange={(e) => setUserData({ ...userData, full_name: e.target.value })}
                       disabled={!isEditing}
-                      className="w-full p-3 bg-dark-surface rounded-lg border border-white/10 text-light-text disabled:opacity-70"
+                      className="w-full p-3 bg-white/5 backdrop-blur-xl rounded-lg border border-white/10 text-light-text disabled:opacity-70"
                     />
                   </div>
                   <div>
@@ -250,7 +250,7 @@ useEffect(() => {
                       value={userData.company || ''}
                       onChange={(e) => setUserData({ ...userData, company: e.target.value })}
                       disabled={!isEditing}
-                      className="w-full p-3 bg-dark-surface rounded-lg border border-white/10 text-light-text disabled:opacity-70"
+                      className="w-full p-3 bg-white/5 backdrop-blur-xl rounded-lg border border-white/10 text-light-text disabled:opacity-70"
                     />
                   </div>
                   <div className="md:col-span-2">
@@ -259,7 +259,7 @@ useEffect(() => {
                       type="text"
                       value={userData.sector || ''}
                       disabled
-                      className="w-full p-3 bg-dark-surface rounded-lg border border-white/10 text-light-text opacity-70"
+                      className="w-full p-3 bg-white/5 backdrop-blur-xl rounded-lg border border-white/10 text-light-text opacity-70"
                     />
                   </div>
                 </div>
@@ -271,7 +271,7 @@ useEffect(() => {
               <div className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl">
                 <h2 className="text-xl font-semibold text-light-text mb-6">API Access</h2>
                 
-                <div className="bg-dark-surface rounded-lg p-6 border border-white/5 mb-6">
+                <div className="bg-white/5 backdrop-blur-xl rounded-lg p-6 border border-white/5 mb-6">
                   <h3 className="text-lg font-medium text-light-text mb-4">API Token</h3>
                   <p className="text-gray-text mb-4">
                     Generate an API token to integrate Plotune with your applications and scripts.
@@ -306,7 +306,7 @@ useEffect(() => {
                   )}
                 </div>
 
-                <div className="bg-dark-surface rounded-lg p-6 border border-white/5">
+                <div className="bg-white/5 backdrop-blur-xl rounded-lg p-6 border border-white/5">
                   <h3 className="text-lg font-medium text-light-text mb-4">API Documentation</h3>
                   <p className="text-gray-text mb-4">
                     Learn how to use the Plotune API with our comprehensive documentation.
@@ -325,7 +325,7 @@ useEffect(() => {
                 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                   {/* Current Plan */}
-                  <div className="bg-dark-surface rounded-lg p-6 border border-white/5">
+                  <div className="bg-white/5 backdrop-blur-xl rounded-lg p-6 border border-white/5">
                     <h3 className="text-lg font-medium text-light-text mb-4">Current Plan</h3>
                     <div className={`p-4 rounded-lg mb-4 ${
                       premiumStatus 
@@ -360,7 +360,7 @@ useEffect(() => {
                   </div>
 
                   {/* Plan Features */}
-                  <div className="bg-dark-surface rounded-lg p-6 border border-white/5">
+                  <div className="bg-white/5 backdrop-blur-xl rounded-lg p-6 border border-white/5">
                     <h3 className="text-lg font-medium text-light-text mb-4">Plan Features</h3>
                     <div className="space-y-3">
                       {[
@@ -404,7 +404,7 @@ useEffect(() => {
                 <h2 className="text-xl font-semibold text-light-text mb-6">Security Settings</h2>
                 
                 <div className="space-y-6">
-                  <div className="bg-dark-surface rounded-lg p-6 border border-white/5">
+                  <div className="bg-white/5 backdrop-blur-xl rounded-lg p-6 border border-white/5">
                     <h3 className="text-lg font-medium text-light-text mb-4">Password</h3>
                     <p className="text-gray-text mb-4">Change your password to keep your account secure.</p>
                     <a href='#/reset-password'>
@@ -414,7 +414,7 @@ useEffect(() => {
                     </a>
                   </div>
 
-                  <div className="bg-dark-surface rounded-lg p-6 border border-white/5">
+                  <div className="bg-white/5 backdrop-blur-xl rounded-lg p-6 border border-white/5">
                     <h3 className="text-lg font-medium text-light-text mb-4">Two-Factor Authentication</h3>
                     <p className="text-gray-text mb-4">Add an extra layer of security to your account.</p>
                     <button className="px-6 py-3 bg-primary/20 text-primary rounded-lg hover:bg-primary/30 transition font-medium">
@@ -422,7 +422,7 @@ useEffect(() => {
                     </button>
                   </div>
 
-                  <div className="bg-dark-surface rounded-lg p-6 border border-white/5">
+                  <div className="bg-white/5 backdrop-blur-xl rounded-lg p-6 border border-white/5">
                     <h3 className="text-lg font-medium text-light-text mb-4">Login History</h3>
                     <p className="text-gray-text mb-4">Review your recent account activity.</p>
                     <div className="text-sm text-gray-text space-y-2">

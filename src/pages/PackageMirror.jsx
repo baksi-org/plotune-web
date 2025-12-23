@@ -247,7 +247,7 @@ const PackageMirror = () => {
             value={formData.packageUrl}
             onChange={(e) => setFormData({ ...formData, packageUrl: e.target.value })}
             placeholder="https://github.com/orgs/baksi-org/packages/container/package/plotune-stream-gateway"
-            className="w-full p-3 bg-dark-surface rounded-lg border border-white/10 text-light-text focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent"
+            className="w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/10 text-light-text focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent"
             required
           />
           <p className="text-gray-text text-xs mt-2">
@@ -263,7 +263,7 @@ const PackageMirror = () => {
               value={formData.tag}
               onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
               placeholder="latest"
-              className="w-full p-3 bg-dark-surface rounded-lg border border-white/10 text-light-text focus:outline-none focus:ring-2 focus:ring-primary/50"
+              className="w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/10 text-light-text focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
             <p className="text-gray-text text-xs mt-2">Container tag (default: latest)</p>
           </div>
@@ -286,7 +286,7 @@ const PackageMirror = () => {
               value={formData.token}
               onChange={(e) => setFormData({ ...formData, token: e.target.value })}
               placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
-              className="w-full p-3 bg-dark-surface rounded-lg border border-white/10 text-light-text focus:outline-none focus:ring-2 focus:ring-primary/50"
+              className="w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/10 text-light-text focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
             <p className="text-gray-text text-xs mt-2">
               Required only for private packages
@@ -304,7 +304,7 @@ const PackageMirror = () => {
               <p>Only needed if your package is <strong>private</strong>. Public packages work without token.</p>
               <div className="flex items-start mt-2">
                 <FaCheckCircle className="text-green-400 mt-1 mr-2 flex-shrink-0" />
-                <span>We only request <code className="bg-dark-surface px-1 rounded">read:packages</code> permission</span>
+                <span>We only request <code className="bg-dark-surface backdrop-blur-xl px-1 rounded">read:packages</code> permission</span>
               </div>
               <a 
                 href="https://github.com/settings/tokens/new?description=Plotune+access+for+private+packages&scopes=read:packages"
@@ -318,7 +318,7 @@ const PackageMirror = () => {
           </div>
         )}
 
-        <div className="bg-dark-surface rounded-lg p-4 border border-white/5">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4 border border-white/5">
           <h4 className="text-light-text font-medium mb-3">How it works</h4>
           <div className="space-y-3 text-sm text-gray-text">
             <div className="flex items-center">
@@ -395,7 +395,7 @@ const PackageMirror = () => {
             {packages.map((pkg) => {
               const statusConfig = getStatusConfig(pkg.status);
               return (
-                <div key={pkg.id} className="bg-dark-surface rounded-xl p-5 border border-white/5 hover:border-white/10 transition">
+                <div key={pkg.id} className="bg-dark-surface backdrop-blur-xl rounded-xl p-5 border border-white/5 hover:border-white/10 transition">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
@@ -519,7 +519,7 @@ const PackageMirror = () => {
             </div>
 
             <div className="bg-dark-bg rounded-lg border border-white/10 overflow-hidden">
-              <div className="px-4 py-3 bg-dark-surface border-b border-white/10 flex items-center justify-between">
+              <div className="px-4 py-3 bg-dark-surface backdrop-blur-xl border-b border-white/10 flex items-center justify-between">
                 <span className="text-light-text font-medium">Live Logs</span>
                 <span className="text-gray-text text-sm">Updated: {formatDate(selectedPackage.lastSynced)}</span>
               </div>
@@ -579,7 +579,7 @@ const PackageMirror = () => {
               className={`px-5 py-3 rounded-lg transition font-medium flex items-center ${
                 activeSection === 'mirror'
                   ? 'bg-primary text-white'
-                  : 'bg-dark-surface text-gray-text hover:text-light-text'
+                  : 'bg-dark-surface backdrop-blur-xl text-gray-text hover:text-light-text'
               }`}
             >
               <FaSync className="mr-2" />
@@ -590,7 +590,7 @@ const PackageMirror = () => {
               className={`px-5 py-3 rounded-lg transition font-medium flex items-center ${
                 activeSection === 'manage'
                   ? 'bg-primary text-white'
-                  : 'bg-dark-surface text-gray-text hover:text-light-text'
+                  : 'bg-dark-surface backdrop-blur-xl text-gray-text hover:text-light-text'
               }`}
             >
               <FaCogs className="mr-2" />
@@ -601,7 +601,7 @@ const PackageMirror = () => {
               className={`px-5 py-3 rounded-lg transition font-medium flex items-center ${
                 activeSection === 'logs'
                   ? 'bg-primary text-white'
-                  : 'bg-dark-surface text-gray-text hover:text-light-text'
+                  : 'bg-dark-surface backdrop-blur-xl text-gray-text hover:text-light-text'
               }`}
             >
               <FaTerminal className="mr-2" />

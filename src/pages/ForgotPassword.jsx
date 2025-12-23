@@ -226,7 +226,7 @@ const ForgotPassword = () => {
                   }
                 }}
                 onBlur={validateEmail}
-                className={`w-full p-3 bg-dark-surface rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition ${
+                className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition ${
                   errors.email ? 'border-red-500' : 'border-white/10 focus:border-primary'
                 }`}
                 placeholder="Enter your email address"
@@ -284,7 +284,7 @@ const ForgotPassword = () => {
                   }
                 }}
                 onBlur={validateCode}
-                className={`w-full p-3 bg-dark-surface rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition text-center text-xl tracking-widest ${
+                className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition text-center text-xl tracking-widest ${
                   errors.code ? 'border-red-500' : 'border-white/10 focus:border-primary'
                 }`}
                 placeholder="000000000"
@@ -360,7 +360,7 @@ const ForgotPassword = () => {
                     }
                   }}
                   onBlur={validatePassword}
-                  className={`w-full p-3 bg-dark-surface rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition pr-10 ${
+                  className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition pr-10 ${
                     errors.newPassword ? 'border-red-500' : 'border-white/10 focus:border-primary'
                   }`}
                   placeholder="Create a strong password"
@@ -436,7 +436,7 @@ const ForgotPassword = () => {
                     }
                   }}
                   onBlur={validatePassword}
-                  className={`w-full p-3 bg-dark-surface rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition pr-10 ${
+                  className={`w-full p-3 bg-dark-surface backdrop-blur-xl rounded-lg border text-light-text focus:ring-2 focus:ring-primary/20 transition pr-10 ${
                     errors.confirmPassword ? 'border-red-500' : 'border-white/10 focus:border-primary'
                   }`}
                   placeholder="Confirm your password"

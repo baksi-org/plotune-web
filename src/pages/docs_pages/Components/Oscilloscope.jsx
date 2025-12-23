@@ -16,25 +16,25 @@ export default function Oscilloscope() {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-wave-square text-primary"></i>
           </div>
           <div className="text-sm font-semibold text-light-text">Real-time Plotting</div>
         </div>
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-layer-group text-primary"></i>
           </div>
           <div className="text-sm font-semibold text-light-text">Multi-layer</div>
         </div>
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-ruler text-primary"></i>
           </div>
           <div className="text-sm font-semibold text-light-text">Dynamic Scaling</div>
         </div>
-        <div className="bg-dark-surface rounded-xl p-6 border border-white/5 text-center">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 text-center">
           <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mb-3 mx-auto">
             <i className="fas fa-mouse-pointer text-primary"></i>
           </div>
@@ -44,7 +44,7 @@ export default function Oscilloscope() {
 
       {/* Introduction */}
       <section className="mb-12">
-        <div className="bg-dark-surface rounded-2xl p-8 border border-white/5">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-8 border border-white/5">
           <h2 className="text-2xl font-bold text-light-text mb-4 flex items-center gap-3">
             <div className="w-2 h-8 bg-primary rounded-full"></div>
             Overview
@@ -76,7 +76,7 @@ export default function Oscilloscope() {
               "Mouse-based zoom, pan, and cursor measurements",
               "Export and snapshot functions"
             ].map((feature, index) => (
-              <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface rounded-lg border border-white/5">
+              <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
                 <i className="fas fa-check text-primary mt-1 text-sm"></i>
                 <span className="text-gray-text">{feature}</span>
               </div>
@@ -113,7 +113,7 @@ export default function Oscilloscope() {
                 desc: "Calibrating sensors or verifying firmware behavior"
               }
             ].map((item, index) => (
-              <div key={index} className="p-4 bg-dark-surface rounded-lg border border-white/5">
+              <div key={index} className="p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
                 <h4 className="font-semibold text-light-text mb-2">{item.useCase}</h4>
                 <p className="text-gray-text text-sm">{item.desc}</p>
               </div>
@@ -129,7 +129,7 @@ export default function Oscilloscope() {
           Structure and Layers
         </h2>
 
-        <div className="bg-dark-surface rounded-2xl p-6 border border-white/5">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5">
           <p className="text-gray-text mb-6">
             Each oscilloscope view consists of one or more <strong className="text-light-text">layers</strong>. 
             A layer defines the visualization properties and signal assignments for a group of related data streams.
@@ -178,7 +178,7 @@ export default function Oscilloscope() {
           Example Usage
         </h2>
 
-        <div className="bg-dark-surface rounded-2xl p-6 border border-white/5">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-semibold text-light-text">Signal Attachment</h3>
             <span className="px-3 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium">
@@ -221,7 +221,7 @@ export default function Oscilloscope() {
               description: "Right-click a layer to edit color, gain, or signal assignment"
             }
           ].map((control, index) => (
-            <div key={index} className="bg-dark-surface rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
+            <div key={index} className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
                 <i className={`${control.icon} text-primary`}></i>
               </div>
@@ -239,7 +239,7 @@ export default function Oscilloscope() {
           Configuration Options
         </h2>
 
-        <div className="bg-dark-surface rounded-2xl p-6 border border-white/5 overflow-x-auto">
+        <div className="bg-dark-surface backdrop-blur-xl rounded-2xl p-6 border border-white/5 overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-white/10">
@@ -286,7 +286,7 @@ export default function Oscilloscope() {
               "Prefer numeric (float) signals — avoid heavy JSON payloads",
               "Disable autoscale for signals with stable amplitude"
             ].map((tip, index) => (
-              <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface rounded-lg border border-white/5">
+              <div key={index} className="flex items-start gap-3 p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
                 <i className="fas fa-lightbulb text-primary mt-1 text-sm"></i>
                 <span className="text-gray-text">{tip}</span>
               </div>
@@ -301,14 +301,14 @@ export default function Oscilloscope() {
             Developer Notes
           </h2>
           <div className="space-y-4">
-            <div className="p-4 bg-dark-surface rounded-lg border border-white/5">
+            <div className="p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
               <h4 className="font-semibold text-light-text mb-2">GPU Acceleration</h4>
               <p className="text-gray-text text-sm">
                 The oscilloscope renderer uses GPU-accelerated drawing (via PyQtGraph) and performs 
                 incremental updates for minimal latency.
               </p>
             </div>
-            <div className="p-4 bg-dark-surface rounded-lg border border-white/5">
+            <div className="p-4 bg-dark-surface backdrop-blur-xl rounded-lg border border-white/5">
               <h4 className="font-semibold text-light-text mb-2">Extensibility</h4>
               <p className="text-gray-text text-sm">
                 Developers can subclass or extend oscilloscope behavior using Plotune's component SDK, 
@@ -328,7 +328,7 @@ export default function Oscilloscope() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <a href="#/docs?page=components-scatter" className="group">
-            <div className="bg-dark-surface rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
+            <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
                 <i className="fas fa-chart-scatter text-primary"></i>
               </div>
@@ -342,7 +342,7 @@ export default function Oscilloscope() {
           </a>
 
           <a href="#/docs?page=extensions-online" className="group">
-            <div className="bg-dark-surface rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
+            <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
                 <i className="fas fa-satellite-dish text-primary"></i>
               </div>
@@ -356,7 +356,7 @@ export default function Oscilloscope() {
           </a>
 
           <a href="#/docs?page=sdk" className="group">
-            <div className="bg-dark-surface rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
+            <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-6 border border-white/5 hover:border-primary/30 hover:shadow-xl transition-all duration-300 text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform">
                 <i className="fas fa-code text-primary"></i>
               </div>

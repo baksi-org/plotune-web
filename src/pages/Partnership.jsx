@@ -84,7 +84,7 @@ const Partnership = () => {
       </section>
 
       {/* Partnership Tiers */}
-      <section className="py-20 bg-dark-surface">
+      <section className="py-20 bg-dark-surface backdrop-blur-xl">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-light-text mb-4">
@@ -146,7 +146,7 @@ const Partnership = () => {
       </section>
 
       {/* Video Section */}
-      <section className="py-16 bg-dark-surface">
+      <section className="py-16 bg-dark-surface backdrop-blur-xl">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-light-text mb-4">
