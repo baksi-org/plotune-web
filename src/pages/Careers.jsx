@@ -5,8 +5,8 @@ import TalentPool from '../components/TalentPool';
 const Careers = () => {
   return (
     <>
-      <CareersHero />
       <TalentPool />
+      <CareersHero />
     </>
   );
 };
