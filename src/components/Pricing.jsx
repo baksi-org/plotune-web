@@ -33,7 +33,7 @@ const Pricing = () => {
       ],
       link: '#/register',
       buttonText: 'Start Free Trial',
-      featured: true,
+      featured: false,
     },
     {
       name: 'Enterprise',
