@@ -7,6 +7,9 @@ import CreateStreamModal from './CreateStreamModal';
 import StreamManagementModal from './StreamManagementModal';
 import StreamCard from './StreamCard';
 import StreamIcon from '../../assets/icons/stream.svg';
+import { 
+  FaPlus
+} from 'react-icons/fa';
 
 const PlotuneStreams = () => {
   const { user, token } = useContext(AuthContext);
@@ -216,7 +219,7 @@ const handleDeleteStream = async (streamName) => {
           onClick={() => setShowCreateModal(true)}
           className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition flex items-center"
         >
-          <span className="mr-2">+</span> Create New Stream
+          <span className="mr-2"><FaPlus className="w-3 h-3" /></span> New Stream
         </button>
       </div>
 
@@ -247,7 +250,7 @@ const handleDeleteStream = async (streamName) => {
       </div>
 
       {/* Connection Information */}
-      <div className="bg-dark-surface rounded-xl p-6 border border-white/10">
+      <div className="rounded-xl p-6 border border-white/10">
         <h4 className="text-light-text font-medium mb-4">Connection Details</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div>

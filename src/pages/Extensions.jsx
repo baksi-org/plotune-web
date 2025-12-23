@@ -55,6 +55,21 @@ const Extensions = () => {
       is_verified: true,
       author: 'Plotune SDK Team',
       logo: 'https://www.gravatar.com/avatar/c1b5f34e4a0335ace8cc4184e1f5a07b71b1b1dad77933276c646c43a0a83389?d=monsterid'
+    },
+    {
+      id: 'plotune_simple_reader_ext',
+      app_id: 'plotune_simple_reader_ext',
+      name: 'Plotune Simple Reader',
+      description: 'File reader, PLTX, HDF5, Arrow, CSV, XLSX',
+      tags: ['verified', 'core'],
+      os: ["Linux", "Windows"],
+      repo: 'https://github.com/baksi-org/plotune-arduino-ext',
+      deployment: 'https://github.com/baksi-org/plotune-simple-reader-ext/releases',
+      web: 'https://plotune.net/',
+      documentation: 'https://github.com/baksi-org/plotune-simple-reader-ext',
+      is_verified: true,
+      author: 'Plotune SDK Team',
+      logo: 'https://www.gravatar.com/avatar/bf5360a203eea8e897bd60e34c52ac18090ae79464fd56b4800ee1ce9136397e?d=monsterid'
     }
   ];
 

@@ -3,27 +3,17 @@ import React, { useState } from 'react';
 import { 
   FaCog, 
   FaTrash, 
-  FaPlay, 
-  FaPause, 
-  FaUsers, 
   FaClock, 
   FaMemory, 
   FaEnvelope, 
   FaGlobe, 
-  FaTag,
-  FaSpinner
+  FaTag
 } from 'react-icons/fa';
 import StreamIcon from '../../assets/icons/stream.svg';
 
 const StreamCard = ({ stream, onManage, onDelete }) => {
   const [isDeleting, setIsDeleting] = useState(false);
   
-  const getStatusBadge = (isActive) => {
-    return isActive 
-      ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
-      : "bg-rose-500/15 text-rose-400 border border-rose-500/30";
-  };
-
   const formatBytes = (bytes) => {
     if (!bytes) return '0 B';
     const k = 1024;
@@ -71,40 +61,20 @@ const StreamCard = ({ stream, onManage, onDelete }) => {
                 className="w-7 h-7 text-primary filter drop-shadow"
               />
             </div>
-            {/* Status Dot */}
-            <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-dark-card ${stream.is_active ? 'bg-emerald-500' : 'bg-rose-500'} animate-pulse`}></div>
           </div>
           
-          {/* Title & Status */}
+          {/* Title & Date */}
           <div className="flex-1 min-w-0">
             <h3 className="text-lg font-semibold text-light-text tracking-tight truncate group-hover:text-primary transition-colors">
               {stream.name}
             </h3>
             <div className="flex items-center space-x-2 mt-1">
-              <span className={`inline-block w-2 h-2 rounded-full ${stream.is_active ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
-              <span className={`text-sm font-medium capitalize ${stream.is_active ? 'text-emerald-400' : 'text-rose-400'}`}>
-                {stream.is_active ? 'Active' : 'Inactive'}
-              </span>
-              <span className="text-gray-500">•</span>
               <div className="flex items-center space-x-1 text-xs text-gray-text">
                 <FaClock />
                 <span>{formatDate(stream.created_at)}</span>
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          {stream.is_active ? (
-            <button className="p-2 text-gray-text hover:text-amber-400 hover:bg-white/5 rounded-lg transition-all">
-              <FaPause className="w-4 h-4" />
-            </button>
-          ) : (
-            <button className="p-2 text-gray-text hover:text-emerald-400 hover:bg-white/5 rounded-lg transition-all">
-              <FaPlay className="w-4 h-4" />
-            </button>
-          )}
         </div>
       </div>
 

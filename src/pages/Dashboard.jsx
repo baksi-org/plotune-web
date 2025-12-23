@@ -8,7 +8,6 @@ import ExtensionIcon from '../assets/icons/extensions.svg';
 import DownloadIcon from '../assets/icons/download.svg';
 import StreamIcon from '../assets/icons/stream.svg';
 
-import { isMobileDevice } from '../context/isMobileDevice';
 import { useAddToHomeScreen } from '../hooks/useAddToHomeScreen';
 
 const Dashboard = () => {
@@ -23,8 +22,9 @@ const Dashboard = () => {
   });
   
   // PWA "Add to Home Screen" functionality
-  const { isSupported, promptInstall } = useAddToHomeScreen();
+  const { isSupported, isStandalone, promptInstall, showManualInstallInstructions } = useAddToHomeScreen();
   const [isMobile, setIsMobile] = useState(false);
+  const [showPWAInstall, setShowPWAInstall] = useState(false);
 
   // Quick links configuration - hardcoded enable/disable
   const quickLinks = [
@@ -75,7 +75,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(false); // Temporarily disable loading for faster UX
+      setLoading(false);
       try {
         const premiumResponse = await api.get('/user/premium', {
           headers: { Authorization: token },
@@ -89,19 +89,35 @@ const Dashboard = () => {
       } catch (err) {
         toast.error('Failed to load dashboard data');
         if (err.response?.status === 401) logout();
-      } finally {
-        // setLoading(false);
       }
     };
     
-    // Check if device is mobile
-    setIsMobile(isMobileDevice());
+    // Mobil cihaz kontrolü - geliştirilmiş versiyon
+    const checkIfMobile = () => {
+      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      const isMobileDevice = /android|iphone|ipad|ipod/i.test(userAgent);
+      const hasTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      
+      setIsMobile(isMobileDevice || hasTouchScreen);
+      
+      // PWA kurulum banner'ını göstermek için kontrol
+      // Zaten PWA olarak yüklü değilse ve mobil cihazdaysa göster
+      if ((isMobileDevice || hasTouchScreen) && !isStandalone) {
+        setShowPWAInstall(true);
+      }
+    };
+    
+    checkIfMobile();
     
     if (token) fetchData();
-  }, [token, logout]);
+  }, [token, logout, isStandalone]);
 
   const handleUpgradePremium = () => {
     toast.info('Upgrade not available currently');
+  };
+
+  const handlePWAInstall = () => {
+    promptInstall();
   };
 
   if (loading) {
@@ -120,68 +136,6 @@ const Dashboard = () => {
       <div className="container mx-auto px-4">
 
         <div className="space-y-6">
-          {/* Stats Cards - Currently commented out */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-            //  { label: 'Installed Extensions', value: stats.extensions, icon: '🧩', color: 'blue' },
-            //  { label: 'Active Projects', value: stats.projects, icon: '📁', color: 'green' },
-            //  { label: 'API Calls (30d)', value: stats.apiCalls, icon: '📊', color: 'purple' },
-            //  { label: 'Storage Used', value: stats.storage, icon: '💾', color: 'orange' },
-            ].map((stat, index) => (
-              <div key={index} className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-gray-text text-sm">{stat.label}</p>
-                    <p className="text-2xl font-bold text-light-text mt-2">{stat.value}</p>
-                  </div>
-                  <div className={`text-2xl bg-${stat.color}-500/20 p-3 rounded-lg`}>
-                    {stat.icon}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Quick Links - Only show if there are enabled links */}
-          {enabledQuickLinks.length > 0 && (
-            <div className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl">
-              <h2 className="text-xl font-semibold text-light-text mb-4">Quick Links</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                {enabledQuickLinks.map((link) => (
-                  link.external ? (
-                    <a
-                      key={link.id}
-                      href={link.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block p-4 bg-dark-surface rounded-lg border border-white/5 hover:border-primary/50 transition group text-center"
-                    >
-                      <div className="text-2xl mb-2">
-                        <span className="material-icons text-3xl text-gray-400 group-hover:text-primary transition">
-                          {link.icon}
-                        </span>
-                      </div>
-                      <h3 className="text-light-text font-medium text-sm">{link.label}</h3>
-                    </a>
-                  ) : (
-                    <Link
-                      key={link.id}
-                      to={link.link}
-                      className="block p-4 bg-dark-surface rounded-lg border border-white/5 hover:border-primary/50 transition group text-center"
-                    >
-                      <div className="text-2xl mb-2">
-                        <span className="material-icons text-3xl text-gray-400 group-hover:text-primary transition">
-                          {link.icon}
-                        </span>
-                      </div>
-                      <h3 className="text-light-text font-medium text-sm">{link.label}</h3>
-                    </Link>
-                  )
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* Quick Actions */}
           <div className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl">
             <h2 className="text-xl font-semibold text-light-text mb-4">Quick Actions</h2>
@@ -231,6 +185,93 @@ const Dashboard = () => {
             </div>
           </div>
 
+          {/* Quick Links - Only show if there are enabled links */}
+          {enabledQuickLinks.length > 0 && (
+            <div className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl">
+              <h2 className="text-xl font-semibold text-light-text mb-4">Quick Links</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                {enabledQuickLinks.map((link) => (
+                  link.external ? (
+                    <a
+                      key={link.id}
+                      href={link.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block p-4 bg-dark-surface rounded-lg border border-white/5 hover:border-primary/50 transition group text-center"
+                    >
+                      <div className="text-2xl mb-2">
+                        <span className="material-icons text-3xl text-gray-400 group-hover:text-primary transition">
+                          {link.icon}
+                        </span>
+                      </div>
+                      <h3 className="text-light-text font-medium text-sm">{link.label}</h3>
+                    </a>
+                  ) : (
+                    <Link
+                      key={link.id}
+                      to={link.link}
+                      className="block p-4 bg-dark-surface rounded-lg border border-white/5 hover:border-primary/50 transition group text-center"
+                    >
+                      <div className="text-2xl mb-2">
+                        <span className="material-icons text-3xl text-gray-400 group-hover:text-primary transition">
+                          {link.icon}
+                        </span>
+                      </div>
+                      <h3 className="text-light-text font-medium text-sm">{link.label}</h3>
+                    </Link>
+                  )
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Add to Home Screen - Daha akıllı gösterim */}
+          {showPWAInstall && !isStandalone && (
+            <div className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-light-text mb-1">Install Plotune App</h3>
+                  <p className="text-gray-text text-sm">
+                    {isSupported 
+                      ? 'Add to home screen for quick access and better experience'
+                      : 'For best experience, install as an app'}
+                  </p>
+                </div>
+                <button
+                  onClick={handlePWAInstall}
+                  className="px-4 py-2 bg-primary/10 text-primary rounded-lg font-medium hover:bg-primary/20 transition-colors border border-primary/20 flex items-center gap-2"
+                >
+                  <span className="material-icons text-sm">add_to_home_screen</span>
+                  {isSupported ? 'Install Now' : 'Show Instructions'}
+                </button>
+              </div>
+              
+              {/* Manuel kurulum talimatları (gizlenebilir) */}
+              {!isSupported && (
+                <div className="mt-4 pt-4 border-t border-white/10">
+                  <details className="text-gray-text text-sm">
+                    <summary className="cursor-pointer hover:text-light-text">Manual Installation Guide</summary>
+                    <div className="mt-2 pl-4 space-y-2">
+                      <p><strong>For Android/Chrome:</strong></p>
+                      <ol className="list-decimal pl-5">
+                        <li>Tap the menu button (⋮) in the top right</li>
+                        <li>Select "Add to Home screen" or "Install app"</li>
+                        <li>Confirm the installation</li>
+                      </ol>
+                      
+                      <p className="mt-2"><strong>For iOS/Safari:</strong></p>
+                      <ol className="list-decimal pl-5">
+                        <li>Tap the share button (⬆️)</li>
+                        <li>Scroll down and tap "Add to Home Screen"</li>
+                        <li>Tap "Add" in the top right</li>
+                      </ol>
+                    </div>
+                  </details>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Premium Banner */}
           {!premiumStatus && (
             <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl p-6 shadow-xl">
@@ -246,27 +287,6 @@ const Dashboard = () => {
                   className="mt-4 md:mt-0 px-6 py-3 bg-white text-purple-600 rounded-lg font-semibold hover:bg-gray-100 transition"
                 >
                   Upgrade Now
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Add to Home Screen - Only shows on supported mobile devices */}
-          {isSupported && isMobile && (
-            <div className="bg-dark-card rounded-2xl p-6 border border-white/10 shadow-xl">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold text-light-text mb-1">Add to Home Screen</h3>
-                  <p className="text-gray-text text-sm">
-                    Install the app for quick access from your home screen
-                  </p>
-                </div>
-                <button
-                  onClick={promptInstall}
-                  className="px-4 py-2 bg-primary/10 text-primary rounded-lg font-medium hover:bg-primary/20 transition-colors border border-primary/20 flex items-center gap-2"
-                >
-                  <span className="material-icons text-sm">add_to_home_screen</span>
-                  Install
                 </button>
               </div>
             </div>
