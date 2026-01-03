@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useLayoutEffect } from 'react';
 import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -29,15 +29,12 @@ import PartnerApplication from './pages/PartnerApplication';
 import PartnerPortal from './pages/PartnerPortal';
 import StorageManager from './pages/StorageManager';
 import PackageMirror from './pages/PackageMirror';
-
-// Scroll'u en üste alan bileşen
-import { useLayoutEffect } from 'react'; // useEffect yerine
+import StreamOverviewPage from './components/streams/StreamOverviewPage';
 
 const ScrollToTop = () => {
   const { pathname, hash } = useLocation();
 
   useLayoutEffect(() => {
-    // Hash varsa → smooth scroll
     if (hash) {
       const element = document.querySelector(hash);
       if (element) {
@@ -46,7 +43,6 @@ const ScrollToTop = () => {
       }
     }
 
-    // Yoksa → en üste, smooth ama hızlı
     window.scrollTo({
       top: 0,
       behavior: 'smooth'
@@ -56,42 +52,57 @@ const ScrollToTop = () => {
   return null;
 };
 
+const NavigationWrapper = ({ children }) => {
+  const location = useLocation();
+  const hideLayoutPaths = ['/streams/connect'];
+  const shouldHide = hideLayoutPaths.includes(location.pathname);
+
+  return (
+    <>
+      {!shouldHide && <DevBanner />}
+      {!shouldHide && <Header />}
+      {children}
+      {!shouldHide && <Footer />}
+    </>
+  );
+};
+
 function App() {
   return (
     <AuthProvider>
       <Router>
         <div className="app">
-          <DevBanner />
-          <Header />
-          <ScrollToTop /> {/* Buraya ekle */}
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/extensions" element={<Extensions />} />
-            <Route path="/blog" element={<RedirectPage url="https://github.com/baksi-org/plotune-web/discussions" />} />
-            <Route path="/community" element={<RedirectPage url="https://github.com/baksi-org/plotune-web/discussions" />} />
-            <Route path="/tutorials" element={<RedirectPage url="https://github.com/baksi-org/plotune-web/discussions" />} />
-            <Route path="/download" element={<Download />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/careers" element={<Careers />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/legal" element={<Legal />} />
-            <Route path="/docs" element={<Docs />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/verify-email" element={<VerifyEmail />} />
-            <Route path="/reset-password" element={<ForgotPassword />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/streams" element={<Streams />} />
-            <Route path="/dns" element={<DnsPage />} />
-            <Route path="/partners" element={<Partnership />} />
-            <Route path="/partner-portal" element={<PartnerPortal />} />
-            <Route path="/partners/apply" element={<PartnerApplication />} />
-            <Route path="/storage" element={<StorageManager />} />
-            <Route path="/mirror" element={<PackageMirror />} />
-          </Routes>
-          <Footer />
+          <ScrollToTop />
+          <NavigationWrapper>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/extensions" element={<Extensions />} />
+              <Route path="/blog" element={<RedirectPage url="https://github.com/baksi-org/plotune-web/discussions" />} />
+              <Route path="/community" element={<RedirectPage url="https://github.com/baksi-org/plotune-web/discussions" />} />
+              <Route path="/tutorials" element={<RedirectPage url="https://github.com/baksi-org/plotune-web/discussions" />} />
+              <Route path="/download" element={<Download />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/careers" element={<Careers />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/legal" element={<Legal />} />
+              <Route path="/docs" element={<Docs />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/verify-email" element={<VerifyEmail />} />
+              <Route path="/reset-password" element={<ForgotPassword />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/streams" element={<Streams />} />
+              <Route path="/dns" element={<DnsPage />} />
+              <Route path="/partners" element={<Partnership />} />
+              <Route path="/partner-portal" element={<PartnerPortal />} />
+              <Route path="/partners/apply" element={<PartnerApplication />} />
+              <Route path="/storage" element={<StorageManager />} />
+              <Route path="/mirror" element={<PackageMirror />} />
+              <Route path="/streams/connect" element={<StreamOverviewPage />} />
+            </Routes>
+          </NavigationWrapper>
         </div>
         <ToastContainer position="bottom-right" autoClose={3000} />
       </Router>

@@ -264,7 +264,7 @@ const PlotuneStreams = () => {
           onClick={() => setShowCreateModal(true)}
           className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition flex items-center"
         >
-          <span className="mr-2"><FaPlus className="w-3 h-3" /></span> New Stream
+          <span className="mr-2"><FaPlus className="w-3 h-3" /></span> New
         </button>
       </div>
 
@@ -318,6 +318,7 @@ const PlotuneStreams = () => {
               onManage={() => setActiveStream(stream)}
               onDelete={stream.is_shared ? null : () => handleDeleteStream(stream.name)}
               isShared={stream.is_shared}
+              streamToken={streamToken}
             />
           ))}
           
@@ -386,7 +387,6 @@ const PlotuneStreams = () => {
           onUpdate={() => activeTab === 'my' ? fetchMyStreams() : fetchSharedStreams()}
           onShare={activeStream.is_shared ? null : handleShareStream}
           onUnshare={activeStream.is_shared ? null : handleUnshareStream}
-          streamToken={streamToken}
           user={user}
           isShared={activeStream.is_shared}
         />
