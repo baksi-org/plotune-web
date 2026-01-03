@@ -10,7 +10,8 @@ const StreamManagementModal = ({
   onShare, 
   onUnshare, 
   streamToken,
-  user 
+  user,
+  isShared = false  // Add this prop
 }) => {
   const [activeTab, setActiveTab] = useState('details');
   const [sharedUsers, setSharedUsers] = useState([]);
@@ -21,9 +22,9 @@ const StreamManagementModal = ({
     can_write: false
   });
 
-  // Stream'in paylaşıldığı kullanıcıları getir
+  // Fetch shared users - only for owned streams
   const fetchSharedUsers = async () => {
-    if (!streamToken) return;
+    if (!streamToken || isShared) return;
     
     setLoadingShared(true);
     try {
@@ -42,10 +43,10 @@ const StreamManagementModal = ({
   };
 
   useEffect(() => {
-    if (activeTab === 'sharing' && streamToken) {
+    if (activeTab === 'sharing' && streamToken && !isShared) {
       fetchSharedUsers();
     }
-  }, [activeTab, streamToken]);
+  }, [activeTab, streamToken, isShared]);
 
   const handleShareSubmit = async (e) => {
     e.preventDefault();
@@ -61,7 +62,7 @@ const StreamManagementModal = ({
       });
       
       setShareForm({ email: '', can_read: true, can_write: false });
-      fetchSharedUsers(); // Listeyi yenile
+      fetchSharedUsers(); // Refresh the list
     } catch (err) {
       // Error handled in parent
     }
@@ -74,10 +75,22 @@ const StreamManagementModal = ({
 
     try {
       await onUnshare(stream.name, userEmail);
-      fetchSharedUsers(); // Listeyi yenile
+      fetchSharedUsers(); // Refresh the list
     } catch (err) {
       // Error handled in parent
     }
+  };
+
+  // Format date helper
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      month: 'long', 
+      day: 'numeric', 
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   };
 
   return (
@@ -86,8 +99,15 @@ const StreamManagementModal = ({
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-white/10">
           <div>
-            <h2 className="text-xl font-semibold text-light-text">Manage Stream</h2>
+            <h2 className="text-xl font-semibold text-light-text">
+              {isShared ? 'View Stream' : 'Manage Stream'}
+            </h2>
             <p className="text-gray-text text-sm mt-1">{stream.name}</p>
+            {isShared && stream.owner_email && (
+              <p className="text-primary text-xs mt-1">
+                Owned by: {stream.owner_email}
+              </p>
+            )}
           </div>
           <button
             onClick={onClose}
@@ -97,7 +117,7 @@ const StreamManagementModal = ({
           </button>
         </div>
 
-        {/* Tabs */}
+        {/* Tabs - Only show Sharing tab for owned streams */}
         <div className="flex border-b border-white/10">
           <button
             onClick={() => setActiveTab('details')}
@@ -109,16 +129,18 @@ const StreamManagementModal = ({
           >
             Details
           </button>
-          <button
-            onClick={() => setActiveTab('sharing')}
-            className={`flex-1 py-4 text-center font-medium transition ${
-              activeTab === 'sharing'
-                ? 'text-primary border-b-2 border-primary'
-                : 'text-gray-text hover:text-light-text'
-            }`}
-          >
-            Sharing
-          </button>
+          {!isShared && (
+            <button
+              onClick={() => setActiveTab('sharing')}
+              className={`flex-1 py-4 text-center font-medium transition ${
+                activeTab === 'sharing'
+                  ? 'text-primary border-b-2 border-primary'
+                  : 'text-gray-text hover:text-light-text'
+              }`}
+            >
+              Sharing
+            </button>
+          )}
         </div>
 
         {/* Content */}
@@ -137,14 +159,40 @@ const StreamManagementModal = ({
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-text">Owner</span>
-                      <span className="text-light-text">{stream.owner_email || user?.email}</span>
+                      <span className="text-light-text">
+                        <a 
+                          href={`mailto:${isShared ? stream.owner_email : user?.email}`}
+                          style={{
+                            textDecoration: 'none',
+                            color: 'inherit',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          {isShared ? stream.owner_email : user?.email}
+                        </a>
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-text">Created</span>
-                      <span className="text-light-text">
-                        {new Date(stream.created_at).toLocaleDateString()}
-                      </span>
+                      <span className="text-light-text">{formatDate(stream.created_at)}</span>
                     </div>
+                    {/* Show permissions for shared streams */}
+                    {isShared && stream.shared_permissions && (
+                      <>
+                        <div className="flex justify-between">
+                          <span className="text-gray-text">Read Access</span>
+                          <span className={stream.shared_permissions.can_read ? 'text-green-400' : 'text-red-400'}>
+                            {stream.shared_permissions.can_read ? '✓ Allowed' : '✗ Not Allowed'}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-text">Write Access</span>
+                          <span className={stream.shared_permissions.can_write ? 'text-green-400' : 'text-red-400'}>
+                            {stream.shared_permissions.can_write ? '✓ Allowed' : '✗ Not Allowed'}
+                          </span>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
 
@@ -172,31 +220,61 @@ const StreamManagementModal = ({
                     </div>
                   </div>
                 </div>
+
+                {/* Connection Details */}
+                <div>
+                  <h3 className="text-light-text font-medium mb-2">Connection Details</h3>
+                  <div className="bg-dark-surface backdrop-blur-xl rounded-lg p-4 space-y-3">
+                    <div>
+                      <p className="text-gray-text text-sm mb-1">Producer Endpoint</p>
+                      <code className="text-primary bg-dark-bg px-3 py-2 rounded block break-all text-sm">
+                        wss://stream.plotune.net/ws/producer/
+                        {isShared ? stream.owner_email?.split('@')[0] : user?.username}/
+                        {stream.name}
+                      </code>
+                    </div>
+                    <div>
+                      <p className="text-gray-text text-sm mb-1">Consumer Endpoint</p>
+                      <code className="text-primary bg-dark-bg px-3 py-2 rounded block break-all text-sm">
+                        wss://stream.plotune.net/ws/consumer/
+                        {isShared ? stream.owner_email?.split('@')[0] : user?.username}/
+                        {stream.name}/[group_name]
+                      </code>
+                    </div>
+                    {isShared && (
+                      <p className="text-xs text-gray-text mt-2">
+                        Note: Use the owner's username in the connection URLs
+                      </p>
+                    )}
+                  </div>
+                </div>
               </div>
 
-              {/* Danger Zone */}
-              <div className="border border-red-500/30 rounded-lg p-4">
-                <h3 className="text-red-400 font-medium mb-3">Danger Zone</h3>
-                <p className="text-gray-text text-sm mb-4">
-                  Deleting this stream will permanently remove all messages and cannot be undone.
-                </p>
-                <button
-                  onClick={() => {
-                    if (window.confirm('Are you sure you want to delete this stream? This action cannot be undone.')) {
-                      onClose();
-                      // Delete will be handled by parent
-                    }
-                  }}
-                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition"
-                >
-                  Delete Stream
-                </button>
-              </div>
+              {/* Danger Zone - Only for owned streams */}
+              {!isShared && (
+                <div className="border border-red-500/30 rounded-lg p-4">
+                  <h3 className="text-red-400 font-medium mb-3">Danger Zone</h3>
+                  <p className="text-gray-text text-sm mb-4">
+                    Deleting this stream will permanently remove all messages and cannot be undone.
+                  </p>
+                  <button
+                    onClick={() => {
+                      if (window.confirm('Are you sure you want to delete this stream? This action cannot be undone.')) {
+                        onClose();
+                        // Delete will be handled by parent
+                      }
+                    }}
+                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition"
+                  >
+                    Delete Stream
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
-          {/* Sharing Tab */}
-          {activeTab === 'sharing' && (
+          {/* Sharing Tab - Only for owned streams */}
+          {activeTab === 'sharing' && !isShared && (
             <div className="space-y-6">
               {/* Add User Form */}
               <div className="bg-dark-surface backdrop-blur-xl rounded-xl p-5 border border-white/5">
@@ -313,10 +391,7 @@ const StreamManagementModal = ({
 
               {/* Sharing Info */}
               <div className="bg-primary/10 border border-primary/20 rounded-lg p-4">
-                <h4 className="text-light-text font-medium mb-2 flex items-center">
-                  <span className="material-icons mr-2 text-primary">info</span>
-                  Sharing Information
-                </h4>
+                <h4 className="text-light-text font-medium mb-2">Sharing Information</h4>
                 <ul className="text-gray-text text-sm space-y-1">
                   <li>• Shared users can access this stream using their own credentials</li>
                   <li>• Read permission allows consuming messages from the stream</li>

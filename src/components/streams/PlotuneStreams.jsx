@@ -8,16 +8,21 @@ import StreamManagementModal from './StreamManagementModal';
 import StreamCard from './StreamCard';
 import StreamIcon from '../../assets/icons/stream.svg';
 import { 
-  FaPlus
+  FaPlus,
+  FaUsers,
+  FaStream
 } from 'react-icons/fa';
 
 const PlotuneStreams = () => {
   const { user, token } = useContext(AuthContext);
-  const [streams, setStreams] = useState([]);
+  const [myStreams, setMyStreams] = useState([]);
+  const [sharedStreams, setSharedStreams] = useState([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [loadingShared, setLoadingShared] = useState(false);
   const [activeStream, setActiveStream] = useState(null);
   const [streamToken, setStreamToken] = useState(null);
+  const [activeTab, setActiveTab] = useState('my'); // 'my' or 'shared'
 
   useEffect(() => {
     fetchStreamToken();
@@ -27,14 +32,13 @@ const PlotuneStreams = () => {
   const fetchStreamToken = async () => {
     try {
       const cacheBuster = Math.floor(Date.now() / (1000 * 60 * 20));
-
       const response = await api.get(`/auth/stream?q=${cacheBuster}&user=${user?.username}`, {
         headers: { Authorization: token },
       });
       
       if (response.data && response.data.token) {
         setStreamToken(response.data.token);
-        fetchStreams(response.data.token);
+        fetchMyStreams(response.data.token);
       } else {
         throw new Error('No token received');
       }
@@ -45,7 +49,7 @@ const PlotuneStreams = () => {
     }
   };
 
-  const fetchStreams = async (tokenToUse = streamToken) => {
+  const fetchMyStreams = async (tokenToUse = streamToken) => {
     if (!tokenToUse) {
       setLoading(false);
       return;
@@ -57,14 +61,55 @@ const PlotuneStreams = () => {
         headers: { Authorization: tokenToUse },
       });
       
-      setStreams(response.data.streams || []);
+      setMyStreams(response.data.streams || []);
       
     } catch (err) {
       console.error('Error fetching streams:', err);
-      toast.error('Failed to load streams');
-      setStreams([]);
+      toast.error('Failed to load your streams');
+      setMyStreams([]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchSharedStreams = async (tokenToUse = streamToken) => {
+    if (!tokenToUse) {
+      return;
+    }
+
+    try {
+      setLoadingShared(true);
+      const response = await streamApi.get('/streams/shared-streams', {
+        headers: { Authorization: tokenToUse },
+      });
+      
+      // Map shared streams to match StreamCard structure
+      const mappedStreams = (response.data.shared_streams || []).map(stream => ({
+        ...stream,
+        id: stream.name, // Use name as ID since shared streams don't have ID
+        is_shared: true,
+        owner: stream.owner_email,
+        shared_permissions: {
+          can_read: stream.can_read,
+          can_write: stream.can_write
+        }
+      }));
+      
+      setSharedStreams(mappedStreams);
+      
+    } catch (err) {
+      console.error('Error fetching shared streams:', err);
+      toast.error('Failed to load shared streams');
+      setSharedStreams([]);
+    } finally {
+      setLoadingShared(false);
+    }
+  };
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    if (tab === 'shared' && sharedStreams.length === 0 && streamToken) {
+      fetchSharedStreams();
     }
   };
 
@@ -75,11 +120,9 @@ const PlotuneStreams = () => {
     }
 
     try {
-      // Match the exact StreamCreate model from backend
       const createData = {
         name: streamData.name,
         owner: user?.username,
-        // These are optional in backend with default=None
         max_messages_per_second: 1000,
         max_message_size_bytes: 1000,
         max_retention_messages: 1000,
@@ -93,7 +136,7 @@ const PlotuneStreams = () => {
       
       setShowCreateModal(false);
       toast.success('Stream created successfully!');
-      fetchStreams();
+      fetchMyStreams();
     } catch (err) {
       console.error('Create error:', err);
       if (err.response?.status === 422) {
@@ -104,37 +147,36 @@ const PlotuneStreams = () => {
     }
   };
 
-const handleDeleteStream = async (streamName) => {
-  if (!streamToken) {
-    toast.error('Stream access not available');
-    return;
-  }
+  const handleDeleteStream = async (streamName) => {
+    if (!streamToken) {
+      toast.error('Stream access not available');
+      return;
+    }
 
-  if (!window.confirm('Are you sure you want to delete this stream? This action cannot be undone.')) {
-    return;
-  }
+    if (!window.confirm('Are you sure you want to delete this stream? This action cannot be undone.')) {
+      return;
+    }
 
-  try {
-    // This matches EXACTLY what your backend expects (StreamCreate model)
-    await streamApi.post('/streams/delete', {
-      name: streamName,
-      owner: user?.username,                    // required field
-      max_messages_per_second: 0,               // can be any number (backend ignores it)
-      max_message_size_bytes: 0,                // same
-      max_retention_messages: 0,                // same
-      max_consumers_per_group: 0,              // same
-      max_consumer_group: 0                     // same
-    }, {
-      headers: { Authorization: streamToken },
-    });
+    try {
+      await streamApi.post('/streams/delete', {
+        name: streamName,
+        owner: user?.username,
+        max_messages_per_second: 0,
+        max_message_size_bytes: 0,
+        max_retention_messages: 0,
+        max_consumers_per_group: 0,
+        max_consumer_group: 0
+      }, {
+        headers: { Authorization: streamToken },
+      });
 
-    toast.success('Stream deleted successfully');
-    fetchStreams();
-  } catch (err) {
-    console.error('Delete error:', err);
-    toast.error('Failed to delete stream');
-  }
-};
+      toast.success('Stream deleted successfully');
+      fetchMyStreams();
+    } catch (err) {
+      console.error('Delete error:', err);
+      toast.error('Failed to delete stream');
+    }
+  };
 
   const handleShareStream = async (streamName, shareEmail, permissions) => {
     if (!streamToken) {
@@ -153,7 +195,7 @@ const handleDeleteStream = async (streamName) => {
         { headers: { Authorization: streamToken } }
       );
       toast.success(`Stream shared with ${shareEmail}`);
-      fetchStreams();
+      fetchMyStreams();
     } catch (err) {
       toast.error('Failed to share stream');
     }
@@ -174,13 +216,13 @@ const handleDeleteStream = async (streamName) => {
         { headers: { Authorization: streamToken } }
       );
       toast.success('User removed from stream');
-      fetchStreams();
+      fetchMyStreams();
     } catch (err) {
       toast.error('Failed to remove user');
     }
   };
 
-  if (loading) {
+  if (loading && activeTab === 'my') {
     return (
       <div className="flex justify-center items-center py-12">
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
@@ -207,13 +249,16 @@ const handleDeleteStream = async (streamName) => {
     );
   }
 
+  const currentStreams = activeTab === 'my' ? myStreams : sharedStreams;
+  const isLoading = activeTab === 'my' ? loading : loadingShared;
+
   return (
     <div className="space-y-8">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-lg font-semibold text-light-text">My Streams</h3>
-          <p className="text-gray-text text-sm">Manage your data streams</p>
+          <h3 className="text-lg font-semibold text-light-text">Streams</h3>
+          <p className="text-gray-text text-sm">Manage your data streams and access shared streams</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
@@ -223,31 +268,82 @@ const handleDeleteStream = async (streamName) => {
         </button>
       </div>
 
-      {/* Streams Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {streams.map((stream) => (
-          <StreamCard
-            key={stream.id}
-            stream={stream}
-            onManage={() => setActiveStream(stream)}
-            onDelete={() => handleDeleteStream(stream.name)}
-          />
-        ))}
-        
-        {streams.length === 0 && (
-          <div className="col-span-full text-center py-12">
-            <img src={StreamIcon} alt="Streams" className="mx-auto mb-4 w-16 h-16 opacity-50" />
-            <h3 className="text-lg font-medium text-light-text mb-2">No streams yet</h3>
-            <p className="text-gray-text mb-4">Create your first stream to get started</p>
-            <button
-              onClick={() => setShowCreateModal(true)}
-              className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark"
-            >
-              Create Your First Stream
-            </button>
-          </div>
-        )}
+      {/* Tabs */}
+      <div className="flex border-b border-white/10">
+        <button
+          className={`px-4 py-3 font-medium text-sm flex items-center gap-2 border-b-2 transition-colors ${
+            activeTab === 'my' 
+              ? 'border-primary text-primary' 
+              : 'border-transparent text-gray-text hover:text-light-text'
+          }`}
+          onClick={() => handleTabChange('my')}
+        >
+          <FaStream className="w-4 h-4" />
+          My Streams
+          {myStreams.length > 0 && (
+            <span className="bg-primary/20 text-primary text-xs px-2 py-0.5 rounded-full">
+              {myStreams.length}
+            </span>
+          )}
+        </button>
+        <button
+          className={`px-4 py-3 font-medium text-sm flex items-center gap-2 border-b-2 transition-colors ${
+            activeTab === 'shared' 
+              ? 'border-primary text-primary' 
+              : 'border-transparent text-gray-text hover:text-light-text'
+          }`}
+          onClick={() => handleTabChange('shared')}
+        >
+          <FaUsers className="w-4 h-4" />
+          Shared With Me
+          {sharedStreams.length > 0 && (
+            <span className="bg-primary/20 text-primary text-xs px-2 py-0.5 rounded-full">
+              {sharedStreams.length}
+            </span>
+          )}
+        </button>
       </div>
+
+      {/* Streams Grid */}
+      {isLoading ? (
+        <div className="flex justify-center items-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {currentStreams.map((stream) => (
+            <StreamCard
+              key={stream.id}
+              stream={stream}
+              onManage={() => setActiveStream(stream)}
+              onDelete={stream.is_shared ? null : () => handleDeleteStream(stream.name)}
+              isShared={stream.is_shared}
+            />
+          ))}
+          
+          {currentStreams.length === 0 && (
+            <div className="col-span-full text-center py-12">
+              <img src={StreamIcon} alt="Streams" className="mx-auto mb-4 w-16 h-16 opacity-50" />
+              <h3 className="text-lg font-medium text-light-text mb-2">
+                {activeTab === 'my' ? 'No streams yet' : 'No shared streams'}
+              </h3>
+              <p className="text-gray-text mb-4">
+                {activeTab === 'my' 
+                  ? 'Create your first stream to get started' 
+                  : 'No one has shared any streams with you yet'}
+              </p>
+              {activeTab === 'my' && (
+                <button
+                  onClick={() => setShowCreateModal(true)}
+                  className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark"
+                >
+                  Create Your First Stream
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Connection Information */}
       <div className="rounded-xl p-6 border border-white/10">
@@ -256,15 +352,22 @@ const handleDeleteStream = async (streamName) => {
           <div>
             <p className="text-gray-text">Producer Endpoint</p>
             <code className="text-primary bg-dark-card px-2 py-1 rounded break-all">
-              wss://stream.plotune.net/ws/producer/{user?.username}/[stream_name]
+              wss://stream.plotune.net/ws/producer/{activeTab === 'shared' ? '[owner_username]' : user?.username}/[stream_name]
             </code>
           </div>
           <div>
             <p className="text-gray-text">Consumer Endpoint</p>
             <code className="text-primary bg-dark-card px-2 py-1 rounded break-all">
-              wss://stream.plotune.net/ws/consumer/{user?.username}/[stream_name]/[group_name]
+              wss://stream.plotune.net/ws/consumer/{activeTab === 'shared' ? '[owner_username]' : user?.username}/[stream_name]/[group_name]
             </code>
           </div>
+          {activeTab === 'shared' && (
+            <div className="col-span-full">
+              <p className="text-gray-text text-xs mt-2">
+                Note: For shared streams, replace <code className="bg-dark-card px-1 rounded">[owner_username]</code> with the stream owner's username
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -280,11 +383,12 @@ const handleDeleteStream = async (streamName) => {
         <StreamManagementModal
           stream={activeStream}
           onClose={() => setActiveStream(null)}
-          onUpdate={fetchStreams}
-          onShare={handleShareStream}
-          onUnshare={handleUnshareStream}
+          onUpdate={() => activeTab === 'my' ? fetchMyStreams() : fetchSharedStreams()}
+          onShare={activeStream.is_shared ? null : handleShareStream}
+          onUnshare={activeStream.is_shared ? null : handleUnshareStream}
           streamToken={streamToken}
           user={user}
+          isShared={activeStream.is_shared}
         />
       )}
     </div>
