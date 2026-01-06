@@ -260,12 +260,31 @@ const PlotuneStreams = () => {
           <h3 className="text-lg font-semibold text-light-text">Streams</h3>
           <p className="text-gray-text text-sm">Manage your data streams and access shared streams</p>
         </div>
+
         <button
-          onClick={() => setShowCreateModal(true)}
-          className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition flex items-center"
-        >
-          <span className="mr-2"><FaPlus className="w-3 h-3" /></span> New
+            onClick={() => setShowCreateModal(true)}          // senin handler
+            className="group relative flex items-center justify-center
+                        w-8 h-8 rounded-full
+                        bg-blue-600 hover:bg-blue-700
+                        text-white
+                        transition-colors"
+            >
+            <FaPlus className="w-3.5 h-3.5" />
+
+            {/* Tooltip */}
+            <span
+                className="pointer-events-none absolute left-1/2 top-full mt-2
+                        -translate-x-1/2
+                        whitespace-nowrap
+                        rounded bg-gray-900 px-2 py-1 text-xs text-white
+                        opacity-0 group-hover:opacity-100
+                        transition-opacity"
+            >
+                New Stream
+            </span>
         </button>
+
+        
       </div>
 
       {/* Tabs */}

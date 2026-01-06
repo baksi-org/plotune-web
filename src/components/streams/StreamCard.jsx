@@ -11,7 +11,7 @@ import {
   FaUser,
   FaEye,
   FaEdit,
-  FaPlay
+  FaPlay,
 } from 'react-icons/fa';
 import StreamIcon from '../../assets/icons/stream.svg';
 

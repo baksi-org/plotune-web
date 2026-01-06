@@ -4,26 +4,32 @@ import api from '../services/api';
 
 export const AuthContext = createContext();
 
+const normalizeToken = (token) => {
+  if (!token) return null;
+  let t = String(token).trim();
+  // remove wrapping quotes
+  t = t.replace(/^"|"$/g, '');
+  // remove optional Bearer prefix
+  t = t.replace(/^Bearer\s+/i, '');
+  return t || null;
+};
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check if we're in production (HTTPS) or development (HTTP)
   const isProduction = window.location.protocol === 'https:';
-  
-  // Cookie options - secure only in production
   const cookieOptions = {
-    expires: 7, // 7 days
+    expires: 7,
     path: '/',
     sameSite: 'lax',
-    secure: isProduction // Only secure in production
+    secure: isProduction,
   };
-
   const sessionCookieOptions = {
     path: '/',
     sameSite: 'lax',
-    secure: isProduction // Only secure in production
+    secure: isProduction,
   };
 
   useEffect(() => {
@@ -32,22 +38,37 @@ export const AuthProvider = ({ children }) => {
 
   const initializeAuth = async () => {
     try {
-      // Get token from cookie
       const storedToken = Cookies.get('auth_token');
-      
-      if (storedToken) {
-        setToken(storedToken);
-        
-        // Validate token and get user data
-        const userResponse = await api.post('/auth/validate', {}, {
-          headers: { Authorization: `${storedToken}` }
-        });
-        
-        setUser(userResponse.data);
+      if (!storedToken) {
+        setIsLoading(false);
+        return;
       }
+
+      const clean = normalizeToken(storedToken);
+      if (!clean) {
+        Cookies.remove('auth_token');
+        setIsLoading(false);
+        return;
+      }
+
+      // lokal state ve axios default header set et
+      setToken(clean);
+      api.defaults.headers.common['Authorization'] = `Bearer ${clean}`;
+
+      // profile endpoint'i çağır — cache booster ile
+      const profileResp = await api.get('/profile', {
+        headers: {
+          Authorization: `Bearer ${clean}`,
+          'Cache-Control': 'no-cache',
+        },
+        params: { cache_buster: Date.now() },
+      });
+
+      // profile endpoint'ten dönen obje şu direktife uygun:
+      // { user_id, username, email, full_name, ... }
+      setUser(profileResp.data);
     } catch (error) {
-      console.error('Auth initialization failed:', error);
-      // Invalid token - clear cookie
+      console.error('Auth initialization failed:', error.response?.status, error.response?.data || error.message);
       Cookies.remove('auth_token');
       setToken(null);
       setUser(null);
@@ -57,17 +78,18 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = (newToken, userData, remember = false) => {
-    // Clean "" prefix (we store only the token in cookie)
-    const cleanToken = newToken.replace('', '');
-    
-    setToken(cleanToken);
-    setUser(userData);
+    const cleanToken = normalizeToken(newToken);
+    if (!cleanToken) return;
 
-    // Store token in cookie
+    setToken(cleanToken);
+    setUser(userData || null);
+
+    // axios default header
+    api.defaults.headers.common['Authorization'] = `Bearer ${cleanToken}`;
+
     if (remember) {
       Cookies.set('auth_token', cleanToken, cookieOptions);
     } else {
-      // Session cookie
       Cookies.set('auth_token', cleanToken, sessionCookieOptions);
     }
   };
@@ -75,25 +97,27 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setToken(null);
     setUser(null);
-    
+    delete api.defaults.headers.common['Authorization'];
     Cookies.remove('auth_token');
     window.location.href = '#/login';
   };
 
-  const getAuthHeader = () => {
-    return token ? `${token}` : '';
-  };
+  const getAuthHeader = () => (token ? `Bearer ${token}` : '');
 
+  // ÖNEMLİ: isLoading true iken children render etmiyoruz — böylece race condition engellenir.
+  // İsterseniz burada spinner gösterebilirsiniz.
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      token, 
-      login, 
-      logout, 
-      getAuthHeader,
-      isLoading 
-    }}>
-      {children}
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        login,
+        logout,
+        getAuthHeader,
+        isLoading,
+      }}
+    >
+      {isLoading ? null : children}
     </AuthContext.Provider>
   );
 };
