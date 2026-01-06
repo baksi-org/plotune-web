@@ -1,4 +1,5 @@
-import React, { createContext, useState, useEffect } from 'react';
+// context/AuthContext.js
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import Cookies from 'js-cookie';
 import api from '../services/api';
 
@@ -8,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isProfileLoading, setIsProfileLoading] = useState(false);
 
   // Check if we're in production (HTTPS) or development (HTTP)
   const isProduction = window.location.protocol === 'https:';
@@ -26,11 +28,65 @@ export const AuthProvider = ({ children }) => {
     secure: isProduction // Only secure in production
   };
 
-  useEffect(() => {
-    initializeAuth();
+  // Fetch user profile with caching
+  const fetchUserProfile = useCallback(async (authToken) => {
+    if (!authToken) return null;
+    
+    try {
+      setIsProfileLoading(true);
+      
+      // Check cache first (sessionStorage)
+      const cacheKey = `user_profile_${authToken.substring(0, 10)}`;
+      const cachedProfile = sessionStorage.getItem(cacheKey);
+      
+      if (cachedProfile) {
+        const parsedProfile = JSON.parse(cachedProfile);
+        const cacheAge = Date.now() - (parsedProfile.timestamp || 0);
+        
+        // Use cache if less than 5 minutes old
+        if (cacheAge < 5 * 60 * 1000) {
+          setUser(parsedProfile.data);
+          setIsProfileLoading(false);
+          return parsedProfile.data;
+        }
+      }
+      
+      // Fetch fresh profile
+      const profileResponse = await api.get('/profile', {
+        headers: { Authorization: `${authToken}` },
+        params: { cb: Date.now() }
+      });
+      
+      const profileData = {
+        id: profileResponse.data.user_id,
+        username: profileResponse.data.username,
+        email: profileResponse.data.email,
+        full_name: profileResponse.data.full_name,
+        company: profileResponse.data.company,
+        sector: profileResponse.data.sector,
+        country: profileResponse.data.country,
+      };
+      
+      // Cache the profile
+      const cacheData = {
+        data: profileData,
+        timestamp: Date.now()
+      };
+      sessionStorage.setItem(cacheKey, JSON.stringify(cacheData));
+      
+      setUser(profileData);
+      setIsProfileLoading(false);
+      return profileData;
+      
+    } catch (error) {
+      console.error('Failed to fetch user profile:', error);
+      setIsProfileLoading(false);
+      return null;
+    }
   }, []);
 
-  const initializeAuth = async () => {
+  // Initialize auth - only validate token, lazy load profile later
+  const initializeAuth = useCallback(async () => {
     try {
       // Get token from cookie
       const storedToken = Cookies.get('auth_token');
@@ -38,12 +94,29 @@ export const AuthProvider = ({ children }) => {
       if (storedToken) {
         setToken(storedToken);
         
-        // Validate token and get user data
-        const userResponse = await api.get('/profile', {
-          headers: { Authorization: `Bearer ${storedToken}` }
+        // Validate token first (quick check)
+        const validateResponse = await api.post('/auth/validate', {}, {
+          headers: { Authorization: `${storedToken}` }
         });
-
-        setUser(userResponse.data);
+        
+        if (validateResponse.data.valid) {
+          // Token is valid, set minimal user data from validation
+          setUser(prev => ({
+            ...prev,
+            username: validateResponse.data.username || null,
+            // We'll fetch full profile lazily when needed
+          }));
+          
+          // Lazy load profile in background (non-blocking)
+          setTimeout(() => {
+            fetchUserProfile(storedToken);
+          }, 100);
+        } else {
+          // Invalid token - clear everything
+          Cookies.remove('auth_token');
+          setToken(null);
+          setUser(null);
+        }
       }
     } catch (error) {
       console.error('Auth initialization failed:', error);
@@ -54,14 +127,24 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [fetchUserProfile]);
 
-  const login = (newToken, userData, remember = false) => {
-    // Clean "" prefix (we store only the token in cookie)
+  useEffect(() => {
+    initializeAuth();
+  }, [initializeAuth]);
+
+  // Enhanced login function
+  const login = async (newToken, userData, remember = false) => {
+    // Clean token
     const cleanToken = newToken.replace('', '');
     
     setToken(cleanToken);
-    setUser(userData);
+    
+    // Set basic user data immediately
+    setUser({
+      username: userData?.username || null,
+      // We'll fetch full profile in background
+    });
 
     // Store token in cookie
     if (remember) {
@@ -70,11 +153,24 @@ export const AuthProvider = ({ children }) => {
       // Session cookie
       Cookies.set('auth_token', cleanToken, sessionCookieOptions);
     }
+    
+    // Fetch full profile in background
+    setTimeout(() => {
+      fetchUserProfile(cleanToken);
+    }, 500);
   };
 
   const logout = () => {
     setToken(null);
     setUser(null);
+    
+    // Clear cache
+    const cacheKeys = Object.keys(sessionStorage);
+    cacheKeys.forEach(key => {
+      if (key.startsWith('user_profile_')) {
+        sessionStorage.removeItem(key);
+      }
+    });
     
     Cookies.remove('auth_token');
     window.location.href = '#/login';
@@ -84,6 +180,28 @@ export const AuthProvider = ({ children }) => {
     return token ? `${token}` : '';
   };
 
+  // Function to force refresh user profile
+  const refreshUserProfile = async () => {
+    if (token) {
+      return await fetchUserProfile(token);
+    }
+    return null;
+  };
+
+  // Function to ensure user email is available
+  const ensureUserEmail = async () => {
+    if (user?.email) {
+      return user.email;
+    }
+    
+    if (token) {
+      const profile = await fetchUserProfile(token);
+      return profile?.email || null;
+    }
+    
+    return null;
+  };
+
   return (
     <AuthContext.Provider value={{ 
       user, 
@@ -91,7 +209,10 @@ export const AuthProvider = ({ children }) => {
       login, 
       logout, 
       getAuthHeader,
-      isLoading 
+      isLoading,
+      isProfileLoading,
+      refreshUserProfile,
+      ensureUserEmail
     }}>
       {children}
     </AuthContext.Provider>

@@ -17,7 +17,7 @@ import {
 } from 'react-icons/fa';
 
 const PlotuneNetworks = () => {
-  const { user, token } = useContext(AuthContext);
+  const { user, token, ensureUserEmail } = useContext(AuthContext);
   const [myNetworks, setMyNetworks] = useState([]);
   const [authorizedNetworks, setAuthorizedNetworks] = useState([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -26,10 +26,22 @@ const PlotuneNetworks = () => {
   const [activeNetwork, setActiveNetwork] = useState(null);
   const [streamToken, setStreamToken] = useState(null);
   const [activeTab, setActiveTab] = useState('my'); // 'my' or 'authorized'
+  const [userEmail, setUserEmail] = useState(null);
 
   useEffect(() => {
     fetchStreamToken();
   }, []);
+
+  // Get user email on component mount
+  useEffect(() => {
+    const loadUserEmail = async () => {
+      if (token) {
+        const email = await ensureUserEmail();
+        setUserEmail(email);
+      }
+    };
+    loadUserEmail();
+  }, [token, ensureUserEmail]);
 
   // Get stream token from backend first
   const fetchStreamToken = async () => {
@@ -89,7 +101,8 @@ const PlotuneNetworks = () => {
       // Map authorized networks to match NetworkCard structure
       const mappedNetworks = (response.data || []).map(network => ({
         ...network,
-        is_authorized: true
+        is_authorized: true,
+        current_user_email: userEmail // Add current user email for permission checks
       }));
       
       setAuthorizedNetworks(mappedNetworks);
@@ -111,7 +124,7 @@ const PlotuneNetworks = () => {
   };
 
   const handleCreateNetwork = async (networkData) => {
-    if (!streamToken) {
+    if (!streamToken || !userEmail) {
       toast.error('Network access not available');
       return;
     }
@@ -119,11 +132,10 @@ const PlotuneNetworks = () => {
     try {
       const createData = {
         name: networkData.name,
-        owner_email: user?.email,
+        owner_email: userEmail, // Use the fetched email
         description: networkData.description || '',
         is_public: networkData.is_public || false
       };
-      console.log(createData);
 
       const response = await streamApi.post('/network/create', createData, {
         headers: { Authorization: streamToken },
@@ -143,7 +155,7 @@ const PlotuneNetworks = () => {
   };
 
   const handleDeleteNetwork = async (networkName) => {
-    if (!streamToken) {
+    if (!streamToken || !userEmail) {
       toast.error('Network access not available');
       return;
     }
@@ -155,7 +167,7 @@ const PlotuneNetworks = () => {
     try {
       await streamApi.post('/network/delete', {
         name: networkName,
-        owner_email: user?.email,
+        owner_email: userEmail, // Use the fetched email
         description: '',
         is_public: false
       }, {
@@ -214,6 +226,21 @@ const PlotuneNetworks = () => {
     }
   };
 
+  // Refresh user email when needed
+  useEffect(() => {
+    if (!userEmail && token) {
+      ensureUserEmail().then(email => {
+        if (email) {
+          setUserEmail(email);
+          // If we have networks to fetch, refetch them with the email
+          if (streamToken && activeTab === 'authorized') {
+            fetchAuthorizedNetworks();
+          }
+        }
+      });
+    }
+  }, [userEmail, token, streamToken, activeTab, ensureUserEmail]);
+
   if (loading && activeTab === 'my') {
     return (
       <div className="flex justify-center items-center py-12">
@@ -253,28 +280,16 @@ const PlotuneNetworks = () => {
           <p className="text-gray-text text-sm">Create and manage peer-to-peer data networks for stream sharing</p>
         </div>
         <button
-            onClick={() => setShowCreateModal(true)}          // senin handler
-            className="group relative flex items-center justify-center
-                        w-8 h-8 rounded-full
-                        bg-blue-600 hover:bg-blue-700
-                        text-white
-                        transition-colors"
-            >
-            <FaPlus className="w-3.5 h-3.5" />
-
-            {/* Tooltip */}
-            <span
-                className="pointer-events-none absolute left-1/2 top-full mt-2
-                        -translate-x-1/2
-                        whitespace-nowrap
-                        rounded bg-gray-900 px-2 py-1 text-xs text-white
-                        opacity-0 group-hover:opacity-100
-                        transition-opacity"
-            >
-                New Network
-            </span>
+          onClick={() => setShowCreateModal(true)}
+          disabled={!userEmail}
+          className={`px-4 py-2 rounded-lg transition flex items-center ${
+            userEmail 
+              ? 'bg-primary text-white hover:bg-primary-dark' 
+              : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+          }`}
+        >
+          <span className="mr-2"><FaPlus className="w-3 h-3" /></span> New Network
         </button>
-
       </div>
 
       {/* Tabs */}
@@ -327,6 +342,7 @@ const PlotuneNetworks = () => {
               onManage={() => setActiveNetwork(network)}
               onDelete={network.is_authorized ? null : () => handleDeleteNetwork(network.name)}
               isAuthorized={network.is_authorized}
+              currentUserEmail={userEmail}
             />
           ))}
           
@@ -346,9 +362,14 @@ const PlotuneNetworks = () => {
               {activeTab === 'my' && (
                 <button
                   onClick={() => setShowCreateModal(true)}
-                  className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark"
+                  disabled={!userEmail}
+                  className={`px-6 py-3 rounded-lg ${
+                    userEmail 
+                      ? 'bg-primary text-white hover:bg-primary-dark' 
+                      : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                  }`}
                 >
-                  Create Your First Network
+                  {userEmail ? 'Create Your First Network' : 'Loading user information...'}
                 </button>
               )}
             </div>
@@ -356,35 +377,13 @@ const PlotuneNetworks = () => {
         </div>
       )}
 
-      {/* Network Information */}
-      <div className="rounded-xl p-6 border border-white/10">
-        <h4 className="text-light-text font-medium mb-4">Network Overview</h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-          <div>
-            <h5 className="text-gray-text mb-2">What are Networks?</h5>
-            <p className="text-gray-text">
-              Networks allow you to create peer-to-peer connections for sharing streams. 
-              Share specific streams with network peers and manage access permissions.
-            </p>
-          </div>
-          <div>
-            <h5 className="text-gray-text mb-2">How it Works</h5>
-            <ul className="text-gray-text space-y-1">
-              <li>• Create a network and invite peers</li>
-              <li>• Share streams with network members</li>
-              <li>• Control publish/subscribe permissions</li>
-              <li>• All connections are peer-to-peer</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
       {/* Modals */}
       {showCreateModal && (
         <CreateNetworkModal 
           onClose={() => setShowCreateModal(false)} 
           onSubmit={handleCreateNetwork}
-          user={user}
+          user={{ ...user, email: userEmail }}
+          isLoading={!userEmail}
         />
       )}
       {activeNetwork && (
@@ -394,7 +393,8 @@ const PlotuneNetworks = () => {
           onUpdate={() => activeTab === 'my' ? fetchMyNetworks() : fetchAuthorizedNetworks()}
           onShare={activeNetwork.is_authorized ? null : handleShareNetwork}
           onUnshare={activeNetwork.is_authorized ? null : handleUnshareNetwork}
-          user={user}
+          user={{ ...user, email: userEmail }}
+          currentUserEmail={userEmail}
           isAuthorized={activeNetwork.is_authorized}
         />
       )}
